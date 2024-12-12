@@ -122,6 +122,7 @@
           telegram-desktop
           vscode
           zoom-us
+          nixpkgs-fmt
         ];
       };
     };
