@@ -153,10 +153,7 @@
     corectrl.enable = true;
     firefox.enable = true;
     gamemode.enable = true;
-    steam = {
-      enable = true;
-      gamescopeSession.enable = true;
-    };
+    steam.enable = true;
   };
 
   zramSwap = {
