@@ -1,138 +1,163 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [
-      ./hardware-configuration.nix
-    ];
-
-  # boot
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.initrd.systemd.enable = true;
-  boot.plymouth.enable = true;
-  boot.consoleLogLevel = 0;
-  boot.initrd.verbose = false;
-  boot.kernelParams = [
-    "quiet"
-    "splash"
-    "boot.shell_on_fail"
-    "loglevel=3"
-    "rd.systemd.show_status=false"
-    "rd.udev.log_level=3"
-    "udev.log_priority=3"
-  ];
-  boot.loader.timeout = 0;
-
-  hardware.graphics.enable = true;
-
-  # networking
-  networking.networkmanager.enable = true;
-  networking.hostName = "nazgul";
-
-
-  # timezone
-  time.timeZone = "US/Eastern";
-
-  # locale
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
-
-  # X11 keymap
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  # automatic upgrades
-  system.autoUpgrade.enable = true;
-  system.autoUpgrade.allowReboot = false;
-
-  # services
-  services.xserver.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  services.printing.enable = true;
-  services.fprintd.enable = true;
-  services.pcscd.enable = true;
-  # services.openssh.enable = true;
-  services.xserver.excludePackages = [ pkgs.xterm ];
-
-
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  # user
-  users.users.justin = {
-    isNormalUser = true;
-    description = "Justin";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      microfetch
-      git
-      vscode
-      gnome-boxes
-      slack
-      zoom-us
-      spotify
-      telegram-desktop
-      discord
-      onlyoffice-desktopeditors
-      bottles
-      dolphin-emu
-      gimp
-      alpaca
-      localsend
-    ];
-  };
-
-  # modules
-  zramSwap.enable = true;
-  zramSwap.memoryPercent = 25;
-  programs.firefox.enable = true;
-  programs.steam.enable = true;
-  programs.gamemode.enable = true;
-
-  # system packages
-  environment.systemPackages = with pkgs; [
-    nerdfonts
-    opensc # cac support
-    ccid # cac support
+  # Imports
+  imports = [
+    ./hardware-configuration.nix
   ];
 
-  environment.gnome.excludePackages = (with pkgs; [
-    gnome-maps
-    gnome-contacts
-    gnome-weather
-    gnome-clocks
-    gnome-tour
-    gnome-music
-    epiphany
-    geary
-    yelp
-  ]);
+  # Boot configuration
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    kernelPackages = pkgs.linuxPackages_latest;
+    initrd = {
+      systemd.enable = true;
+      verbose = false;
+    };
+    plymouth.enable = true;
+    consoleLogLevel = 0;
+    kernelParams = [
+      "boot.shell_on_fail"
+      "loglevel=3"
+      "quiet"
+      "rd.systemd.show_status=false"
+      "rd.udev.log_level=3"
+      "splash"
+      "udev.log_priority=3"
+    ];
+    loader.timeout = 0;
+  };
 
-  # nonfree packages
+  # Hardware configuration
+  hardware = {
+    graphics.enable = true;
+    pulseaudio.enable = false;
+  };
+
+  # Networking configuration
+  networking = {
+    networkmanager.enable = true;
+    hostName = "nazgul";
+  };
+
+  # Time and locale settings
+  time = {
+    timeZone = "US/Eastern";
+  };
+
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    extraLocaleSettings = {
+      LC_ADDRESS = "en_US.UTF-8";
+      LC_IDENTIFICATION = "en_US.UTF-8";
+      LC_MEASUREMENT = "en_US.UTF-8";
+      LC_MONETARY = "en_US.UTF-8";
+      LC_NAME = "en_US.UTF-8";
+      LC_NUMERIC = "en_US.UTF-8";
+      LC_PAPER = "en_US.UTF-8";
+      LC_TELEPHONE = "en_US.UTF-8";
+      LC_TIME = "en_US.UTF-8";
+    };
+  };
+
+  # Services
+  services = {
+    xserver = {
+      enable = true;
+      xkb = {
+        layout = "us";
+        variant = "";
+      };
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
+      excludePackages = [ pkgs.xterm ];
+    };
+    printing.enable = true;
+    pcscd.enable = true;
+    pipewire = {
+      enable = true;
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
+      pulse.enable = true;
+    };
+    # openssh.enable = true;
+  };
+
+  # System settings
+  system = {
+    autoUpgrade = {
+      enable = true;
+      allowReboot = false;
+    };
+    stateVersion = "24.11";
+  };
+
+  # User configuration
+  users = {
+    users = {
+      justin = {
+        isNormalUser = true;
+        description = "Justin";
+        extraGroups = [ "networkmanager" "wheel" ];
+        packages = with pkgs; [
+          alpaca
+          bottles
+          discord
+          dolphin-emu
+          gimp
+          git
+          gnome-boxes
+          gnome-tweaks
+          localsend
+          microfetch
+          onlyoffice-desktopeditors
+          slack
+          spotify
+          telegram-desktop
+          vscode
+          zoom-us
+          nixpkgs-fmt
+        ];
+      };
+    };
+  };
+
+  # Environment and packages
+  environment = {
+    systemPackages = with pkgs; [
+      ccid
+      nerdfonts
+      opensc
+    ];
+    gnome.excludePackages = with pkgs; [
+      epiphany
+      geary
+      gnome-clocks
+      gnome-contacts
+      gnome-maps
+      gnome-music
+      gnome-tour
+      gnome-weather
+      yelp
+    ];
+  };
+
   nixpkgs.config.allowUnfree = true;
 
-  # system state
-  system.stateVersion = "24.11";
+  # Modules
+  programs = {
+    firefox.enable = true;
+    gamemode.enable = true;
+    steam.enable = true;
+  };
 
+  zramSwap = {
+    enable = true;
+    memoryPercent = 25;
+  };
 }
