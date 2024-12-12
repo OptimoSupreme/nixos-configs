@@ -86,8 +86,6 @@
       };
       pulse.enable = true;
     };
-    openssh.enable = false;
-
   };
 
   # System settings
