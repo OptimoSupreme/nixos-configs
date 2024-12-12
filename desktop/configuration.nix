@@ -67,7 +67,7 @@
   services = {
     xserver = {
       enable = true;
-      videoDrivers = ["amdgpu"];
+      videoDrivers = [ "amdgpu" ];
       xkb = {
         layout = "us";
         variant = "";
@@ -159,7 +159,7 @@
   };
 
   zramSwap = {
-      enable = true;
-      memoryPercent = 50;
+    enable = true;
+    memoryPercent = 50;
   };
 }
