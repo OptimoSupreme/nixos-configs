@@ -85,6 +85,7 @@
       };
       pulse.enable = true;
     };
+    openssh.enable = false;
   };
 
   # System settings
@@ -132,7 +133,6 @@
       ccid
       nerdfonts
       opensc
-      openssh
     ];
     gnome.excludePackages = with pkgs; [
       epiphany
