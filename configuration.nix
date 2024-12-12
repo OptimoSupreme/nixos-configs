@@ -104,7 +104,7 @@
       justin = {
         isNormalUser = true;
         description = "Justin";
-        extraGroups = [ "networkmanager" "wheel" "corectrl" ];
+        extraGroups = [ "corectrl" "networkmanager" "wheel" ];
         packages = with pkgs; [
           alpaca
           bottles
@@ -113,6 +113,7 @@
           gimp
           git
           gnome-boxes
+          gnome-tweaks
           localsend
           microfetch
           onlyoffice-desktopeditors
