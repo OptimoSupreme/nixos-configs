@@ -47,7 +47,6 @@
   time = {
     timeZone = "US/Eastern";
   };
-
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
@@ -102,7 +101,7 @@
       justin = {
         isNormalUser = true;
         description = "Justin";
-        extraGroups = [ "networkmanager" "wheel" ];
+        extraGroups = [ "networkmanager" "wheel" "libvirtd" ];
         packages = with pkgs; [
           alpaca
           bottles
@@ -147,7 +146,6 @@
       yelp
     ];
   };
-
   nixpkgs.config.allowUnfree = true;
 
   # Modules
@@ -156,9 +154,9 @@
     gamemode.enable = true;
     steam.enable = true;
   };
-
   zramSwap = {
     enable = true;
     memoryPercent = 25;
   };
+  virtualisation.libvirtd.enable = true;
 }
