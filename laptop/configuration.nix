@@ -159,4 +159,11 @@
     memoryPercent = 25;
   };
   virtualisation.libvirtd.enable = true;
+
+  # Activation scripts
+  system.activationScripts = {
+    runGarbageCollect = ''
+      ${pkgs.nix}/bin/nix-collect-garbage --delete-older-than 14d
+    '';
+  };
 }
