@@ -137,8 +137,6 @@
 
   # Activation scripts
   system.activationScripts.addFlathub = ''
-    if ! flatpak remote-list | grep -q '^flathub'; then
-      ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    fi
+    ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   '';
 }
