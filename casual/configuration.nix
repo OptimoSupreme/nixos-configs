@@ -9,8 +9,10 @@
   # Boot configuration
   boot = {
     loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
+      systemd-boot.enable = true; # comment if legacy boot system
+      efi.canTouchEfiVariables = true; # comment if legacy boot system
+      # grub.enable = true; # uncomment for legacy boot system
+      # grub.device = "/dev/sda"; # uncomment for legacy boot system, use appropriate disk
     };
     # kernelPackages = pkgs.linuxPackages_latest; # latest LTS kernel is default, uncomment if you require the latest kernel
     initrd = {
@@ -47,7 +49,6 @@
   time = {
     timeZone = "US/Eastern";
   };
-
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
@@ -123,16 +124,21 @@
       yelp
     ];
   };
-
   nixpkgs.config.allowUnfree = true;
 
   # Modules
   programs = {
     firefox.enable = true;
   };
-
   zramSwap = {
     enable = true;
     memoryPercent = 40;
   };
+
+  # Activation scripts
+  system.activationScripts.addFlathub = ''
+    if ! flatpak remote-list | grep -q '^flathub'; then
+      ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    fi
+  '';
 }
