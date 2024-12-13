@@ -135,7 +135,12 @@
   };
 
   # Activation scripts
-  system.activationScripts.addFlathub = ''
-    ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-  '';
+  system.activationScripts = {
+    addFlathub = ''
+      ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    '';
+    runGarbageCollect = ''
+      ${pkgs.nix}/bin/nix-collect-garbage --delete-older-than 14d
+    '';
+  };
 }
