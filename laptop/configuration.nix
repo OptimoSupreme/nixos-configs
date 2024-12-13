@@ -113,6 +113,7 @@
           gnome-boxes
           gnome-tweaks
           localsend
+          nixpkgs-fmt
           microfetch
           onlyoffice-desktopeditors
           slack
@@ -130,6 +131,7 @@
   environment = {
     systemPackages = with pkgs; [
       ccid
+      mint-cursor-themes
       nerdfonts
       opensc
     ];
