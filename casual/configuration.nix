@@ -113,8 +113,6 @@
   environment = {
     systemPackages = with pkgs; [
       gnome-software
-      onlyoffice-desktopeditors
-      spotify
     ];
     gnome.excludePackages = with pkgs; [
       epiphany
