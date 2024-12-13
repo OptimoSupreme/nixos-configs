@@ -101,8 +101,9 @@
   users = {
     users = {
       username = {
+        # Update with real username
         isNormalUser = true;
-        description = "Pretty Username";
+        description = "Pretty Username"; # Update with real pretty username
         extraGroups = [ "networkmanager" "wheel" ];
       };
     };
