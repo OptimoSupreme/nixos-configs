@@ -94,6 +94,7 @@
       enable = true;
       dates = "Tue 03:00";
       persistent = true;
+      allowReboot = false;
     };
     stateVersion = "24.11";
   };
