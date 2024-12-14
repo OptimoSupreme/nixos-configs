@@ -84,6 +84,7 @@
       };
       pulse.enable = true;
     };
+    fprintd.enable = true;
   };
 
   # System settings
