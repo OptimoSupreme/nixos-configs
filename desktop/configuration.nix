@@ -91,7 +91,8 @@
   system = {
     autoUpgrade = {
       enable = true;
-      allowReboot = false;
+      dates = "Tue 03:00";
+      persistent = true;
     };
     stateVersion = "24.11";
   };
