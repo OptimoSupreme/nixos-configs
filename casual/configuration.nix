@@ -141,6 +141,9 @@
     addFlathub = ''
       ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     '';
+    updateFlatpaks = ''
+      ${pkgs.flatpak}/bin/flatpak update
+    '';
     runGarbageCollect = ''
       ${pkgs.nix}/bin/nix-collect-garbage --delete-older-than 14d
     '';
