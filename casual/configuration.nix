@@ -88,7 +88,7 @@
     flatpak.enable = true;
   };
 
-  # System settings
+  # Maintenance automation
   system = {
     autoUpgrade = {
       enable = true;
@@ -97,6 +97,12 @@
       allowReboot = false;
     };
     stateVersion = "24.11";
+  };
+  nix.gc = {
+    automatic = true;
+    dates = "Tue 03:00";
+    options = "--delete-older-than +7";
+    persistent = true;
   };
 
   # User configuration
@@ -143,9 +149,6 @@
     '';
     updateFlatpaks = ''
       ${pkgs.flatpak}/bin/flatpak update
-    '';
-    runGarbageCollect = ''
-      ${pkgs.nix}/bin/nix-collect-garbage --delete-older-than 14d
     '';
   };
 }

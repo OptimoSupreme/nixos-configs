@@ -87,7 +87,7 @@
     fprintd.enable = true;
   };
 
-  # System settings
+  # Maintenance automation
   system = {
     autoUpgrade = {
       enable = true;
@@ -96,6 +96,12 @@
       allowReboot = false;
     };
     stateVersion = "24.11";
+  };
+  nix.gc = {
+    automatic = true;
+    dates = "Tue 03:00";
+    options = "--delete-older-than +7";
+    persistent = true;
   };
 
   # User configuration
@@ -162,11 +168,4 @@
     memoryPercent = 25;
   };
   virtualisation.libvirtd.enable = true;
-
-  # Activation scripts
-  system.activationScripts = {
-    runGarbageCollect = ''
-      ${pkgs.nix}/bin/nix-collect-garbage --delete-older-than 14d
-    '';
-  };
 }
