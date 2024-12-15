@@ -84,8 +84,8 @@
         support32Bit = true;
       };
       pulse.enable = true;
+      fwupd.enable = true;
     };
-    fwupd.enable = true;
   };
 
   # Maintenance automation
@@ -130,7 +130,6 @@
           telegram-desktop
           vscode
           zoom-us
-          nixpkgs-fmt
         ];
       };
     };
