@@ -85,6 +85,7 @@
       pulse.enable = true;
     };
     fprintd.enable = true;
+    fwupd.enable = true;
   };
 
   # Maintenance automation

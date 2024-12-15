@@ -85,6 +85,7 @@
       };
       pulse.enable = true;
     };
+    fwupd.enable = true;
   };
 
   # Maintenance automation

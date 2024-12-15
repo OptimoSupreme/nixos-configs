@@ -86,6 +86,7 @@
       pulse.enable = true;
     };
     flatpak.enable = true;
+    fwupd.enable = true;
   };
 
   # Maintenance automation
