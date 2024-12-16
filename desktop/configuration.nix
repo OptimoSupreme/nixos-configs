@@ -84,8 +84,8 @@
         support32Bit = true;
       };
       pulse.enable = true;
-      fwupd.enable = true;
     };
+    fwupd.enable = true;
   };
 
   # Maintenance automation
