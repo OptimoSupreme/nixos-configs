@@ -49,17 +49,6 @@
   };
   i18n = {
     defaultLocale = "en_US.UTF-8";
-    extraLocaleSettings = {
-      LC_ADDRESS = "en_US.UTF-8";
-      LC_IDENTIFICATION = "en_US.UTF-8";
-      LC_MEASUREMENT = "en_US.UTF-8";
-      LC_MONETARY = "en_US.UTF-8";
-      LC_NAME = "en_US.UTF-8";
-      LC_NUMERIC = "en_US.UTF-8";
-      LC_PAPER = "en_US.UTF-8";
-      LC_TELEPHONE = "en_US.UTF-8";
-      LC_TIME = "en_US.UTF-8";
-    };
   };
 
   # Services
@@ -119,12 +108,12 @@
           dolphin-emu
           gimp
           git
-          gnome-boxes
           gnome-tweaks
           localsend
           nixpkgs-fmt
           microfetch
           onlyoffice-desktopeditors
+          ptyxis
           slack
           spotify
           telegram-desktop
@@ -148,6 +137,7 @@
       epiphany
       geary
       gnome-clocks
+      gnome-console
       gnome-contacts
       gnome-maps
       gnome-music
@@ -163,6 +153,7 @@
     firefox.enable = true;
     gamemode.enable = true;
     steam.enable = true;
+    virt-manager.enable = true;
   };
   zramSwap = {
     enable = true;
