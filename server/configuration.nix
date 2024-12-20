@@ -102,8 +102,9 @@
   nixpkgs.config.allowUnfree = true;
   environment = {
     systemPackages = with pkgs; [
-      tree
       btrfs-progs
+      git
+      tree
     ];
   };
   # User configuration
