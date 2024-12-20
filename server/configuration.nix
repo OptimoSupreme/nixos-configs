@@ -72,32 +72,29 @@
     };
   };
 
-  # virtualisation.oci-containers = {
-  #   backend = "docker";
-  #   containers.satisfactory = {
-  #     image = "wolveix/satisfactory-server:latest";
-  #     containerName = "satisfactory";
-  #     hostname = "satisfactory";
-  #     restartPolicy = "unless-stopped";
-  #     volumes = [ "/srv/satisfactory:/config" ];
-  #     environment = {
-  #       MAXPLAYERS = "4";
-  #       PGID = "995";
-  #       PUID = "999";
-  #       ROOTLESS = "false";
-  #       STEAMBETA = "false";
-  #     };
-  #     stopSignal = "SIGINT";
-  #     ports = [
-  #       "7777:7777/udp"
-  #       "7777:7777/tcp"
-  #     ];
-  #     extraOptions = [
-  #       "--memory=12G"
-  #       "--memory-reservation=6G"
-  #     ];
-  #   };
-  # };
+  virtualisation.oci-containers = {
+    backend = "docker";
+    containers.satisfactory = {
+      image = "wolveix/satisfactory-server:latest";
+      hostname = "satisfactory";
+      volumes = [ "/srv/freeloader/satisfactory:/config" ];
+      environment = {
+        MAXPLAYERS = "4";
+        PGID = "995";
+        PUID = "999";
+        ROOTLESS = "false";
+        STEAMBETA = "false";
+      };
+      ports = [
+        "7777:7777/udp"
+        "7777:7777/tcp"
+      ];
+      extraOptions = [
+        "--memory=12G"
+        "--memory-reservation=6G"
+      ];
+    };
+  };
 
   # Modules
   zramSwap = {
