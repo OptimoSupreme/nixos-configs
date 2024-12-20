@@ -51,6 +51,23 @@
     defaultLocale = "en_US.UTF-8";
   };
 
+  # Maintenance automation
+  system = {
+    autoUpgrade = {
+      enable = true;
+      dates = "Tue 03:00";
+      persistent = true;
+      allowReboot = false;
+    };
+    stateVersion = "24.11";
+  };
+  nix.gc = {
+    automatic = true;
+    dates = "Tue 03:00";
+    options = "--delete-older-than +7";
+    persistent = true;
+  };
+
   # Services
   services = {
     xserver = {
@@ -77,21 +94,41 @@
     fwupd.enable = true;
   };
 
-  # Maintenance automation
-  system = {
-    autoUpgrade = {
-      enable = true;
-      dates = "Tue 03:00";
-      persistent = true;
-      allowReboot = false;
-    };
-    stateVersion = "24.11";
+  # Modules
+  programs = {
+    corectrl.enable = true;
+    firefox.enable = true;
+    gamemode.enable = true;
+    steam.enable = true;
+    virt-manager.enable = true;
   };
-  nix.gc = {
-    automatic = true;
-    dates = "Tue 03:00";
-    options = "--delete-older-than +7";
-    persistent = true;
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+  };
+  virtualisation.libvirtd.enable = true;
+
+  # Environment and packages
+  nixpkgs.config.allowUnfree = true;
+  environment = {
+    systemPackages = with pkgs; [
+      ccid
+      mint-cursor-themes
+      nerdfonts
+      opensc
+    ];
+    gnome.excludePackages = with pkgs; [
+      epiphany
+      geary
+      gnome-clocks
+      gnome-console
+      gnome-contacts
+      gnome-maps
+      gnome-music
+      gnome-tour
+      gnome-weather
+      yelp
+    ];
   };
 
   # User configuration
@@ -125,41 +162,4 @@
       };
     };
   };
-
-  # Environment and packages
-  environment = {
-    systemPackages = with pkgs; [
-      ccid
-      mint-cursor-themes
-      nerdfonts
-      opensc
-    ];
-    gnome.excludePackages = with pkgs; [
-      epiphany
-      geary
-      gnome-clocks
-      gnome-console
-      gnome-contacts
-      gnome-maps
-      gnome-music
-      gnome-tour
-      gnome-weather
-      yelp
-    ];
-  };
-  nixpkgs.config.allowUnfree = true;
-
-  # Modules
-  programs = {
-    corectrl.enable = true;
-    firefox.enable = true;
-    gamemode.enable = true;
-    steam.enable = true;
-    virt-manager.enable = true;
-  };
-  zramSwap = {
-    enable = true;
-    memoryPercent = 50;
-  };
-  virtualisation.libvirtd.enable = true;
 }

@@ -53,6 +53,23 @@
     defaultLocale = "en_US.UTF-8";
   };
 
+  # Maintenance automation
+  system = {
+    autoUpgrade = {
+      enable = true;
+      dates = "Tue 03:00";
+      persistent = true;
+      allowReboot = false;
+    };
+    stateVersion = "24.11";
+  };
+  nix.gc = {
+    automatic = true;
+    dates = "Tue 03:00";
+    options = "--delete-older-than +7";
+    persistent = true;
+  };
+
   # Services
   services = {
     xserver = {
@@ -78,36 +95,17 @@
     fwupd.enable = true;
   };
 
-  # Maintenance automation
-  system = {
-    autoUpgrade = {
-      enable = true;
-      dates = "Tue 03:00";
-      persistent = true;
-      allowReboot = false;
-    };
-    stateVersion = "24.11";
+  # Modules
+  programs = {
+    firefox.enable = true;
   };
-  nix.gc = {
-    automatic = true;
-    dates = "Tue 03:00";
-    options = "--delete-older-than +7";
-    persistent = true;
-  };
-
-  # User configuration
-  users = {
-    users = {
-      username = {
-        # Update with real username
-        isNormalUser = true;
-        description = "Pretty Username"; # Update with real pretty username
-        extraGroups = [ "networkmanager" "wheel" ];
-      };
-    };
+  zramSwap = {
+    enable = true;
+    memoryPercent = 40;
   };
 
   # Environment and packages
+  nixpkgs.config.allowUnfree = true;
   environment = {
     systemPackages = with pkgs; [
       gnome-software
@@ -121,15 +119,17 @@
       yelp
     ];
   };
-  nixpkgs.config.allowUnfree = true;
 
-  # Modules
-  programs = {
-    firefox.enable = true;
-  };
-  zramSwap = {
-    enable = true;
-    memoryPercent = 40;
+  # User configuration
+  users = {
+    users = {
+      username = {
+        # Update with real username
+        isNormalUser = true;
+        description = "Pretty Username"; # Update with real pretty username
+        extraGroups = [ "networkmanager" "wheel" ];
+      };
+    };
   };
 
   # Activation scripts
