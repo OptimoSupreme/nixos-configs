@@ -100,7 +100,11 @@
 
   # Environment and packages
   nixpkgs.config.allowUnfree = true;
-
+  environment = {
+    systemPackages = with pkgs; [
+      btrfs-progs
+    ];
+  };
   # User configuration
   users = {
     users = {
