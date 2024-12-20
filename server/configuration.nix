@@ -102,6 +102,7 @@
   nixpkgs.config.allowUnfree = true;
   environment = {
     systemPackages = with pkgs; [
+      tree
       btrfs-progs
     ];
   };
@@ -112,9 +113,6 @@
         isNormalUser = true;
         description = "Justin";
         extraGroups = [ "networkmanager" "wheel" ];
-        packages = with pkgs; [
-          tree
-        ];
       };
     };
   };
