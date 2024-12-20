@@ -15,6 +15,13 @@
     };
   };
 
+  # Raid
+  fileSystems."/srv" = {
+    device = "/dev/disk/by-uuid/db8f6060-73d6-4440-9692-50d04fd15f65";
+    fsType = "btrfs";
+    options = [ "noatime" "compress=zstd" ];
+  };
+
   # Networking configuration
   networking = {
     networkmanager.enable = true;
