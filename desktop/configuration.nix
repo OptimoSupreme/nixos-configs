@@ -44,12 +44,8 @@
   };
 
   # Time and locale settings
-  time = {
-    timeZone = "US/Eastern";
-  };
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-  };
+  time.timeZone = "US/Eastern";
+  i18n.defaultLocale = "en_US.UTF-8";
 
   # Maintenance automation
   system = {
@@ -132,34 +128,32 @@
   };
 
   # User configuration
-  users = {
-    users = {
-      justin = {
-        isNormalUser = true;
-        description = "Justin";
-        extraGroups = [ "corectrl" "networkmanager" "wheel" "libvirtd" ];
-        packages = with pkgs; [
-          alpaca
-          bottles
-          discord
-          dolphin-emu
-          easyeffects
-          gimp
-          git
-          gnome-tweaks
-          localsend
-          nixpkgs-fmt
-          microfetch
-          onlyoffice-desktopeditors
-          ptyxis
-          slack
-          spotify
-          telegram-desktop
-          vscode
-          zoom-us
-          nixpkgs-fmt
-        ];
-      };
+  users.users = {
+    justin = {
+      isNormalUser = true;
+      description = "Justin";
+      extraGroups = [ "corectrl" "networkmanager" "wheel" "libvirtd" ];
+      packages = with pkgs; [
+        alpaca
+        bottles
+        discord
+        dolphin-emu
+        easyeffects
+        gimp
+        git
+        gnome-tweaks
+        localsend
+        nixpkgs-fmt
+        microfetch
+        onlyoffice-desktopeditors
+        ptyxis
+        slack
+        spotify
+        telegram-desktop
+        vscode
+        zoom-us
+        nixpkgs-fmt
+      ];
     };
   };
 }

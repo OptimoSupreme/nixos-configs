@@ -46,12 +46,8 @@
   };
 
   # Time and locale settings
-  time = {
-    timeZone = "US/Eastern";
-  };
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-  };
+  time.timeZone = "US/Eastern";
+  i18n.defaultLocale = "en_US.UTF-8";
 
   # Maintenance automation
   system = {
@@ -121,14 +117,11 @@
   };
 
   # User configuration
-  users = {
-    users = {
-      username = {
-        # Update with real username
-        isNormalUser = true;
-        description = "Pretty Username"; # Update with real pretty username
-        extraGroups = [ "networkmanager" "wheel" ];
-      };
+  users.users = {
+    username = {
+      isNormalUser = true;
+      description = "Pretty Username"; # Update with real pretty username
+      extraGroups = [ "networkmanager" "wheel" ];
     };
   };
 
