@@ -41,6 +41,9 @@
   networking = {
     networkmanager.enable = true;
     hostName = "nazgul";
+    hosts = {
+      "10.0.0.45" = [ "morgoth" ];
+    };
   };
 
   # Time and locale settings
