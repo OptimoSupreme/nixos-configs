@@ -24,8 +24,17 @@
 
   # Networking configuration
   networking = {
-    networkmanager.enable = true;
     hostName = "morgoth";
+    interfaces.enp2s0 = {
+      ipv4.addresses = [{
+        address = "10.0.0.45";
+        prefixLength = 24;
+      }];
+    };
+    defaultGateway = {
+      address = "10.0.0.1";
+      interface = "enp2s0";
+    };
     firewall = {
       interfaces."enp2s0".allowedTCPPorts = [ 7777 53 5380 53443 ];
       interfaces."enp2s0".allowedUDPPorts = [ 7777 53 ];
