@@ -38,6 +38,7 @@
       address = "10.0.0.1";
       interface = "enp2s0";
     };
+    nameservers = [ "1.1.1.1" ];
     nat = {
       enable = true;
       externalInterface = "enp2s0";
@@ -66,6 +67,7 @@
             # Justin's Phone
             publicKey = "JsQ/MwVgher/ZGzBh38ZRP+Bahp7sUri+unDhUs+FXI=";
             allowedIPs = [ "10.69.69.2/32" ];
+            persistentKeepalive = 25;
           }
         ];
       };
@@ -104,6 +106,10 @@
         support32Bit = true;
       };
       pulse.enable = true;
+    };
+    technitium-dns-server = {
+      enable = true;
+      openFirewall = true;
     };
   };
 
