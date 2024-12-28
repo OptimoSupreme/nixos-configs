@@ -38,6 +38,38 @@
       address = "10.0.0.1";
       interface = "enp2s0";
     };
+    nat = {
+      enable = true;
+      externalInterface = "enp2s0";
+      internalInterfaces = [ "wg0" ];
+    };
+    firewall = {
+      allowedUDPPorts = [ 443 ];
+    };
+    wireguard.interfaces = {
+      wg0 = {
+        ips = [ "10.69.69.1/24" ];
+        listenPort = 443;
+
+        postSetup = ''
+          ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.69.69.0/24 -o eth0 -j MASQUERADE
+        '';
+
+        postShutdown = ''
+          ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.69.69.0/24 -o eth0 -j MASQUERADE
+        '';
+
+        privateKeyFile = "/srv/wireguard-keys/private";
+
+        peers = [
+          {
+            # Justin's Phone
+            publicKey = "JsQ/MwVgher/ZGzBh38ZRP+Bahp7sUri+unDhUs+FXI=";
+            allowedIPs = [ "10.69.69.2/32" ];
+          }
+        ];
+      };
+    };
   };
 
   # Time and locale settings
@@ -89,8 +121,8 @@
     systemPackages = with pkgs; [
       btrfs-progs
       git
-      microfetch
       tree
+      wireguard-tools
     ];
   };
 
