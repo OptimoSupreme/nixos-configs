@@ -13,6 +13,9 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
+    kernel.sysctl = {
+      "net.ipv4.ip_forward" = 1;
+    };
   };
 
   # Raid
@@ -34,10 +37,6 @@
     defaultGateway = {
       address = "10.0.0.1";
       interface = "enp2s0";
-    };
-    firewall = {
-      interfaces."enp2s0".allowedTCPPorts = [ 7777 53 5380 53443 ];
-      interfaces."enp2s0".allowedUDPPorts = [ 7777 53 ];
     };
   };
 
@@ -90,6 +89,7 @@
     systemPackages = with pkgs; [
       btrfs-progs
       git
+      microfetch
       tree
     ];
   };
