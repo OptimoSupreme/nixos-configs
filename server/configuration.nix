@@ -45,24 +45,19 @@
       internalInterfaces = [ "wg0" ];
     };
     firewall = {
-      allowedUDPPorts = [ 53 443 ];
-      allowedTCPPorts = [ 53 5380 ];
+      allowedUDPPorts = [ 443 ];
     };
     wireguard.interfaces = {
       wg0 = {
         ips = [ "10.69.69.1/24" ];
         listenPort = 443;
-
         postSetup = ''
-          ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.69.69.0/24 -o eth0 -j MASQUERADE
+          ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.69.69.0/24 -o enp2s0 -j MASQUERADE
         '';
-
         postShutdown = ''
-          ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.69.69.0/24 -o eth0 -j MASQUERADE
+          ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.69.69.0/24 -o enp2s0 -j MASQUERADE
         '';
-
         privateKeyFile = "/srv/wireguard-keys/private";
-
         peers = [
           {
             # Justin's Phone
@@ -110,6 +105,7 @@
     };
     technitium-dns-server = {
       enable = true;
+      openFirewall = true;
     };
   };
 
