@@ -45,7 +45,8 @@
       internalInterfaces = [ "wg0" ];
     };
     firewall = {
-      allowedUDPPorts = [ 443 ];
+      allowedUDPPorts = [ 53 443 ];
+      allowedTCPPorts = [ 53 5380 ];
     };
     wireguard.interfaces = {
       wg0 = {
@@ -109,7 +110,6 @@
     };
     technitium-dns-server = {
       enable = true;
-      openFirewall = true;
     };
   };
 
