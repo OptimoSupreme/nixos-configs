@@ -111,8 +111,6 @@
     "d /srv/security_cam/sounds 0755 zoneminder nginx -"
   ];
 
-  virtualisation.docker.enable = true;
-
   # Environment and packages
   nixpkgs.config.allowUnfree = true;
   environment = {
