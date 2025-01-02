@@ -18,7 +18,7 @@
     };
   };
 
-  # Raid
+  # Filesystems
   fileSystems."/srv" = {
     device = "/dev/disk/by-uuid/db8f6060-73d6-4440-9692-50d04fd15f65";
     fsType = "btrfs";
@@ -45,7 +45,25 @@
       internalInterfaces = [ "wg0" ];
     };
     firewall = {
-      allowedUDPPorts = [ 443 ];
+      enable = true;
+      allowedUDPPorts = [
+        443
+        5353
+      ];
+      allowedUDPPortRanges = [
+        { from = 319; to = 320; }
+        { from = 6000; to = 6009; }
+        { from = 32768; to = 60999; }
+      ];
+      allowedTCPPorts = [
+        3689
+        5000
+        7000
+        5353
+      ];
+      allowedTCPPortRanges = [
+        { from = 32768; to = 60999; }
+      ];
     };
     wireguard.interfaces = {
       wg0 = {
@@ -108,7 +126,22 @@
       openFirewall = true;
     };
   };
-
+  systemd.services = {
+    outdoor-speakers = {
+      description = "Outdoor speakers shairport-sync instance";
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
+      };
+    };
+    dining-room = {
+      description = "Dining room shairport-sync instance";
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
+      };
+    };
+  };
   virtualisation.docker.enable = true;
 
   # Modules
@@ -121,8 +154,10 @@
   nixpkgs.config.allowUnfree = true;
   environment = {
     systemPackages = with pkgs; [
+      alsa-utils
       btrfs-progs
       git
+      shairport-sync-airplay2
       tree
       wireguard-tools
     ];
@@ -134,6 +169,10 @@
       isNormalUser = true;
       description = "Justin";
       extraGroups = [ "wheel" ];
+      packages = with pkgs; [
+        microfetch
+        zellij
+      ];
     };
   };
 }

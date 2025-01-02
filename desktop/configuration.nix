@@ -156,6 +156,7 @@
         vscode
         zoom-us
         nixpkgs-fmt
+        zellij
       ];
     };
   };
