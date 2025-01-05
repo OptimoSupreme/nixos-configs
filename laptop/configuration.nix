@@ -151,7 +151,7 @@
         slack
         spotify
         telegram-desktop
-        vscode
+        vscodium
         zoom-us
         nixpkgs-fmt
         zellij
