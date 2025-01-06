@@ -35,7 +35,6 @@
     };
   };
 
-  # Networking configuration
   # networking = {
   #   hostName = "vics-pi";
   #   interfaces.enu1u1u1 = {
@@ -88,7 +87,7 @@
     openssh.enable = true;
     zoneminder = {
       enable = true;
-      port = 8095;
+      port = 443;
       storageDir = "/srv/security_cam";
       openFirewall = true;
       cameras = 2;
