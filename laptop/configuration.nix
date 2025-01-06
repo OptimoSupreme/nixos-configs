@@ -13,6 +13,7 @@
       efi.canTouchEfiVariables = true;
     };
     kernelPackages = pkgs.linuxPackages_latest;
+    kernelModules = [" hid_multitouch" ]
     initrd = {
       systemd.enable = true;
       verbose = false;
