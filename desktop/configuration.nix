@@ -97,6 +97,7 @@
       pulse.enable = true;
     };
     fwupd.enable = true;
+    mullvad-vpn.enable = true;
   };
 
   # Modules
