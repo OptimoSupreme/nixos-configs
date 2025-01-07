@@ -39,7 +39,15 @@
       interface = "enp2s0";
     };
     nameservers = [ "1.1.1.1" ];
-    firewall.enable = true;
+    firewall = {
+      enable = true;
+      interfaces = {
+        enp2s0 = {
+          allowedUDPPorts = [ 7777 ];
+          allowedTCPPorts = [ 7777 ];
+        };
+      };
+    };
   };
 
   # Time and locale settings
@@ -99,6 +107,7 @@
   #     };
   #   };
   # };
+  
   virtualisation.docker.enable = true;
 
   # Modules
@@ -116,7 +125,6 @@
       git
       shairport-sync-airplay2
       tree
-      wireguard-tools
     ];
   };
 

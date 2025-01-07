@@ -140,6 +140,7 @@
   #     };
   #   };
   # };
+  
   virtualisation.docker.enable = true;
 
   # Modules
