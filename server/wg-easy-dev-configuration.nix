@@ -39,53 +39,7 @@
       interface = "enp2s0";
     };
     nameservers = [ "1.1.1.1" ];
-    nat = {
-      enable = true;
-      externalInterface = "enp2s0";
-      internalInterfaces = [ "wg0" ];
-    };
-    firewall = {
-      enable = true;
-      allowedUDPPorts = [
-        443
-        5353
-      ];
-      allowedUDPPortRanges = [
-        { from = 319; to = 320; }
-        { from = 6000; to = 6009; }
-        { from = 32768; to = 60999; }
-      ];
-      allowedTCPPorts = [
-        3689
-        5000
-        7000
-        5353
-      ];
-      allowedTCPPortRanges = [
-        { from = 32768; to = 60999; }
-      ];
-    };
-    wireguard.interfaces = {
-      wg0 = {
-        ips = [ "10.69.69.1/24" ];
-        listenPort = 443;
-        postSetup = ''
-          ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.69.69.0/24 -o enp2s0 -j MASQUERADE
-        '';
-        postShutdown = ''
-          ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.69.69.0/24 -o enp2s0 -j MASQUERADE
-        '';
-        privateKeyFile = "/srv/wireguard-keys/private";
-        peers = [
-          {
-            # Justin's Phone
-            publicKey = "JsQ/MwVgher/ZGzBh38ZRP+Bahp7sUri+unDhUs+FXI=";
-            allowedIPs = [ "10.69.69.2/32" ];
-            persistentKeepalive = 25;
-          }
-        ];
-      };
-    };
+    firewall.enable = true;
   };
 
   # Time and locale settings
@@ -120,10 +74,6 @@
         support32Bit = true;
       };
       pulse.enable = true;
-    };
-    technitium-dns-server = {
-      enable = true;
-      openFirewall = true;
     };
     audiobookshelf = {
       enable = true;
