@@ -70,13 +70,19 @@
   services = {
     xserver = {
       enable = true;
+      excludePackages = [ pkgs.xterm ];
       xkb = {
         layout = "us";
         variant = "";
       };
       displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
-      excludePackages = [ pkgs.xterm ];
+      desktopManager.gnome = {
+        enable = true;
+        extraGSettingsOverrides = ''
+          [org.gnome.desktop.interface]
+          cursor-theme='Bibata-Modern-Ice'
+        '';
+      };
     };
     printing.enable = true;
     pipewire = {
