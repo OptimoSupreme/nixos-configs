@@ -10,5 +10,5 @@ services:
     environment:
       - IP6_PROVIDER=none
     env_file:
-      - ./cloudflare-ddns.env
+      - /srv/envs/cloudflare-ddns.env
     restart: unless-stopped
