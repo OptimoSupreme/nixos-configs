@@ -1,0 +1,24 @@
+services:
+  satisfactory:
+    image: wolveix/satisfactory-server:latest
+    container_name: satisfactory
+    hostname: satisfactory
+    restart: unless-stopped
+    volumes:
+      - /srv/freeloader/satisfactory:/config
+    environment:
+      - MAXPLAYERS=4
+      - PGID=995
+      - PUID=999
+      - ROOTLESS=false
+      - STEAMBETA=false
+    stop_signal: SIGINT
+    deploy:
+      resources:
+        limits:
+          memory: 12G
+        reservations:
+          memory: 6G
+    ports:
+      - "7777:7777/udp"
+      - "7777:7777/tcp"
