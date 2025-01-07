@@ -66,7 +66,6 @@
           {
             # Justin's Phone
             publicKey = "JsQ/MwVgher/ZGzBh38ZRP+Bahp7sUri+unDhUs+FXI=";
-            listenPort = 443;
             endpoint = "questionable.zip:443";
             allowedIPs = [ "10.69.69.2/32" ];
             persistentKeepalive = 25;
