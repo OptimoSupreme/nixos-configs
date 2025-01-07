@@ -47,11 +47,8 @@
     firewall = {
       enable = true;
       interfaces = {
-        wg0.allowedUDPPorts = [ 443 ];
-        enp2s0 = {
-          allowedUDPPorts = [ 443 7777 ];
-          allowedTCPPorts = [ 7777 ];
-        };
+        # wg0.allowedUDPPorts = [ 443 ];
+        enp2s0.allowedUDPPorts = [ 443 ];
       };
     };
     wireguard.interfaces = {

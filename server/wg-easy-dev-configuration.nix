@@ -39,15 +39,7 @@
       interface = "enp2s0";
     };
     nameservers = [ "1.1.1.1" ];
-    firewall = {
-      enable = true;
-      interfaces = {
-        enp2s0 = {
-          allowedUDPPorts = [ 7777 ];
-          allowedTCPPorts = [ 7777 ];
-        };
-      };
-    };
+    firewall.enable = true;
   };
 
   # Time and locale settings
@@ -82,6 +74,10 @@
         support32Bit = true;
       };
       pulse.enable = true;
+    };
+    technitium-dns-server = {
+      enable = true;
+      openFirewall = true;
     };
     audiobookshelf = {
       enable = true;
