@@ -125,23 +125,30 @@
       enable = true;
       openFirewall = true;
     };
-  };
-  systemd.services = {
-    outdoor-speakers = {
-      description = "Outdoor speakers shairport-sync instance";
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
-      };
-    };
-    dining-room = {
-      description = "Dining room shairport-sync instance";
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
-      };
+    audiobookshelf = {
+      enable = true;
+      openFirewall = true;
+      port = 8000;
+      host = "10.0.0.45";
     };
   };
+  
+  # systemd.services = {
+  #   outdoor-speakers = {
+  #     description = "Outdoor speakers shairport-sync instance";
+  #     wantedBy = [ "multi-user.target" ];
+  #     serviceConfig = {
+  #       ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
+  #     };
+  #   };
+  #   dining-room = {
+  #     description = "Dining room shairport-sync instance";
+  #     wantedBy = [ "multi-user.target" ];
+  #     serviceConfig = {
+  #       ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
+  #     };
+  #   };
+  # };
   virtualisation.docker.enable = true;
 
   # Modules
