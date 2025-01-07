@@ -46,24 +46,13 @@
     };
     firewall = {
       enable = true;
-      allowedUDPPorts = [
-        443
-        5353
-      ];
-      allowedUDPPortRanges = [
-        { from = 319; to = 320; }
-        { from = 6000; to = 6009; }
-        { from = 32768; to = 60999; }
-      ];
-      allowedTCPPorts = [
-        3689
-        5000
-        7000
-        5353
-      ];
-      allowedTCPPortRanges = [
-        { from = 32768; to = 60999; }
-      ];
+      interfaces = {
+        wg0.allowedUDPPorts = [ 443 ];
+        enp2s0 = {
+          allowedUDPPorts = [ 443 7777 ];
+          allowedTCPPorts = [ 7777 ];
+        };
+      };
     };
     wireguard.interfaces = {
       wg0 = {
@@ -80,6 +69,8 @@
           {
             # Justin's Phone
             publicKey = "JsQ/MwVgher/ZGzBh38ZRP+Bahp7sUri+unDhUs+FXI=";
+            listenPort = 443;
+            endpoint = "questionable.zip:443";
             allowedIPs = [ "10.69.69.2/32" ];
             persistentKeepalive = 25;
           }
