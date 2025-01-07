@@ -17,12 +17,12 @@ services:
       - "8081:5380/tcp"
       - "53:53/udp"
       - "53:53/tcp"
-      # - "853:853/tcp" #DNS-over-TLS service
-      # - "443:443/udp" #DNS-over-HTTPS service (HTTP/3)
-      # - "443:443/tcp" #DNS-over-HTTPS service (HTTP/1.1, HTTP/2)
+      - "853:853/tcp" #DNS-over-TLS service
+      # - "443:443/udp" #DNS-over-HTTPS service (HTTP/3) USING THIS PORT FOR WIREGUARD
+      - "443:443/tcp" #DNS-over-HTTPS service (HTTP/1.1, HTTP/2)
     environment:
       - DNS_SERVER_DOMAIN=dns-server
-      - DNS_SERVER_RECURSION=AllowOnlyForPrivateNetworks
+      - DNS_SERVER_RECURSION_NETWORK_ACL=10.0.0.0/24,10.40.0.0/24,10.69.69.0/24
       - DNS_SERVER_ENABLE_BLOCKING=true
       - DNS_SERVER_BLOCK_LIST_URLS= https://big.oisd.nl/
     env_file:
