@@ -61,7 +61,7 @@
         postShutdown = ''
           ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.69.69.0/24 -o enp2s0 -j MASQUERADE
         '';
-        privateKeyFile = "/srv/wireguard-keys/private";
+        privateKeyFile = "/srv/secrets/wireguard-keys/private";
         peers = [
           {
             # Justin's Phone
@@ -107,6 +107,17 @@
         support32Bit = true;
       };
       pulse.enable = true;
+    };
+    ddclient = {
+      enable = true;
+      protocol    = "cloudflare";
+      server      = "api.cloudflare.com/client/v4";
+      ssl         = true;
+      username    = "token";
+      passwordFile = "/srv/secrets/cloudflare-token";
+      domains     = [ "questionable.zip" ];
+      zone        = "questionable.zip";
+      interval = "10m";
     };
     technitium-dns-server = {
       enable = true;
