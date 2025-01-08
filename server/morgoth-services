@@ -11,10 +11,10 @@ Nix native:
     - `docker`         -- Docker host
 
 Docker:
-  - `satisfactory`   -- Satisfactory game server
-  - `watchtower`     -- Docker container automatic updates
+  - `satisfactory`     -- Satisfactory game server
+  - `watchtower`       -- Docker container automatic updates
   
 Future:
-  - `immich`         -- 'Cloud' photo backup.
-  - `shairport-sync` -- Airplay audio reciever
-  - arr-suite        -- Media management software
+  - `immich`           -- 'Cloud' photo backup.
+  - `shairport-sync`   -- Airplay audio reciever
+  - arr-suite          -- Media management software
