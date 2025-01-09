@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  environment.systemPackages = with pkgs; [ wireguard-tools qbittorrent-nox ];
+
   # ddclient
   services = {
     ddclient = {
@@ -25,7 +27,6 @@
   };
 
   # wireguard server
-  environment.systemPackages = with pkgs; [ wireguard-tools ];
   networking = {
     nat = {
       enable = true;
@@ -82,6 +83,17 @@
     "dotnet-sdk-6.0.428"
     "aspnetcore-runtime-6.0.36"
   ];
+  systemd.services.qbittorrent = {
+    description = "qBittorrent-nox Service";
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.qbittorrent-nox}/bin/qbittorrent-nox";
+      Restart = "on-failure";
+      User = "media";
+      AmbientCapabilities= "CAP_NET_RAW";
+    };
+  };
   services = {
     sonarr = {
       enable = true;
@@ -130,36 +142,6 @@
       user = "media";
       group = "media";
       openFirewall = true;
-    };
-    transmission = {
-      enable = true;
-      user = "media";
-      group = "media";
-      settings = {
-        rpc-bind-address = "10.0.0.45";
-        rpc-port = 9091;
-        download-dir = "/srv/media/downloads";
-        incomplete-dir = "/srv/media/incomplete";
-        watch-dir = "/srv/media/torrents";
-        watch-dir-enabled = true;
-        openFirewall = true;
-      };
-      openPeerPorts = true;
-    };
-    caddy = {
-      enable = true;
-      config = ''
-        http:// {
-          reverse_proxy /watch localhost:8096
-          reverse_proxy /tv localhost:8989
-          reverse_proxy /movies localhost:7878
-          reverse_proxy /music localhost:8686
-          reverse_proxy /books localhost:8787
-          reverse_proxy /subs localhost:6767
-          reverse_proxy /index localhost:9696
-          reverse_proxy /torrent localhost:9091
-        }
-      '';
     };
   };
 
