@@ -78,6 +78,8 @@
     "d /srv/media/music 0770 media media - -"
     "d /srv/media/torrents 0770 media media - -"
     "d /srv/media/tv 0770 media media - -"
+    "d /srv/media/qbittorrent 0770 media media - -"
+
   ];
   nixpkgs.config.permittedInsecurePackages = [
     "dotnet-sdk-6.0.428"
@@ -91,6 +93,7 @@
       ExecStart = "${pkgs.qbittorrent-nox}/bin/qbittorrent-nox";
       Restart = "on-failure";
       User = "media";
+      WorkingDirectory = "/srv/media/qbittorrent";
       AmbientCapabilities= "CAP_NET_RAW";
     };
   };
