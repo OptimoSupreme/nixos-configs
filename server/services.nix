@@ -39,11 +39,14 @@
       };
     };
     bridges.qb0 = {
-      ipv4.addresses = [{
+      interfaces = [ ];
+    };
+    interfaces.qb0.ipv4.addresses = [
+      {
         address = "10.0.5.1";
         prefixLength = 24;
-      }];
-    };
+      }
+    ];
     wireguard.interfaces = {
       wg0 = { # server
         ips = [ "10.69.69.1/24" ];
