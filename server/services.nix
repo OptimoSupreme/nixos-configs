@@ -38,6 +38,12 @@
         enp2s0.allowedUDPPorts = [ 443 51820 ];
       };
     };
+    bridges.qb0 = {
+      ipv4.addresses = [{
+        address = "10.0.5.1";
+        prefixLength = 24;
+      }];
+    };
     wireguard.interfaces = {
       wg0 = { # server
         ips = [ "10.69.69.1/24" ];
@@ -60,14 +66,14 @@
         ];
       };
       wg1 = { # mullvad client
-        ips = [ "10.64.116.40/32" "fc00:bbbb:bbbb:bb01::1:7427/128" ];
+        ips = [ "10.74.29.35/32" "fc00:bbbb:bbbb:bb01::b:1d22/128" ];
         listenPort = 51820;
         privateKeyFile = "/srv/secrets/wireguard-keys/mullvad_private";
         peers = [
           {
-            publicKey = "LLkA2XSBvfUeXgLdMKP+OTQeKhtGB03kKskJEwlzAE8=";
-            endpoint = "43.225.189.162:51820";
-            allowedIPs = [ "10.64.116.40/32" ];
+            publicKey = "7X6zOgtJfJAK8w8C3z+hekcS9Yf3qK3Bp4yx56lqxBQ=";
+            endpoint = "146.70.198.130:51820";
+            allowedIPs = [ "10.0.5.1/32" ];
             persistentKeepalive = 25;
           }
         ];
