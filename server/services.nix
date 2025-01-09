@@ -67,6 +67,7 @@
   users.users.media = {
     isSystemUser = true;
     group = "media";
+    shell = pkgs.bash;
   };
   systemd.tmpfiles.rules = [
     "d /srv/media 0770 media media - -"
