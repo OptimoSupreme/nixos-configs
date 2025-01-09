@@ -65,51 +65,27 @@
   services = {
     sonarr = {
       enable = true;
-      dataDir = "/var/lib/sonarr";
-      settings = {
-        bindAddress = "0.0.0.0";
-        port = 8989;
-      };
+      openFirewall = true;
     };
     radarr = {
       enable = true;
-      dataDir = "/var/lib/radarr";
-      settings = {
-        bindAddress = "0.0.0.0";
-        port = 7878;
-      };
-    };
-    prowlarr = {
-      enable = true;
-      dataDir = "/var/lib/prowlarr";
-      settings = {
-        bindAddress = "0.0.0.0";
-        port = 9696;
-      };
-    };
-    readarr = {
-      enable = true;
-      dataDir = "/var/lib/readarr";
-      settings = {
-        bindAddress = "0.0.0.0";
-        port = 8787;
-      };
+      openFirewall = true;
     };
     lidarr = {
       enable = true;
-      dataDir = "/var/lib/lidarr";
-      settings = {
-        bindAddress = "0.0.0.0";
-        port = 8686;
-      };
+      openFirewall = true;
+    };
+    readarr = {
+      enable = true;
+      openFirewall = true;
     };
     bazarr = {
       enable = true;
-      dataDir = "/var/lib/bazarr";
-      settings = {
-        bindAddress = "0.0.0.0";
-        port = 6767;
-      };
+      openFirewall = true;
+    };
+    prowlarr = {
+      enable = true;
+      openFirewall = true;
     };
     audiobookshelf = {
       enable = true;
@@ -119,6 +95,7 @@
     };
     jellyfin = {
       enable = true;
+      openFirewall = true;
       mediaDirectories = [
         { path = "/mnt/media/movies"; name = "Movies"; }
         { path = "/mnt/media/tv"; name = "TV Shows"; }
@@ -138,13 +115,13 @@
       enable = true;
       config = ''
         http:// {
-          reverse_proxy /sonarr localhost:8989
-          reverse_proxy /radarr localhost:7878
-          reverse_proxy /prowlarr localhost:9696
-          reverse_proxy /readarr localhost:8787
-          reverse_proxy /lidarr localhost:8686
-          reverse_proxy /bazarr localhost:6767
-          reverse_proxy /jellyfin localhost:8096
+          reverse_proxy /tv localhost:8989
+          reverse_proxy /movies localhost:7878
+          reverse_proxy /music localhost:8686
+          reverse_proxy /books localhost:8787
+          reverse_proxy /subs localhost:6767
+          reverse_proxy /index localhost:9696
+          reverse_proxy /watch localhost:8096
         }
       '';
     };
