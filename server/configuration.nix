@@ -5,6 +5,7 @@
   imports =
     [
       ./hardware-configuration.nix
+      ./services.nix
     ];
 
   # Boot configuration
@@ -47,7 +48,6 @@
     firewall = {
       enable = true;
       interfaces = {
-        # wg0.allowedUDPPorts = [ 443 ];
         enp2s0.allowedUDPPorts = [ 443 ];
       };
     };
@@ -130,24 +130,7 @@
       host = "10.0.0.45";
     };
   };
-  
-  # systemd.services = {
-  #   outdoor-speakers = {
-  #     description = "Outdoor speakers shairport-sync instance";
-  #     wantedBy = [ "multi-user.target" ];
-  #     serviceConfig = {
-  #       ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
-  #     };
-  #   };
-  #   dining-room = {
-  #     description = "Dining room shairport-sync instance";
-  #     wantedBy = [ "multi-user.target" ];
-  #     serviceConfig = {
-  #       ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
-  #     };
-  #   };
-  # };
-  
+
   virtualisation.docker.enable = true;
 
   # Modules
@@ -177,7 +160,6 @@
       extraGroups = [ "wheel" ];
       packages = with pkgs; [
         microfetch
-        zellij
       ];
     };
   };
