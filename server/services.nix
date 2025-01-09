@@ -98,6 +98,7 @@
       AmbientCapabilities= "CAP_NET_RAW";
     };
   };
+  networking.firewall.allowedTCPPorts = [ 8080 ];
   services = {
     sonarr = {
       enable = true;
