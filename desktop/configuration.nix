@@ -163,7 +163,6 @@
         vscodium
         zoom-us
         nixpkgs-fmt
-        zellij
       ];
     };
   };
