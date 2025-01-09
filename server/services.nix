@@ -26,7 +26,7 @@
     };
   };
 
-  # wireguard server
+  # wireguard
   networking = {
     nat = {
       enable = true;
@@ -35,11 +35,11 @@
     };
     firewall = {
       interfaces = {
-        enp2s0.allowedUDPPorts = [ 443 ];
+        enp2s0.allowedUDPPorts = [ 443 51820 ];
       };
     };
     wireguard.interfaces = {
-      wg0 = {
+      wg0 = { # server
         ips = [ "10.69.69.1/24" ];
         listenPort = 443;
         postSetup = ''
@@ -55,6 +55,20 @@
             publicKey = "JsQ/MwVgher/ZGzBh38ZRP+Bahp7sUri+unDhUs+FXI=";
             endpoint = "questionable.zip:443";
             allowedIPs = [ "10.69.69.2/32" ];
+            persistentKeepalive = 25;
+          }
+        ];
+      };
+      wg1 = { # mullvad client
+        ips = [ "10.64.116.40/32" "fc00:bbbb:bbbb:bb01::1:7427/128" ];
+        dns = [ "10.64.0.1" ];
+        listenPort = 51820;
+        privateKeyFile = "/srv/secrets/wireguard-keys/mullvad_private";
+        peers = [
+          {
+            publicKey = "LLkA2XSBvfUeXgLdMKP+OTQeKhtGB03kKskJEwlzAE8=";
+            endpoint = "43.225.189.162:51820";
+            allowedIPs = [ "0.0.0.0/0" ];
             persistentKeepalive = 25;
           }
         ];
