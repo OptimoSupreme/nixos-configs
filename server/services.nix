@@ -68,6 +68,7 @@
     isSystemUser = true;
     group = "media";
     shell = pkgs.bash;
+    home = "/srv/media/qbittorrent";
   };
   systemd.tmpfiles.rules = [
     "d /srv/media 0770 media media - -"
