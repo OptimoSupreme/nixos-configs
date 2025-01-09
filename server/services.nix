@@ -59,19 +59,19 @@
           }
         ];
       };
-      wg1 = { # mullvad client
-        ips = [ "10.64.116.40/32" "fc00:bbbb:bbbb:bb01::1:7427/128" ];
-        listenPort = 51820;
-        privateKeyFile = "/srv/secrets/wireguard-keys/mullvad_private";
-        peers = [
-          {
-            publicKey = "LLkA2XSBvfUeXgLdMKP+OTQeKhtGB03kKskJEwlzAE8=";
-            endpoint = "43.225.189.162:51820";
-            allowedIPs = [ "0.0.0.0/0" ];
-            persistentKeepalive = 25;
-          }
-        ];
-      };
+      # wg1 = { # mullvad client
+      #   ips = [ "10.64.116.40/32" "fc00:bbbb:bbbb:bb01::1:7427/128" ];
+      #   listenPort = 51820;
+      #   privateKeyFile = "/srv/secrets/wireguard-keys/mullvad_private";
+      #   peers = [
+      #     {
+      #       publicKey = "LLkA2XSBvfUeXgLdMKP+OTQeKhtGB03kKskJEwlzAE8=";
+      #       endpoint = "43.225.189.162:51820";
+      #       allowedIPs = [ "0.0.0.0/0" ];
+      #       persistentKeepalive = 25;
+      #     }
+      #   ];
+      # };
     };
   };
 
