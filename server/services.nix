@@ -61,73 +61,111 @@
     };
   };
 
-  # media stack
+  # media stack (under construction)
+  users.groups.media = {};
+  users.users.media = {
+    isSystemUser = true;
+    group = "media";
+  };
+  systemd.tmpfiles.rules = [
+    "d /srv/media 0770 media media - -"
+    "d /srv/media/audiobooks 0770 media media - -"
+    "d /srv/media/ebooks 0770 media media - -"
+    "d /srv/media/downloads 0770 media media - -"
+    "d /srv/media/incomplete 0770 media media - -"
+    "d /srv/media/movies 0770 media media - -"
+    "d /srv/media/music 0770 media media - -"
+    "d /srv/media/torrents 0770 media media - -"
+    "d /srv/media/tv 0770 media media - -"
+  ];
   services = {
     sonarr = {
       enable = true;
+      user = "media";
+      group = "media";
       openFirewall = true;
     };
     radarr = {
       enable = true;
+      user = "media";
+      group = "media";
       openFirewall = true;
     };
     lidarr = {
       enable = true;
+      user = "media";
+      group = "media";
       openFirewall = true;
     };
     readarr = {
       enable = true;
+      user = "media";
+      group = "media";
       openFirewall = true;
     };
     bazarr = {
       enable = true;
+      user = "media";
+      group = "media";
       openFirewall = true;
     };
     prowlarr = {
       enable = true;
+      user = "media";
+      group = "media";
       openFirewall = true;
     };
     audiobookshelf = {
       enable = true;
+      user = "media";
+      group = "media";
       openFirewall = true;
       port = 8000;
       host = "10.0.0.45";
     };
     jellyfin = {
       enable = true;
+      user = "media";
+      group = "media";
       openFirewall = true;
       mediaDirectories = [
         { path = "/mnt/media/movies"; name = "Movies"; }
         { path = "/mnt/media/tv"; name = "TV Shows"; }
       ];
     };
-    qbittorrent = {
+    transmission = {
       enable = true;
-      dataDir = "/var/lib/qbittorrent";
-      webUiPort = 8080;
+      user = "media";
+      group = "media";
       settings = {
-        "Preferences/Connection/PortRangeMin" = 6881;
-        "Preferences/Connection/PortRangeMax" = 6889;
-        "Preferences/Bittorrent/MaxActiveDownloads" = 5;
+        rpc-bind-address = "10.0.0.45";
+        rpc-port = 9091;
+        download-dir = "/srv/media/downloads";
+        incomplete-dir = "/srv/media/incomplete";
+        watch-dir = "/srv/media/torrents";
+        watch-dir-enabled = true;
+        openFirewall = true;
       };
+      openPeerPorts = true;
     };
     caddy = {
       enable = true;
       config = ''
         http:// {
+          reverse_proxy /watch localhost:8096
           reverse_proxy /tv localhost:8989
           reverse_proxy /movies localhost:7878
           reverse_proxy /music localhost:8686
           reverse_proxy /books localhost:8787
           reverse_proxy /subs localhost:6767
           reverse_proxy /index localhost:9696
-          reverse_proxy /watch localhost:8096
+          reverse_proxy /torrent localhost:9091
         }
       '';
     };
   };
 
-  # shairport-sync
+  # shairport-sync (under construction)
   # environment = {
   #   systemPackages = with pkgs; [
   #     alsa-utils
