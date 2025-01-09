@@ -61,7 +61,6 @@
       };
       wg1 = { # mullvad client
         ips = [ "10.64.116.40/32" "fc00:bbbb:bbbb:bb01::1:7427/128" ];
-        dns = [ "10.64.0.1" ];
         listenPort = 51820;
         privateKeyFile = "/srv/secrets/wireguard-keys/mullvad_private";
         peers = [
