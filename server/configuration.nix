@@ -39,7 +39,7 @@
       address = "10.0.0.1";
       interface = "enp2s0";
     };
-    nameservers = [ "127.0.0.1" ];
+    nameservers = [ "1.1.1.1" ];
     nat = {
       enable = true;
       externalInterface = "enp2s0";
