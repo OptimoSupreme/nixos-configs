@@ -96,9 +96,7 @@
       isNormalUser = true;
       description = "Justin";
       extraGroups = [ "wheel" ];
-      packages = with pkgs; [
-        microfetch
-      ];
+      packages = with pkgs; [ microfetch ];
     };
   };
 }
