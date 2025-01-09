@@ -81,11 +81,6 @@
     "d /srv/media/torrents 0770 media media - -"
     "d /srv/media/tv 0770 media media - -"
     "d /srv/media/qbittorrent 0770 media media - -"
-
-  ];
-  nixpkgs.config.permittedInsecurePackages = [
-    "dotnet-sdk-6.0.428"
-    "aspnetcore-runtime-6.0.36"
   ];
   systemd.services.qbittorrent = {
     description = "qBittorrent-nox Service";
@@ -100,7 +95,11 @@
       AmbientCapabilities= "CAP_NET_RAW";
     };
   };
-  networking.firewall.allowedTCPPorts = [ 8080 ];
+  networking.firewall.interfaces.enp2s0.allowedTCPPorts = [ 8080 ];
+  nixpkgs.config.permittedInsecurePackages = [
+    "dotnet-sdk-6.0.428"
+    "aspnetcore-runtime-6.0.36"
+  ];
   services = {
     sonarr = {
       enable = true;
