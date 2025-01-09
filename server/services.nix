@@ -78,6 +78,10 @@
     "d /srv/media/torrents 0770 media media - -"
     "d /srv/media/tv 0770 media media - -"
   ];
+  nixpkgs.config.permittedInsecurePackages = [
+    "dotnet-sdk-6.0.428"
+    "aspnetcore-runtime-6.0.36"
+  ];
   services = {
     sonarr = {
       enable = true;
