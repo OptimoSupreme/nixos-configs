@@ -148,6 +148,10 @@
       enable = true;
       openFirewall = true;
     };
+    flaresolverr = {
+      enable = true;
+      openFirewall = true;
+    }
     audiobookshelf = {
       enable = true;
       user = "media";
@@ -161,7 +165,6 @@
       user = "media";
       group = "media";
       openFirewall = true;
-    };
   };
 
   # shairport-sync (under construction)
