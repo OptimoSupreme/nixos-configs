@@ -111,8 +111,6 @@
     };
     prowlarr = {
       enable = true;
-      user = "media";
-      group = "media";
       openFirewall = true;
     };
     audiobookshelf = {
