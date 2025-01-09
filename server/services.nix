@@ -128,10 +128,6 @@
       user = "media";
       group = "media";
       openFirewall = true;
-      mediaDirectories = [
-        { path = "/mnt/media/movies"; name = "Movies"; }
-        { path = "/mnt/media/tv"; name = "TV Shows"; }
-      ];
     };
     transmission = {
       enable = true;
