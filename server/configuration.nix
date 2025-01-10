@@ -6,8 +6,7 @@
     [
       ./hardware-configuration.nix
       ./network_services.nix
-      ./audiobookself.nix
-      # ./media_server.nix
+      ./media_server.nix
       # ./shairport-sync.nix
     ];
 
