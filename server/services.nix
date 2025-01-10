@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  environment.systemPackages = with pkgs; [ wireguard-tools qbittorrent-nox ];
+  environment.systemPackages = with pkgs; [ wireguard-tools qbittorrent-nox jellyfin jellyfin-ffmpeg jellyfin-web ];
 
   # ddclient
   services = {
