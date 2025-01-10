@@ -1,4 +1,3 @@
-# media server
 { config, pkgs, ... }:
 
 {
@@ -111,14 +110,14 @@
       enable = true;
       openFirewall = true;
     };
-    audiobookshelf = {
-      enable = true;
-      user = "media";
-      group = "media";
-      openFirewall = true;
-      port = 8000;
-      host = "10.0.0.45";
-    };
+    # audiobookshelf = {
+    #   enable = true;
+    #   user = "media";
+    #   group = "media";
+    #   openFirewall = true;
+    #   port = 8000;
+    #   host = "10.0.0.45";
+    # };
     jellyfin = {
       enable = true;
       user = "media";
