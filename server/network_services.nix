@@ -33,7 +33,6 @@
       internalInterfaces = [ "wg0" ];
     };
     firewall.interfaces.enp2s0.allowedUDPPorts = [ 443 ];
-    firewall.interfaces.wg0.allowedUDPPorts = [ 443 ];
 
     wireguard.interfaces = {
       wg0 = {
