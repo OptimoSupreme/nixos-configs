@@ -6,7 +6,7 @@
     [
       ./hardware-configuration.nix
       ./network_services.nix
-      # ./servarr.nix
+      # ./media_server.nix
       # ./shairport-sync.nix
     ];
 
