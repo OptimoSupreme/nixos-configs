@@ -34,7 +34,7 @@
     };
     firewall.interfaces.enp2s0.allowedUDPPorts = [ 443 ];
     wireguard.interfaces = {
-      wg0 = { # vpn server
+      wg0 = {
         ips = [ "10.69.69.1/24" ];
         listenPort = 443;
         postSetup = ''

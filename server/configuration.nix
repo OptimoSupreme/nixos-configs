@@ -6,7 +6,8 @@
     [
       ./hardware-configuration.nix
       ./network_services.nix
-      ./servarr.nix
+      # ./servarr.nix
+      # ./shairport-sync.nix
     ];
 
   # Boot configuration
@@ -70,18 +71,16 @@
     persistent = true;
   };
 
-  # Services
-  services = {
-    openssh.enable = true;
-    fwupd.enable = true;
-  };
-  virtualisation.docker.enable = true;
-
   # Modules
   zramSwap = {
     enable = true;
     memoryPercent = 50;
   };
+  services = {
+    openssh.enable = true;
+    fwupd.enable = true;
+  };
+  virtualisation.docker.enable = true;
 
   # Environment and packages
   nixpkgs.config.allowUnfree = true;

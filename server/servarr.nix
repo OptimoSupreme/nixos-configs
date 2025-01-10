@@ -39,7 +39,7 @@
       { table = "qbittorrent"; destination = "0.0.0.0/0"; interface = "mullvad0"; }
     ];
     wireguard.interfaces = {
-      mullvad0 = { # mullvad vpn client
+      mullvad0 = {
         ips = [ "10.74.173.88/32" "fc00:bbbb:bbbb:bb01::b:ad57/128" ];
         listenPort = 51820;
         privateKeyFile = "/srv/secrets/wireguard-keys/mullvad_private";
