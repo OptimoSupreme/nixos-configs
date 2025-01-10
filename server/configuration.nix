@@ -5,7 +5,8 @@
   imports =
     [
       ./hardware-configuration.nix
-      ./services.nix
+      ./network_services.nix
+      ./servarr.nix
     ];
 
   # Boot configuration
@@ -36,8 +37,8 @@
       }];
     };
     defaultGateway = {
-      address = "10.0.0.1";
       interface = "enp2s0";
+      address = "10.0.0.1";
     };
     nameservers = [ "1.1.1.1" ];
     nat = {
@@ -74,6 +75,7 @@
     openssh.enable = true;
     fwupd.enable = true;
   };
+  virtualisation.docker.enable = true;
 
   # Modules
   zramSwap = {
