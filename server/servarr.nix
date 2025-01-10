@@ -57,7 +57,7 @@
     serviceConfig = {
       ExecStart = "${pkgs.qbittorrent-nox}/bin/qbittorrent-nox";
       Restart = "on-failure";
-      User = "qbittorrent";
+      User = "media";
       Environment = "HOME=/srv/media/qbittorrent";
       WorkingDirectory = "/srv/media/qbittorrent";
       AmbientCapabilities= "CAP_NET_RAW";
