@@ -119,6 +119,7 @@
   environment = {
     systemPackages = with pkgs; [
       ccid
+      libre-baskerville
       mint-cursor-themes
       nerdfonts
       opensc
