@@ -47,7 +47,7 @@
   # module
   services.shairport-sync = {
     enable = true;
-    package = shairport-sync-airplay2;
+    package = pkgs.shairport-sync-airplay2;
     openFirewall = true;
     arguments = "-a 'Dining Room' -o alsa -- -d resampled_dac2";
   };
