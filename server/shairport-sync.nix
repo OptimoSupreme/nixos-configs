@@ -83,14 +83,14 @@
         ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -a 'Outdoor Speakers' -o alsa -- -d resampled_dac1";
       };
     };
-    dining-room = {
-      description = "Dining room Shairport Sync instance";
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        Type = "dbus";
-        BusName = "org.gnome.ShairportSync.DiningRoom";
-        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -a 'Dining Room' -o alsa -- -d resampled_dac2";
-      };
-    };
+    # dining-room = {
+    #   description = "Dining room Shairport Sync instance";
+    #   wantedBy = [ "multi-user.target" ];
+    #   serviceConfig = {
+    #     Type = "dbus";
+    #     BusName = "org.gnome.ShairportSync.DiningRoom";
+    #     ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -a 'Dining Room' -o alsa -- -d resampled_dac2";
+    #   };
+    # };
   };
 }
