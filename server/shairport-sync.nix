@@ -1,7 +1,17 @@
 { config, pkgs, ... }:
 
 {
-  # Open firewall ports
+  # add shairport-sync user
+    users.users.shairport = {
+      description = "Shairport user";
+      isSystemUser = true;
+      createHome = true;
+      home = "/var/lib/shairport-sync";
+      group = "shairport";
+      extraGroups = [ "audio" ];
+    };
+  
+  # open firewall ports
   networking.firewall = {
     interfaces."enp2s0" = {
       allowedTCPPorts = [
@@ -24,16 +34,18 @@
     };
   };
 
-  # Packages
-  environment.systemPackages = with pkgs; [
-    alsa-utils
-    shairport-sync-airplay2
-  ];
+  # packages
+  environment = {
+    systemPackages = with pkgs; [
+      alsa-utils
+      shairport-sync-airplay2
+    ];
+  };
 
-  # Enable ALSA
+  # enable pipewire with alsa aupport
   hardware.alsa.enable = true;
 
-  # Setup resample for USB DAC compatibility
+  # setup resmaple for garbage  usb DAC compatibility :)
   environment.etc."asound.conf".text = ''
     # Resample for the outdoor speaker USB DAC
     pcm.usb_dac1 {
@@ -66,25 +78,21 @@
     }
   '';
 
-  # Systemd units for Shairport Sync instances
+  # systemd units
   systemd.services = {
     outdoor-speakers = {
-      description = "Outdoor speakers Shairport Sync instance";
+      description = "Outdoor speakers shairport-sync instance";
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        Type = "dbus";
-        BusName = "org.gnome.ShairportSync.OutdoorSpeakers";
-        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -a 'Outdoor Speakers' -o alsa -- -d resampled_dac1";
+        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
       };
     };
-    # dining-room = {
-    #   description = "Dining room Shairport Sync instance";
-    #   wantedBy = [ "multi-user.target" ];
-    #   serviceConfig = {
-    #     Type = "dbus";
-    #     BusName = "org.gnome.ShairportSync.DiningRoom";
-    #     ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -a 'Dining Room' -o alsa -- -d resampled_dac2";
-    #   };
-    # };
+    dining-room = {
+      description = "Dining room shairport-sync instance";
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
+      };
+    };
   };
 }
