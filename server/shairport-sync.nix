@@ -45,10 +45,13 @@
   '';
 
   # module
-  services.shairport-sync = {
-    enable = true;
-    package = pkgs.shairport-sync-airplay2;
-    openFirewall = true;
-    arguments = "-a 'Dining Room' -o alsa -- -d resampled_dac2";
+  services = {
+    shairport-sync = {
+      enable = true;
+      package = pkgs.shairport-sync-airplay2;
+      openFirewall = true;
+      arguments = "-a 'Dining Room' -o alsa -- -d resampled_dac2";
+    };
   };
+  avahi.enable = true;
 }
