@@ -52,6 +52,6 @@
       openFirewall = true;
       arguments = "-a 'Dining Room' -o alsa -- -d resampled_dac2";
     };
+    avahi.enable = true;
   };
-  avahi.enable = true;
 }
