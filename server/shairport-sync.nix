@@ -114,4 +114,23 @@
       };
     };
   };
+
+
+  services.dbus.policies = [
+    {
+      name = "shairport-sync";
+      policy = ''
+        <!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-Bus Bus Configuration 1.0//EN"
+        "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
+        <busconfig>
+          <policy user="shairport">
+            <allow own="org.gnome.ShairportSync.*"/>
+            <allow own="org.mpris.MediaPlayer2.ShairportSync.*"/>
+            <allow send_destination="org.gnome.ShairportSync.*"/>
+            <allow send_destination="org.mpris.MediaPlayer2.ShairportSync.*"/>
+          </policy>
+        </busconfig>
+      '';
+    }
+  ];
 }
