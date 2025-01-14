@@ -30,14 +30,8 @@
     shairport-sync-airplay2
   ];
 
-  # Enable PipeWire with ALSA support
-  services.pipewire = {
-    enable = true;
-    alsa = {
-      enable = true;
-      support32Bit = true;
-    };
-  };
+  # Enable ALSA
+  sound.enable = true;
 
   # Setup resample for USB DAC compatibility
   environment.etc."asound.conf".text = ''
