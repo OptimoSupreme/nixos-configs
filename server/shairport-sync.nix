@@ -39,6 +39,7 @@
   environment = {
     systemPackages = with pkgs; [
       alsa-utils
+      nqptp
       shairport-sync-airplay2
     ];
   };
@@ -48,9 +49,6 @@
 
   # enable avahi
   services.avahi.enable = true;
-
-  # add shairport-sync dbus package to dbus config
-  services.dbus.packages = [ pkgs.shairport-sync-airplay2 ];
 
   # setup resmaple for garbage  usb DAC compatibility :)
   environment.etc."asound.conf".text = ''
@@ -87,10 +85,24 @@
 
   # systemd units
   systemd.services = {
+    nqptp = {
+      description = "Network Precision Time Protocol for Shairport Sync";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
+      serviceConfig = {
+        ExecStart = "${pkgs.nqptp}/bin/nqptp";
+        Restart = "always";
+        RestartSec = "5s";
+        User = "shairport";
+        Group = "shairport";
+      };
+    };
     outdoor-speakers = {
       description = "Outdoor speakers shairport-sync instance";
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
+        User = "shairport";
+        Group = "shairport";
         ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
       };
     };
@@ -98,6 +110,8 @@
       description = "Dining room shairport-sync instance";
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
+        User = "shairport";
+        Group = "shairport";
         ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
       };
     };
