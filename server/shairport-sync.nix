@@ -1,50 +1,15 @@
 { config, pkgs, ... }:
 
 {
-  # add shairport-sync user
-    users.users.shairport = {
-      description = "Shairport user";
-      isSystemUser = true;
-      createHome = true;
-      home = "/var/lib/shairport-sync";
-      group = "shairport";
-      extraGroups = [ "audio" ];
-    };
-    users.groups.shairport = {};
-  
-  # open firewall ports
-  networking.firewall = {
-    interfaces."enp2s0" = {
-      allowedTCPPorts = [
-        3689
-        5353
-        5000
-      ];
-      allowedUDPPorts = [
-        5353
-      ];
-      allowedTCPPortRanges = [
-        { from = 7000; to = 7001; }
-        { from = 32768; to = 60999; }
-      ];
-      allowedUDPPortRanges = [
-        { from = 319; to = 320; }
-        { from = 6000; to = 6009; }
-        { from = 32768; to = 60999; }
-      ];
-    };
-  };
-
   # packages
   environment = {
     systemPackages = with pkgs; [
       alsa-utils
-      shairport-sync-airplay2
     ];
   };
 
-  # enable pipewire with alsa aupport
-  hardware.alsa.enable = true;
+  # # enable pipewire with alsa aupport
+  # hardware.alsa.enable = true;
 
   # setup resmaple for garbage  usb DAC compatibility :)
   environment.etc."asound.conf".text = ''
@@ -79,21 +44,11 @@
     }
   '';
 
-  # systemd units
-  systemd.services = {
-    outdoor-speakers = {
-      description = "Outdoor speakers shairport-sync instance";
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
-      };
-    };
-    dining-room = {
-      description = "Dining room shairport-sync instance";
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
-      };
-    };
-  };
+  # module
+  services.shairport-sync = {
+    enable = true;
+    package = shairport-sync-airplay2;
+    openFirewall = true;
+    arguments = "-a 'Dining Room' -o alsa -- -d resampled_dac2";
+  }
 }
