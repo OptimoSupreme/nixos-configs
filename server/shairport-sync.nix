@@ -10,6 +10,7 @@
       group = "shairport";
       extraGroups = [ "audio" ];
     };
+    users.groups.shairport = {};
   
   # open firewall ports
   networking.firewall = {
