@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  # open firewall ports
+  # Open firewall ports
   networking.firewall = {
     interfaces."enp2s0" = {
       allowedTCPPorts = [
@@ -24,15 +24,13 @@
     };
   };
 
-  # packages
-  environment = {
-    systemPackages = with pkgs; [
-      alsa-utils
-      shairport-sync-airplay2
-    ];
-  };
+  # Packages
+  environment.systemPackages = with pkgs; [
+    alsa-utils
+    shairport-sync-airplay2
+  ];
 
-  # enable pipewire with alsa aupport
+  # Enable PipeWire with ALSA support
   services.pipewire = {
     enable = true;
     alsa = {
@@ -41,7 +39,7 @@
     };
   };
 
-  # setup resmaple for garbage  usb DAC compatibility :)
+  # Setup resample for USB DAC compatibility
   environment.etc."asound.conf".text = ''
     # Resample for the outdoor speaker USB DAC
     pcm.usb_dac1 {
@@ -74,20 +72,24 @@
     }
   '';
 
-  # systemd units
+  # Systemd units for Shairport Sync instances
   systemd.services = {
     outdoor-speakers = {
-      description = "Outdoor speakers shairport-sync instance";
+      description = "Outdoor speakers Shairport Sync instance";
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
+        Type = "dbus";
+        BusName = "org.gnome.ShairportSync.OutdoorSpeakers";
+        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -a 'Outdoor Speakers' -o alsa -- -d resampled_dac1";
       };
     };
     dining-room = {
-      description = "Dining room shairport-sync instance";
+      description = "Dining room Shairport Sync instance";
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
+        Type = "dbus";
+        BusName = "org.gnome.ShairportSync.DiningRoom";
+        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -a 'Dining Room' -o alsa -- -d resampled_dac2";
       };
     };
   };
