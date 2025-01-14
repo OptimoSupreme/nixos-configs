@@ -8,7 +8,7 @@
       createHome = true;
       home = "/var/lib/shairport-sync";
       group = "shairport";
-      extraGroups = [ "audio" "netdev" ];
+      extraGroups = [ "audio" ];
     };
     users.groups.shairport = {};
   
@@ -48,6 +48,16 @@
 
   # enable avahi
   services.avahi.enable = true;
+
+  # add shairport-sync dbus package to dbus config
+  services.dbus.packages = [
+    shairport-sync-airplay2/etc/dbus-1/system.d
+    shairport-sync-airplay2/share/dbus-1/system.d
+    shairport-sync-airplay2/share/dbus-1/system-services
+    shairport-sync-airplay2/etc/dbus-1/session.d
+    shairport-sync-airplay2/share/dbus-1/session.d
+    shairport-sync-airplay2/share/dbus-1/services
+  ];
 
   # setup resmaple for garbage  usb DAC compatibility :)
   environment.etc."asound.conf".text = ''
