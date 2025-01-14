@@ -93,8 +93,6 @@
         ExecStart = "${pkgs.nqptp}/bin/nqptp";
         Restart = "always";
         RestartSec = "5s";
-        User = "shairport";
-        Group = "shairport";
       };
     };
     outdoor-speakers = {
