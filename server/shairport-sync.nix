@@ -31,7 +31,7 @@
   ];
 
   # Enable ALSA
-  sound.enable = true;
+  hardware.alsa.enable = true;
 
   # Setup resample for USB DAC compatibility
   environment.etc."asound.conf".text = ''
