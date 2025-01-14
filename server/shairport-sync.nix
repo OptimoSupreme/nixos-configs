@@ -50,7 +50,7 @@
   services.avahi.enable = true;
 
   # add shairport-sync dbus package to dbus config
-  services.dbus.packages = [ shairport-sync-airplay2 ];
+  services.dbus.packages = [ pkgs.shairport-sync-airplay2 ];
 
   # setup resmaple for garbage  usb DAC compatibility :)
   environment.etc."asound.conf".text = ''
