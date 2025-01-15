@@ -9,7 +9,7 @@
       createHome     = true;
       home           = "/var/lib/shairport-sync";
       group          = "shairport";
-      extraGroups    = [ "pulse-access" ]
+      extraGroups    = [ "pulse-access" ];
     };
     groups.shairport = {};
   };
