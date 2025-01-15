@@ -1,14 +1,12 @@
 { config, pkgs, ... }:
 
 {
-  # enable pipewire with alsa and pulse support
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
+  # enable pulseaudio
+  services.pipewire.enable = false;
+  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio.support32Bit = true;
+
+  nixpkgs.config.pulseaudio = true;
   
   # enable shairport-sync module
   services.shairport-sync.enable = true;
