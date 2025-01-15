@@ -7,7 +7,8 @@
       ./hardware-configuration.nix
       ./network_services.nix
       ./media_server.nix
-      ./shairport-sync.nix
+      # ./shairport-sync.nix
+      ./simple-shairport.nix
     ];
 
   # Boot configuration

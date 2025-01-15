@@ -38,6 +38,7 @@
   # packages
   environment = {
     systemPackages = with pkgs; [
+      alsa-utils
       nqptp
       shairport-sync-airplay2
     ];
