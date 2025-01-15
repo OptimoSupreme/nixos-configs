@@ -8,7 +8,7 @@
       createHome = true;
       home = "/var/lib/shairport-sync";
       group = "shairport";
-      extraGroups = [ "audio" ];
+      extraGroups = [ "pulse-access" ];
     };
     users.groups.shairport = {};
   
