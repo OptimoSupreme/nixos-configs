@@ -46,15 +46,13 @@
   # enable pulseaudio
   services.pipewire.enable = false;
   hardware.pulseaudio.enable = true;
-  hardware.pulseaudio.systemWide = true;
   hardware.pulseaudio.support32Bit = true;
+  hardware.pulseaudio.systemWide = true;
 
   # enable avahi
   services.avahi = {
     enable = true;
     allowInterfaces = [ "enp2s0" ];
-    openFirewall = true;
-    publish.enable = true;
   };
 
   systemd.services = {
@@ -72,8 +70,8 @@
       description = "Outdoor speakers shairport-sync instance";
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        User = "shairport";
-        Group = "shairport";
+        User = "root";
+        Group = "root";
         # ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
         ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -v -o pa";
 
@@ -83,8 +81,8 @@
     #   description = "Dining room shairport-sync instance";
     #   wantedBy = [ "multi-user.target" ];
     #   serviceConfig = {
-    #     User = "shairport";
-    #     Group = "shairport";
+    #     User = "root";
+    #     Group = "root";
     #     ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
     #   };
     # };
