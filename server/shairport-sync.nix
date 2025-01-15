@@ -47,7 +47,7 @@
     };
   };
   
-  # enable Avahi module
+  # enable Avahi
   services.avahi = {
     enable = true;
     publish.enable = true;
