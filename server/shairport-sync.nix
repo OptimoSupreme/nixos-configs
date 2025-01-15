@@ -1,17 +1,22 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-  # add shairport-sync user
-    users.users.shairport = {
-      description = "Shairport user";
-      isSystemUser = true;
-      createHome = true;
-      home = "/var/lib/shairport-sync";
-      group = "shairport";
-      extraGroups = [ "pulse-access" ];
+  # user and group
+  users = {
+    users.shairport = {
+      description    = "Shairport user";
+      isSystemUser   = true;
+      createHome     = true;
+      home           = "/var/lib/shairport-sync";
+      group          = "shairport";
+      extraGroups    = [ "audio" "pulse-access" ]
+        ++ lib.optional (config.hardware.pulseaudio.enable 
+                         || config.services.pipewire.pulse.enable)
+                        "pulse";
     };
-    users.groups.shairport = {};
-  
+    groups.shairport = {};
+  };
+
   # open firewall ports
   networking.firewall = {
     interfaces."enp2s0" = {
@@ -35,30 +40,21 @@
     };
   };
 
-  # packages
-  environment = {
-    systemPackages = with pkgs; [
-      alsa-utils
-      nqptp
-      shairport-sync-airplay2
-    ];
-  };
-
-  # enable pipewire with alsa support
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  # enable avahi
+  # enable pulseaudio
+  services.pipewire.enable = false;
+  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio.support32Bit = true;
+  hardware.pulseaudio.systemWide = true;
+  
+  # enable Avahi
   services.avahi = {
     enable = true;
+    publish.enable = true;
+    publish.userServices = true;
     allowInterfaces = [ "enp2s0" ];
   };
 
+  # systemd services
   systemd.services = {
     nqptp = {
       description = "Network Precision Time Protocol for Shairport Sync";
@@ -72,23 +68,28 @@
     };
     outdoor-speakers = {
       description = "Outdoor speakers shairport-sync instance";
-      wantedBy = [ "multi-user.target" ];
+      after       = [ "network.target" "avahi-daemon.service" ];
       serviceConfig = {
-        User = "root";
-        Group = "root";
-        # ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
-        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -v -o alsa";
-
+        User             = "shairport";
+        Group            = "shairport";
+        # ExecStart = "${pkgs.shairport-sync-airplay2}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
+        ExecStart        = ''
+          ${pkgs.shairport-sync-airplay2}/bin/shairport-sync \
+            -v \
+            -o pa -- -d "alsa_output.usb-Generic_USB_Audio_20210726905926-00.analog-stereo"
+        '';
+        Restart          = "on-failure";
+        RuntimeDirectory = "shairport-sync";
       };
     };
-    # dining-room = {
-    #   description = "Dining room shairport-sync instance";
-    #   wantedBy = [ "multi-user.target" ];
-    #   serviceConfig = {
-    #     User = "root";
-    #     Group = "root";
-    #     ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
-    #   };
-    # };
+  };
+
+  # packages
+  environment = {
+    systemPackages = with pkgs; [
+      alsa-utils
+      nqptp
+      shairport-sync-airplay2
+    ];
   };
 }
