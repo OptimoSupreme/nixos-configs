@@ -67,6 +67,23 @@
         RestartSec = "5s";
       };
     };
+    dining-room = {
+      description = "Dining room speakers shairport-sync instance";
+      after       = [ "network.target" "avahi-daemon.service" ];
+      serviceConfig = {
+        User             = "shairport";
+        Group            = "shairport";
+        # ExecStart = "${pkgs.shairport-sync-airplay2}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
+        ExecStart        = ''
+          ${pkgs.shairport-sync-airplay2}/bin/shairport-sync \
+            -v \
+            -a "Dining Room"
+            -o pa -- -d "alsa_output.usb-Generic_USB_Audio_20210726905926-00.analog-stereo"
+        '';
+        Restart          = "on-failure";
+        RuntimeDirectory = "shairport-sync";
+      };
+    };
     outdoor-speakers = {
       description = "Outdoor speakers shairport-sync instance";
       after       = [ "network.target" "avahi-daemon.service" ];
@@ -78,28 +95,12 @@
           ${pkgs.shairport-sync-airplay2}/bin/shairport-sync \
             -v \
             -a "Outdoor Speakers"
-            -o pa -- -d "alsa_output.usb-Generic_USB_Audio_20210726905926-00.analog-stereo"
+            -o pa -- -d "alsa_output.usb-Generic_USB_Audio_20210726905926-00.analog-stereo.2"
         '';
         Restart          = "on-failure";
         RuntimeDirectory = "shairport-sync";
       };
     };
-    # dining-room = {
-    #   description = "Dining room shairport-sync instance";
-    #   after       = [ "network.target" "avahi-daemon.service" ];
-    #   serviceConfig = {
-    #     User             = "shairport";
-    #     Group            = "shairport";
-    #     ExecStart        = ''
-    #       ${pkgs.shairport-sync-airplay2}/bin/shairport-sync \
-    #         -v \
-    #         -a "Dining Room"
-    #         -o pa -- -d "alsa_output.usb-Generic_USB_Audio_20210726905926-00.analog-stereo.2"
-    #     '';
-    #     Restart          = "on-failure";
-    #     RuntimeDirectory = "shairport-sync";
-    #   };
-    # };
   };
 
   # packages
