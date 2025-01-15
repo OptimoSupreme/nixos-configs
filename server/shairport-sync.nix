@@ -52,7 +52,7 @@
   # enable avahi
   services.avahi = {
     enable = true;
-    allowInterfaces = "enp2s0";
+    allowInterfaces = [ "enp2s0" ];
     openFirewall = true;
     publish.enable = true;
   };
