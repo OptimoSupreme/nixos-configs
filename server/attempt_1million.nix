@@ -9,7 +9,7 @@
       createHome     = true;
       home           = "/var/lib/shairport-sync";
       group          = "shairport";
-      extraGroups    = [ "audio" ]
+      extraGroups    = [ "audio" "pulse-access" ]
         ++ lib.optional (config.hardware.pulseaudio.enable 
                          || config.services.pipewire.pulse.enable)
                         "pulse";
