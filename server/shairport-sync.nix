@@ -39,9 +39,11 @@
 
   # enable pulseaudio
   services.pipewire.enable = false;
-  hardware.pulseaudio.enable = true;
-  hardware.pulseaudio.support32Bit = true;
-  hardware.pulseaudio.systemWide = true;
+  hardware = {
+    pulseaudio.enable = true;
+    pulseaudio.support32Bit = true;
+    pulseaudio.systemWide = true;
+  };
   
   # enable Avahi
   services.avahi = {
