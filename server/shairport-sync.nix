@@ -45,9 +45,13 @@
   };
 
   # enable pulseaudio
-  services.pipewire.enable = false;
-  hardware.pulseaudio.enable = true;
-  hardware.pulseaudio.support32Bit = true;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true; # if not already enabled
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
 
   # enable avahi
   # services.avahi.enable = true;
