@@ -37,6 +37,15 @@
     };
   };
 
+  # packages
+  environment = {
+    systemPackages = with pkgs; [
+      alsa-utils
+      nqptp
+      shairport-sync-airplay2
+    ];
+  };
+
   # enable pulseaudio
   services.pipewire.enable = false;
   hardware = {
@@ -73,7 +82,7 @@
       serviceConfig = {
         User             = "shairport";
         Group            = "shairport";
-        ExecStart = "${pkgs.shairport-sync-airplay2}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
+        ExecStart = "${pkgs.shairport-sync-airplay2}/bin/shairport-sync -c /etc/dining_room.conf";
         Restart          = "on-failure";
         RuntimeDirectory = "shairport-sync";
       };
@@ -84,21 +93,42 @@
       serviceConfig = {
         User             = "shairport";
         Group            = "shairport";
-        ExecStart = "${pkgs.shairport-sync-airplay2}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
+        ExecStart = "${pkgs.shairport-sync-airplay2}/bin/shairport-sync -c /etc/outdoor_speakers.conf";
         Restart          = "on-failure";
         RuntimeDirectory = "shairport-sync";
       };
     };
   };
 
-  # packages
-  environment = {
-    systemPackages = with pkgs; [
-      alsa-utils
-      nqptp
-      shairport-sync-airplay2
-    ];
-  };
+  # write shairport-sync configs
+  environment.etc."dining_room.conf".text = ''
+    general =
+    {
+      name = "Dining Room";
+      output_backend = "pa";
+      port = 7000;
+      airplay_device_id_offset = 0;
+    };
+
+    pa =
+    {
+      sink = "alsa_output.usb-Generic_USB_Audio_20210726905926-00.analog-stereo";
+    };
+  '';
+  environment.etc."outdoor_speakers.conf".text = ''
+    general =
+    {
+      name = "Outdoor Speakers";
+      output_backend = "pa";
+      port = 7001;
+      airplay_device_id_offset = 1;
+    };
+
+    pa =
+    {
+      sink = "alsa_output.usb-Generic_USB_Audio_20210726905926-00.analog-stereo.2";
+    };
+  '';
 }
 
 # run `sudo -u pulse PULSE_RUNTIME_PATH=/run/pulse pactl list sinks short` to display available sinks
