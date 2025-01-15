@@ -8,7 +8,7 @@
       ./network_services.nix
       ./media_server.nix
       # ./shairport-sync.nix
-      ./simple-shairport.nix
+      ./attempt_1million.nix
     ];
 
   # Boot configuration
