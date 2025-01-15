@@ -76,7 +76,7 @@
         User = "root";
         Group = "root";
         # ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
-        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -v -o pa";
+        ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -v -o alsa";
 
       };
     };
