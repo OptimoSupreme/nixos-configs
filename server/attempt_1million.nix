@@ -51,6 +51,7 @@
     enable = true;
     publish.enable = true;
     publish.userServices = true;
+    allowInterfaces = [ enp2s0 ];
   };
 
   # systemd services
