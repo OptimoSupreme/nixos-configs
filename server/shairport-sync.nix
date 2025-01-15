@@ -78,6 +78,7 @@
     };
     dining-room = {
       description = "Dining room speakers shairport-sync instance";
+      wantedBy = [ "multi-user.target" ];
       after       = [ "network.target" "avahi-daemon.service" ];
       serviceConfig = {
         User             = "shairport";
@@ -89,6 +90,7 @@
     };
     outdoor-speakers = {
       description = "Outdoor speakers shairport-sync instance";
+      wantedBy = [ "multi-user.target" ];
       after       = [ "network.target" "avahi-daemon.service" ];
       serviceConfig = {
         User             = "shairport";
