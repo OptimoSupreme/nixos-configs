@@ -72,20 +72,15 @@
         User             = "shairport";
         Group            = "shairport";
         # ExecStart = "${pkgs.shairport-sync-airplay2}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
-        ExecStart        = "${pkgs.shairport-sync-airplay2}/bin/shairport-sync -v -o pa";
+        ExecStart        = ''
+          ${pkgs.shairport-sync-airplay2}/bin/shairport-sync \
+            -v \
+            -o pa -- -d "alsa_output.usb-Generic_USB_Audio_20210726905926-00.analog-stereo"
+        '';
         Restart          = "on-failure";
         RuntimeDirectory = "shairport-sync";
       };
     };
-    # dining-room = {
-    #   description = "Dining room shairport-sync instance";
-    # after       = [ "network.target" "avahi-daemon.service" ];
-    #   serviceConfig = {
-    #     User = "root";
-    #     Group = "root";
-    #     ExecStart = "${pkgs.shairport-sync}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
-    #   };
-    # };
   };
 
   # packages
