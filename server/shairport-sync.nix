@@ -45,7 +45,9 @@
   };
 
   # enable pulseaudio
+  services.pipewire.enable = false;
   hardware.pulseaudio.enable = true;
+  hardware.pulseaudio.support32Bit = true;
 
   # enable avahi
   # services.avahi.enable = true;
