@@ -51,7 +51,7 @@
   hardware.pulseaudio.support32Bit = true;
 
   # enable avahi
-  # services.avahi.enable = true;
+  services.avahi.enable = true;
 
   systemd.services = {
     nqptp = {
