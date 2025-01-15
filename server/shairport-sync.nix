@@ -74,14 +74,6 @@
         User             = "shairport";
         Group            = "shairport";
         ExecStart = "${pkgs.shairport-sync-airplay2}/bin/shairport-sync -c /srv/shairport-sync/dining_room.conf";
-        # ExecStart        = ''
-        #   ${pkgs.shairport-sync-airplay2}/bin/shairport-sync \
-        #     -v \
-        #     -a "Dining Room" \
-        #     -p 7000 \
-        #     --airplay_device_id_offset=0 \
-        #     -o pa -- -d "alsa_output.usb-Generic_USB_Audio_20210726905926-00.analog-stereo"
-        # '';
         Restart          = "on-failure";
         RuntimeDirectory = "shairport-sync";
       };
