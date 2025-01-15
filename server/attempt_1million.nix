@@ -71,8 +71,8 @@
       serviceConfig = {
         User             = "shairport";
         Group            = "shairport";
-        # ExecStart = "${shairport-sync-airplay2}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
-        ExecStart        = "${shairport-sync-airplay2}/bin/shairport-sync -v -o pa";
+        # ExecStart = "${pkgs.shairport-sync-airplay2}/bin/shairport-sync -c /srv/shairport-sync/outdoor_speakers.conf";
+        ExecStart        = "${pkgs.shairport-sync-airplay2}/bin/shairport-sync -v -o pa";
         Restart          = "on-failure";
         RuntimeDirectory = "shairport-sync";
       };
