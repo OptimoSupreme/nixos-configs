@@ -133,6 +133,6 @@
   '';
 }
 
-# run `sudo -u pulse PULSE_RUNTIME_PATH=/run/pulse pactl list sinks short` to display available sinks
+# run `sudo -u pulse pactl list sinks short` to display available sinks
 # run `sudo -u pulse alsamixer` to adjust volume levels
 # run `sudo alsactl store` so save the volume levels persistently
