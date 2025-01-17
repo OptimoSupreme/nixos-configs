@@ -6,3 +6,5 @@ Firewall
 DNS
 QoS
 Port Forwarding/UPnP
+VPN Entry
+DDClient
