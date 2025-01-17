@@ -1,0 +1,8 @@
+Services wanted:
+
+DHCP
+NAT
+Firewall
+DNS
+QoS
+Port Forwarding/UPnP
