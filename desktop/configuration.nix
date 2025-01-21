@@ -110,7 +110,7 @@
   };
   zramSwap = {
     enable = true;
-    memoryPercent = 50;
+    memoryPercent = 25;
   };
   virtualisation.libvirtd.enable = true;
 

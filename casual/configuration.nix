@@ -103,7 +103,7 @@
   };
   zramSwap = {
     enable = true;
-    memoryPercent = 40;
+    memoryPercent = 25;
   };
 
   # Environment and packages
