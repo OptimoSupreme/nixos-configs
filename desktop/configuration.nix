@@ -60,11 +60,14 @@
     };
     stateVersion = "24.11";
   };
-  nix.gc = {
-    automatic = true;
-    dates = "Tue 03:00";
-    options = "--delete-older-than +7";
-    persistent = true;
+  nix = {
+    settings.auto-optimise-store = true;
+    gc = {
+      automatic = true;
+      dates = "Tue 03:00";
+      options = "--delete-older-than +7";
+      persistent = true;
+    };
   };
 
   # Services
