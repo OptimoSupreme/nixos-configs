@@ -29,7 +29,6 @@
     wg-quick.interfaces.wg1 = {
       address = [ "10.73.114.193/32" "fc00:bbbb:bbbb:bb01::a:72c0/128" ];
       privateKey = "2CkEIKgMkA+rISZMcrAzJatz8GkIfqz/YzoMlbAj61Y=";
-      dns = [ "10.64.0.1" ];
       peers = [
         {
           publicKey = "LLkA2XSBvfUeXgLdMKP+OTQeKhtGB03kKskJEwlzAE8=";
