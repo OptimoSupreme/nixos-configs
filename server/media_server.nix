@@ -34,7 +34,7 @@
           {
             publicKey = "LLkA2XSBvfUeXgLdMKP+OTQeKhtGB03kKskJEwlzAE8=";
             endpoint = "43.225.189.162:51820";
-            allowedIPs = [ 10.73.114.193/32 ];
+            allowedIPs = [ "10.73.114.193/32" ];
           }
         ];
       };
