@@ -26,18 +26,18 @@
 
   # vpn interface
   networking = {
-    wireguard.interfaces = {
-      "wg1" = {
-        ips = [ "10.73.114.193/32" "fc00:bbbb:bbbb:bb01::a:72c0/128" ];
-        privateKey = "2CkEIKgMkA+rISZMcrAzJatz8GkIfqz/YzoMlbAj61Y=";
-        peers = [
-          {
-            publicKey = "LLkA2XSBvfUeXgLdMKP+OTQeKhtGB03kKskJEwlzAE8=";
-            endpoint = "43.225.189.162:51820";
-            allowedIPs = [ "10.73.114.193/32" ];
-          }
-        ];
-      };
+    wg-quick.interfaces.wg1 = {
+      address = [ "10.73.114.193/32" "fc00:bbbb:bbbb:bb01::a:72c0/128" ];
+      privateKey = "2CkEIKgMkA+rISZMcrAzJatz8GkIfqz/YzoMlbAj61Y=";
+      dns = [ "10.64.0.1" ];
+      peers = [
+        {
+          publicKey = "LLkA2XSBvfUeXgLdMKP+OTQeKhtGB03kKskJEwlzAE8=";
+          endpoint = "43.225.189.162:51820";
+          allowedIPs = [ "0.0.0.0/0" ];
+        }
+      ];
+      table = "off"; # Disable automatic routes
     };
     firewall.interfaces.enp2s0.allowedTCPPorts = [ 8080 ];
   };
