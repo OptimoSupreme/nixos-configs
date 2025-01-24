@@ -114,7 +114,6 @@
   environment = {
     systemPackages = with pkgs; [
       gnome-software
-      libre-baskerville
     ];
     gnome.excludePackages = with pkgs; [
       epiphany

@@ -122,7 +122,6 @@
   environment = {
     systemPackages = with pkgs; [
       ccid
-      libre-baskerville
       mint-cursor-themes
       nerdfonts
       opensc
@@ -156,6 +155,7 @@
         gimp
         git
         gnome-tweaks
+        libre-baskerville
         localsend
         nixpkgs-fmt
         microfetch
