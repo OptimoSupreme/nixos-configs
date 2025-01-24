@@ -25,19 +25,22 @@
   ];
 
   # vpn interface
-  networking.wireguard.interfaces = {
-    "wg1" = {
-      ips = [ "10.73.114.193/32" "fc00:bbbb:bbbb:bb01::a:72c0/128" ];
-      privateKey = "2CkEIKgMkA+rISZMcrAzJatz8GkIfqz/YzoMlbAj61Y=";
-      peers = [
-        {
-          publicKey = "LLkA2XSBvfUeXgLdMKP+OTQeKhtGB03kKskJEwlzAE8=";
-          endpoint = "43.225.189.162:51820";
-          allowedIPs = [];
-        }
-      ];
+  networking = {
+    wireguard.interfaces = {
+      "wg1" = {
+        ips = [ "10.73.114.193/32" "fc00:bbbb:bbbb:bb01::a:72c0/128" ];
+        privateKey = "2CkEIKgMkA+rISZMcrAzJatz8GkIfqz/YzoMlbAj61Y=";
+        peers = [
+          {
+            publicKey = "LLkA2XSBvfUeXgLdMKP+OTQeKhtGB03kKskJEwlzAE8=";
+            endpoint = "43.225.189.162:51820";
+            allowedIPs = [];
+          }
+        ];
+      };
     };
-  };  
+    firewall.interfaces.enp2s0.allowedTCPPorts = [ 8080 ];
+  };
   
   # applications
   environment.systemPackages = with pkgs; [ qbittorrent-nox jellyfin jellyfin-ffmpeg jellyfin-web ];
