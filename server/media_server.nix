@@ -24,6 +24,21 @@
     "d /srv/media/qbittorrent 0770 media media - -"
   ];
 
+  # vpn interface
+  networking.wireguard.interfaces = {
+    "wg1" = {
+      ips = [ "10.73.114.193/32" "fc00:bbbb:bbbb:bb01::a:72c0/128" ];
+      privateKey = "2CkEIKgMkA+rISZMcrAzJatz8GkIfqz/YzoMlbAj61Y=";
+      peers = [
+        {
+          publicKey = "LLkA2XSBvfUeXgLdMKP+OTQeKhtGB03kKskJEwlzAE8=";
+          endpoint = "43.225.189.162:51820";
+          allowedIPs = [];
+        }
+      ];
+    };
+  };  
+  
   # applications
   environment.systemPackages = with pkgs; [ qbittorrent-nox jellyfin jellyfin-ffmpeg jellyfin-web ];
   nixpkgs.config.permittedInsecurePackages = [ "dotnet-sdk-6.0.428" "aspnetcore-runtime-6.0.36" ];
