@@ -84,12 +84,16 @@
 
   # zoneminder and ssh services
   services = {
-    openssh.enable = true;
+    
+    openssh = {
+      enable = true;
+      openFirewall = true;
+    
     zoneminder = {
       enable = true;
-      port = 443;
-      storageDir = "/srv/security_cam";
       openFirewall = true;
+      port = 80;
+      storageDir = "/srv/security_cam";
       cameras = 2;
       database = {
         createLocally = true;
