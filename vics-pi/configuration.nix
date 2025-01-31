@@ -88,6 +88,7 @@
     openssh = {
       enable = true;
       openFirewall = true;
+    };
     
     zoneminder = {
       enable = true;
