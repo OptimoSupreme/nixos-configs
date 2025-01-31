@@ -17,14 +17,23 @@
     };
   };
 
-  # Connectivity
+  ########### NETWORKING ###########
+
+  # disable bluetooth
   hardware.bluetooth.enable = false;
-  networking.interfaces.enu1u1u1.useDHCP = false;
-  
+
+  # host settings
   networking = {
     hostName = "vics-pi";
-    firewall.enable = true;
     nameservers = [ "1.1.1.1" ];
+    firewall.enable = true;
+  };
+
+  # ethernet nic settings
+  networking.interfaces.enu1u1u1.useDHCP = true;
+  
+  # wifi nic settings
+  networking = {
     wireless = {
       enable = true;
       networks = {
@@ -35,20 +44,7 @@
     };
   };
 
-  # networking = {
-  #   hostName = "vics-pi";
-  #   interfaces.enu1u1u1 = {
-  #     ipv4.addresses = [{
-  #       address = "192.168.0.11";
-  #       prefixLength = 24;
-  #     }];
-  #   };
-  #   defaultGateway = {
-  #     address = "192.168.0.1";
-  #     interface = "enu1u1u1";
-  #   };
-  #   nameservers = [ "1.1.1.1" ];
-  #   firewall.enable = true;
+  ##################################
 
   # Time and locale settings
   time.timeZone = "US/Eastern";
@@ -74,7 +70,7 @@
     };
   };
 
-  # Modules and services
+  # swap
   zramSwap = {
     enable = true;
     memoryPercent = 25;
@@ -86,6 +82,7 @@
     priority = 1;
   } ];
 
+  # zoneminder and ssh services
   services = {
     openssh.enable = true;
     zoneminder = {
@@ -104,6 +101,7 @@
     };
   };
 
+  # create zoneminder required directories
   systemd.tmpfiles.rules = [
     "d /srv/security_cam 0755 zoneminder nginx -"
     "d /srv/security_cam/events 0755 zoneminder nginx -"
@@ -122,12 +120,11 @@
 
   # User configuration
   users.users = {
-    justin = {
+    vic = {
       isNormalUser = true;
-      description = "Justin";
+      description = "Vic";
       extraGroups = [ "wheel" ];
-      hashedPassword = "$y$j9T$ysd1ddoDwf45FD3utoC6P1$zGOrG6xwgpF9eB8xcUvIJqMJQK30KJSNain1v8DRd.C";
-      openssh.authorizedKeys.keys  = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC4fraADxE5Wx1AxuoCTpd9wkxSbwZhl2pi7iPvgvZCf justin@balrog" ];
+      password = "password";
     };
   };
 }
