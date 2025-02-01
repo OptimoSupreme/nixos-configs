@@ -22,24 +22,19 @@
   # disable bluetooth
   hardware.bluetooth.enable = false;
 
-  # host settings
   networking = {
     hostName = "vics-pi";
     nameservers = [ "1.1.1.1" ];
     firewall.enable = true;
-  };
 
-  # ethernet nic settings
-  networking.interfaces.enu1u1u1.useDHCP = true;
-  
-  # wifi nic settings
-  networking = {
-    wireless = {
-      enable = true;
-      networks = {
-        "Airnet" = {
-          psk = "over9000";
-        };
+    # Ethernet settings
+    interfaces.enu1u1u1.useDHCP = true;
+
+    # Wi-Fi settings
+    wireless.enable = true;
+    wireless.networks = {
+      "Airnet" = {
+        psk = "over9000";
       };
     };
   };
