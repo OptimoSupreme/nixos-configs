@@ -80,17 +80,27 @@
     
     zoneminder = {
       enable = true;
+      webserver = "nginx";
+      hostname = "zoneminder";
+      port = 8095;
       openFirewall = true;
-      port = 80;
-      storageDir = "/srv/security_cam";
-      cameras = 2;
+
       database = {
         createLocally = true;
+        host = "localhost";
         name = "zm";
         username = "zoneminder";
-        password = "zmpass";
-        host = "localhost";
+        password = "securepassword";
       };
+
+      cameras = 2;
+
+      storageDir = "/srv/security_cam";
+
+      extraConfig = ''
+        ZM_LOG_DEBUG=1
+        ZM_DB_SOCKET=/run/mysqld/mysqld.sock
+      '';
     };
   };
 
