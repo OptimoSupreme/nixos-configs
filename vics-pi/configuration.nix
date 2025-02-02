@@ -16,7 +16,7 @@
   hardware.bluetooth.enable = false;
 
   networking = {
-    hostName = "vics-pi";
+    hostName = "zoneminder";
     nameservers = [ "1.1.1.1" ];
     firewall.enable = true;
 
