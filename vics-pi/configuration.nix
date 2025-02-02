@@ -7,15 +7,8 @@
     ];
 
   # Boot configuration
-  boot = {
-    loader = {
-      grub.enable = false;
-      generic-extlinux-compatible.enable = true;
-    };
-    kernel.sysctl = {
-      "net.ipv4.ip_forward" = 1;
-    };
-  };
+  boot.loader.grub.enable = false;
+  boot.loader.generic-extlinux-compatible.enable = true;
 
   ########### NETWORKING ###########
 
@@ -33,8 +26,8 @@
     # Wi-Fi settings
     wireless.enable = true;
     wireless.networks = {
-      "Airnet" = {
-        psk = "over9000";
+      "Airnet" = {           # change wifi ssid here
+        psk = "over9000";    # change wifi password here
       };
     };
   };
