@@ -44,6 +44,11 @@
     hosts = {
       "10.0.0.45" = [ "morgoth" ];
     };
+    extraHosts = ''
+      192.168.122.148 node-1
+      192.168.122.79  node-2
+      192.168.122.132 node-3
+    '';
   };
 
   # Time and locale settings
