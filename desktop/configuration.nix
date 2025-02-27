@@ -42,13 +42,24 @@
     networkmanager.enable = true;
     hostName = "balrog";
     hosts = {
-      "10.0.0.45" = [ "morgoth" ];
+      "10.0.0.45"          = [ "morgoth" ];
+      # "192.168.122.180"    = [ "fleet" ];
+      # "192.168.122.63"     = [ "kibana-1" ];
+      # "192.168.122.62"     = [ "kibana-2" ];
+      # "192.168.122.151"    = [ "node-1" ];
+      # "192.168.122.230"    = [ "node-2" ];
+      # "192.168.122.5"      = [ "node-3" ];
+      # "192.168.122.188"    = [ "webserver" ];
+      # "192.168.122.247"    = [ "proxy" ];
+      "192.168.122.2"    = [ "nu-node-1" ];
+      "192.168.122.170"  = [ "nu-node-2" ];
+      "192.168.122.35"   = [ "nu-node-3" ];
+      "192.168.122.47"   = [ "nu-node-4" ];
+      "192.168.122.57"   = [ "nu-kibana-1" ];
+      "192.168.122.212"  = [ "nu-kibana-2" ];
+      "192.168.122.63"   = [ "nu-fleet-server" ];
+      "192.168.122.111"  = [ "nu-service" ];
     };
-    extraHosts = ''
-      192.168.122.148 node-1
-      192.168.122.79  node-2
-      192.168.122.132 node-3
-    '';
   };
 
   # Time and locale settings
@@ -154,6 +165,7 @@
       packages = with pkgs; [
         alpaca
         bottles
+        chromium
         discord
         dolphin-emu
         easyeffects
@@ -169,6 +181,7 @@
         slack
         spotify
         telegram-desktop
+        terminator
         vscodium
         zoom-us
         nixpkgs-fmt
