@@ -172,8 +172,8 @@
         gimp
         git
         gnome-tweaks
+        jellyfin
         libre-baskerville
-        localsend
         nixpkgs-fmt
         microfetch
         onlyoffice-desktopeditors
