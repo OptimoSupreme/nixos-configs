@@ -169,6 +169,7 @@
         discord
         dolphin-emu
         easyeffects
+        element-desktop
         gimp
         git
         gnome-tweaks
@@ -180,7 +181,6 @@
         ptyxis
         slack
         spotify
-        telegram-desktop
         terminator
         vscodium
         zoom-us
