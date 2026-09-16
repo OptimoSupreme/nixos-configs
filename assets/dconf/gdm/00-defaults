@@ -1,0 +1,14 @@
+[org/gnome/login-screen]
+cursor-theme='Breeze_Light'
+font-antialiasing='rgba'
+clock-format='12h'
+show-battery-percentage=true
+color-scheme='prefer-dark'
+accent-color='orange'
+
+[org/gnome/desktop/interface]
+cursor-theme='Breeze_Light'
+color-scheme='prefer-dark'
+accent-color='orange'
+clock-format='12h'
+show-battery-percentage=true

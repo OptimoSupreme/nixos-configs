@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>retrotv</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="stage">
+    <div class="safe">
+      <div class="top">
+        <!-- The "TV picture" quadrant: WeatherStar 4000+, tuned to home,
+             music on — and itself a channel (CH 02, Enter goes full
+             screen). launcher.js sets the iframe src (one place owns the
+             URL), but only once net.js says the internet is reachable:
+             until then the tile plays static (.nosignal) instead of an
+             offline error page. pointer-events off on the iframe so a
+             stray mouse can't focus it away from the launcher's key
+             handling; the wrapper takes the hover/click like any tile. -->
+        <a class="wtile nosignal" id="weather">
+          <iframe scrolling="no" allow="autoplay"></iframe>
+        </a>
+        <div class="info">
+          <button class="power" id="power" aria-label="Power off">
+            <!-- IEC 5010 power symbol: broken ring, bar through the gap -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="3" stroke-linecap="square">
+              <path d="M18.36 6.64a9 9 0 1 1-12.72 0"></path>
+              <line x1="12" y1="2" x2="12" y2="11"></line>
+            </svg>
+          </button>
+          <div class="hud" id="hud"></div>
+          <!-- Prevue-style promo card, rotated by promo.js: what's on the
+               games shelf and what's new on Jellyfin. Itself tunable as
+               the channel after the tiles: Enter/click opens the promoted
+               thing (game launches, media opens its Jellyfin page). -->
+          <div class="promo" id="promo">
+            <div class="phead" id="promoHead"></div>
+            <img class="part" id="promoArt" alt="" hidden>
+            <div class="ptitle" id="promoTitle"></div>
+            <div class="psub" id="promoSub"></div>
+            <div class="pfoot" id="promoFoot"></div>
+          </div>
+        </div>
+      </div>
+      <nav class="grid" id="grid"></nav>
+    </div>
+    <div class="noise" id="noise"><span class="label" id="noiseLabel"></span></div>
+  </div>
+  <!-- box-local config (Jellyfin, weather) via the bridge; a 404 here is
+       fine, the pages fall back without it -->
+  <script src="http://127.0.0.1:8788/local.js"></script>
+  <script src="tiles.js"></script>
+  <script src="net.js"></script>
+  <script src="launcher.js"></script>
+  <script src="promo.js"></script>
+  <script src="pad.js"></script>
+</body>
+</html>

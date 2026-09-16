@@ -1,0 +1,419 @@
+/* Prevue Channel look (the Amiga grid, mid-90s). Permanent layout rules:
+   - everything lives inside a 4:3 stage, letterboxed on wider outputs
+   - a 6% overscan margin inside the stage; console TVs eat the edges
+   - big type only, no 1px lines (interlace flicker)
+   - no fake CRT filters: the real tube supplies its own scanlines */
+
+/* Fan recreations of the actual Prevue Channel Amiga fonts (PrevueC and
+   H26f, redrawn as TrueType by Rudy Valencia): Grid for the guide cells,
+   List for text listings like the games page. */
+@font-face {
+  font-family: "Prevue Grid";
+  src: url("PrevueGrid.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Prevue List";
+  src: url("PrevueList.ttf") format("truetype");
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* sampled from a Prevue Channel capture */
+  --blue: #21218e;       /* guide cell */
+  --red: #8f2f28;        /* selected cell, info panel */
+  --edge: #c3c3ee;       /* cell outline periwinkle */
+  --yellow: #ffd94a;     /* channel numbers, clock */
+  --white: #f2f2f2;
+  --ink: #06060f;        /* the dark ground the cells sit on */
+  /* analog snow: SVG turbulence tile, shared by the tuning overlay and
+     the weather quadrant's no-signal state */
+  --static: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+html, body {
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  cursor: none;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Prevue Grid", "Arial Narrow", sans-serif;
+  color: var(--white);
+}
+
+.stage {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--ink);
+  overflow: hidden;
+}
+
+.safe {
+  position: absolute;
+  inset: 6%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6vh;
+}
+
+/* Top: WeatherStar feed left (as big as the grid leaves room for),
+   narrow info panel right */
+.top {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 1.6vh;
+}
+
+/* The weather quadrant is a channel like any other: same outline as the
+   guide cells, yellow when selected, Enter goes full screen */
+.wtile {
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  border: 0.5vh solid var(--edge);
+  border-radius: 1vh;
+  background: #000;
+  overflow: hidden;
+}
+
+.wtile iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  pointer-events: none; /* never steals focus from the launcher keys */
+}
+
+.wtile.sel {
+  border-color: var(--yellow);
+}
+
+/* No signal: static in the quadrant until the box is actually on the
+   internet — boot doesn't wait for the network, so the feed starts when
+   the network does (net.js gives the all-clear, launcher.js unsets this) */
+.wtile.nosignal iframe {
+  display: none;
+}
+
+.wtile.nosignal {
+  background-image: var(--static);
+  background-size: 42vh 42vh;
+  animation: snow 0.5s steps(6) infinite;
+}
+
+.info {
+  position: relative; /* anchors the .hud digit-entry overlay */
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.2vh;
+  background: var(--red);
+  border: 0.5vh solid var(--edge);
+  border-radius: 1vh;
+  text-shadow: 0.35vh 0.35vh 0 rgba(0, 0, 0, 0.85);
+}
+
+.hud {
+  font-size: 5vh;
+  color: var(--yellow);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* launcher only: the digit-entry readout (CH 4_) floats over the promo
+   card while typing, invisible otherwise (no space reserved). Scoped to
+   .info — the games page reuses .hud for its header clock, which must
+   stay put. */
+.info .hud {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.info .hud:not(:empty) {
+  background: var(--red);
+  border: 0.5vh solid var(--edge);
+  border-radius: 1vh;
+  padding: 0.8vh 1.6vh;
+}
+
+/* Promo card: the Prevue ad box — games on the shelf, new on Jellyfin.
+   A channel of its own: transparent border lights up yellow on select */
+.promo {
+  flex: 1;
+  min-height: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2vh;
+  padding: 0.6vh;
+  border: 0.5vh solid transparent;
+  border-radius: 1vh;
+  text-align: center;
+}
+
+.promo.sel {
+  border-color: var(--yellow);
+}
+
+.phead, .pfoot {
+  font-size: 2.4vh;
+  color: var(--yellow);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.part {
+  max-width: 82%;
+  max-height: 28vh;
+  border: 0.4vh solid var(--edge);
+  border-radius: 0.8vh;
+}
+
+.ptitle {
+  max-width: 92%;
+  font-size: 2.9vh;
+  line-height: 1.5;
+  text-transform: uppercase;
+  white-space: pre-line; /* the fallback card is multi-line */
+  overflow: hidden;
+}
+
+.psub {
+  font-size: 2.2vh;
+  letter-spacing: 0.1em;
+  color: var(--edge);
+  text-transform: uppercase;
+}
+
+.power {
+  flex: none;
+  align-self: flex-end;
+  width: 8vh;
+  height: 5.5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0.5vh solid var(--edge);
+  border-radius: 1vh;
+  background: var(--blue);
+  color: var(--yellow);
+  outline: none;
+  cursor: none;
+}
+
+.power svg {
+  width: 2.8vh;
+  height: 2.8vh;
+  filter: drop-shadow(0.3vh 0.3vh 0 rgba(0, 0, 0, 0.85));
+}
+
+/* Guide grid: single-line cells no taller than the font needs, a few
+   channels per row, splits staggered row to row so the dividers never
+   line up (launcher.js sets the widths) */
+.grid {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+}
+
+.gridrow {
+  flex: none;
+  display: flex;
+  gap: 1.2vh;
+}
+
+.tile {
+  flex-basis: 0; /* widths come purely from the flex-grow split weights */
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 1.8vh;
+  padding: 0.5vh 2vh;
+  border: 0.5vh solid var(--edge);
+  border-radius: 1vh;
+  background: var(--blue);
+  color: var(--white);
+  text-decoration: none;
+  text-shadow: 0.35vh 0.35vh 0 rgba(0, 0, 0, 0.85);
+}
+
+.tile .ch {
+  font-size: 3.8vh;
+  color: var(--yellow);
+}
+
+.tile .name {
+  font-size: 3.4vh;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.tile.sel,
+.row.sel {
+  background: var(--red);
+  border-color: var(--yellow);
+}
+
+.power.sel {
+  background: var(--red);
+  border-color: var(--yellow);
+  color: var(--white);
+}
+
+/* Games list */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  text-shadow: 0.35vh 0.35vh 0 rgba(0, 0, 0, 0.85);
+}
+
+.wordmark {
+  font-size: 5.5vh;
+  color: var(--yellow);
+}
+
+header .hud { font-size: 4.5vh; }
+
+main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.list::-webkit-scrollbar { display: none; }
+.list[hidden] { display: none; } /* author display:flex beats the UA hidden rule */
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 2.5vh;
+  padding: 1vh 2.4vh;
+  border: 0.5vh solid var(--edge);
+  border-radius: 1vh;
+  background: var(--blue);
+  flex: none;
+  font-family: "Prevue List", "Prevue Grid", sans-serif;
+  text-shadow: 0.35vh 0.35vh 0 rgba(0, 0, 0, 0.85);
+}
+
+.row .num {
+  font-size: 3.2vh;
+  color: var(--yellow);
+}
+
+.row .name {
+  flex: 1;
+  font-size: 3.2vh;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* console marker (GAMECUBE / PS2), right-aligned */
+.row .tag {
+  flex: none;
+  font-size: 2.6vh;
+  color: var(--yellow);
+}
+
+/* Status text (loading / empty / offline) */
+.status {
+  text-align: center;
+  font-size: 4.2vh;
+  letter-spacing: 0.15em;
+  text-shadow: 0.35vh 0.35vh 0 rgba(0, 0, 0, 0.85);
+  animation: blink 1.6s step-end infinite;
+}
+
+.substatus {
+  margin-top: 2vh;
+  text-align: center;
+  font-size: 2.6vh;
+  font-family: "Prevue List", sans-serif;
+  color: var(--edge);
+  animation: none;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.hint {
+  margin: 1.5vh 0 0;
+  text-align: center;
+  font-size: 2.4vh;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--edge);
+  text-shadow: 0.35vh 0.35vh 0 rgba(0, 0, 0, 0.85);
+}
+
+/* Tuning static: SVG turbulence tiles, jittered in big steps. Not a filter,
+   a transition — masks the page load like an analog tuner between channels. */
+.noise {
+  position: absolute;
+  inset: 0;
+  display: none;
+  z-index: 5;
+  background-image: var(--static);
+  background-size: 42vh 42vh;
+}
+
+.noise.on {
+  display: block;
+  animation: snow 0.5s steps(6) infinite;
+}
+
+/* channel banner over the static: the TV chip's OSD, not the guide's font
+   (same look as the bridge's volume OSD) */
+.noise .label {
+  position: absolute;
+  top: 6%;
+  right: 6%;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 5vh;
+  font-weight: bold;
+  color: #33ff66;
+  text-shadow: 0 0 1vh rgba(51, 255, 102, 0.8), 0.3vh 0.3vh 0 rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.1em;
+}
+
+@keyframes snow {
+  to { background-position: 42vh 21vh; }
+}
+
+/* Power press: the picture collapses to a bright line and fades, like a
+   tube losing its beam, then the screen sits black while the box halts. */
+.stage.off {
+  animation: crt-off 0.7s ease-in forwards;
+}
+
+@keyframes crt-off {
+  0%   { transform: scaleY(1);     filter: brightness(1); opacity: 1; }
+  55%  { transform: scaleY(0.006); filter: brightness(4); opacity: 1; }
+  100% { transform: scaleY(0.006); filter: brightness(4); opacity: 0; }
+}

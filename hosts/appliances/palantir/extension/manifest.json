@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "retrotv helper",
+  "version": "1.0",
+  "description": "Home key returns to the launcher and F13 (the remote's AI button) opens the games page; youtube.com gets a TV user agent so /tv serves the leanback UI.",
+  "permissions": ["declarativeNetRequest"],
+  "host_permissions": ["*://*.youtube.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["home.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["ua.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      { "id": "ua", "enabled": true, "path": "rules.json" }
+    ]
+  }
+}

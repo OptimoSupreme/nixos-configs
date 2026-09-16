@@ -1,0 +1,24 @@
+# Workaround for HP Spectre x360 15-ch0xx (board 83BB), Kaby Lake-G / Vega M GL.
+#
+# The PCIe Root Port above the AMD dGPU cannot bring the device back from
+# D3cold. amdgpu selects BOCO runtime PM, powers the chip fully off when idle,
+# and the next wake (any app enumerating GPUs -- Resources, Electron apps,
+# Vulkan probes) blocks the kernel for ~110s and leaves the GPU in state
+# "error" until reboot:
+#
+#   amdgpu 0000:01:00.0: not ready 65535ms after resume; giving up
+#   [drm:atom_op_jump] *ERROR* atombios stuck in loop for more than 20secs
+#   amdgpu 0000:01:00.0: amdgpu_device_ip_resume failed (-22)
+#
+# Upstream fix exists but was never merged -- it would have added
+# HP/83BB to bridge_d3_blacklist in drivers/pci/pci.c:
+#   "PCI/PM: Avoid D3cold for HP Spectre x360 Convertible 15-ch0xx PCIe Ports"
+#   https://patchwork.kernel.org/project/linux-pci/patch/20240629001743.1573581-1-superm1@kernel.org/
+#   (patchwork state: New, archived -- not in mainline as of kernel 7.1.x)
+#
+# Capping both the Root Port and the dGPU at D3hot keeps the link powered, so
+# the chip never fully powers off and never has to re-run the ATOM BIOS init
+# that hangs. D3hot runtime PM still applies, so most idle savings are kept.
+
+ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:00:01.0", ATTR{d3cold_allowed}="0"
+ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:01:00.0", ATTR{d3cold_allowed}="0"
