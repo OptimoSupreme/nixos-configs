@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>retrotv - video games</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="stage">
+    <div class="safe">
+      <header>
+        <div class="wordmark">VIDEO GAMES</div>
+        <div class="hud" id="hud">--:--</div>
+      </header>
+      <main>
+        <div class="status" id="status">SCANNING</div>
+        <div class="substatus" id="substatus"></div>
+        <div class="list" id="list" hidden></div>
+      </main>
+      <div class="hint">ARROWS SELECT &middot; ENTER PLAY &middot; BKSP BACK</div>
+    </div>
+    <div class="noise" id="noise"><span class="label" id="noiseLabel"></span></div>
+  </div>
+  <script src="games.js"></script>
+  <script src="pad.js"></script>
+</body>
+</html>

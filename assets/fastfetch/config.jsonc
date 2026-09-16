@@ -1,0 +1,68 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "source": "nixos_small",
+    "padding": {
+      "top": 0,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "display": {
+    "separator": "  ",
+    "color": {
+      "keys": "38;2;122;162;255",
+      "title": "38;2;122;162;255",
+      "output": "38;2;255;255;255"
+    }
+  },
+  "modules": [
+    {
+      "type": "os",
+      "key": "      System",
+      "format": "{name} {version-id}"
+    },
+    {
+      "type": "command",
+      "key": "      Kernel",
+      "shell": "/bin/sh",
+      "text": "printf 'Linux %s\\n' \"$(uname -r | sed 's/[+-].*//')\""
+    },
+    {
+      "type": "shell",
+      "key": "       Shell",
+      "format": "{process-name}"
+    },
+    {
+      "type": "command",
+      "key": "      Uptime",
+      "shell": "/bin/sh",
+      "text": "awk '{d=int($1/86400);h=int($1%86400/3600);m=int($1%3600/60);if(d>0)printf\"%d %s\\n\",d,(d==1?\"Day\":\"Days\");else if(h>0)printf\"%d %s\\n\",h,(h==1?\"Hour\":\"Hours\");else printf\"%d %s\\n\",m,(m==1?\"Minute\":\"Minutes\")}' /proc/uptime"
+    },
+    {
+      "type": "break"
+    },
+    {
+      "type": "command",
+      "key": "         CPU",
+      "shell": "/bin/sh",
+      "text": "grep -m1 'model name' /proc/cpuinfo | sed -E 's/.*: //; s/\\(R\\)//g; s/\\(TM\\)//g; s/ w\\/ .* Graphics//; s/ [0-9]+-Core Processor//; s/  +/ /g; s/ +$//'"
+    },
+    {
+      "type": "gpu",
+      "key": "         GPU",
+      "format": "{name}"
+    },
+    {
+      "type": "memory",
+      "key": "      Memory",
+      "format": "{used} / {total} ({percentage})"
+    },
+    {
+      "type": "command",
+      "key": "     Storage",
+      "shell": "/bin/sh",
+      "text": "df -h / | awk 'NR==2{printf \"%s / %s (%s)\", $3, $2, $5}'"
+    }
+  ]
+}
