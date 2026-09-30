@@ -19,11 +19,20 @@
         Locked = true;
       };
 
-      # Same Nimbus problem: rollouts flip sidebar.revamp to user-branch true
-      # seconds after startup, which injects the sidebar-button widget into
-      # nav-bar regardless of browser.uiCustomization.state.
+      # AI features default to blocked but stay user-changeable in Settings
+      # (Locked = false only sets default prefs). Default covers every feature,
+      # including ones Mozilla adds later, and flips each feature's own enable
+      # pref (browser.ml.chat.enabled, browser.ml.linkPreview.enabled, ...).
+      AIControls = {
+        Default = { Value = "blocked"; Locked = false; };
+      };
+
+      # The new sidebar (sidebar.revamp, default since Firefox 157) is left on:
+      # the pref is going away at the end of 2027. mozilla.cfg keeps its
+      # toolbar button from being added (open panels with Ctrl+B / Ctrl+H or
+      # View > Sidebar).
+      # Vertical tabs stay locked off so Nimbus rollouts can't switch them on.
       Preferences = {
-        "sidebar.revamp" = { Value = false; Status = "locked"; };
         "sidebar.verticalTabs" = { Value = false; Status = "locked"; };
         "signon.firefoxRelay.feature" = { Value = "disabled"; Status = "locked"; };
       };
@@ -45,7 +54,6 @@
         Default = "Google";
         Remove = [
           "Bing"
-          "Amazon.com"
           "DuckDuckGo"
           "eBay"
           "Wikipedia (en)"
