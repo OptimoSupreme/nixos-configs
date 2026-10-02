@@ -32,7 +32,7 @@ folder-children=['Utilities']
 
 [org/gnome/desktop/app-folders/folders/Utilities]
 name='Utilities'
-apps=['org.gnome.DiskUtility.desktop', 'org.gnome.baobab.desktop', 'btrfs-assistant.desktop', 'org.gnome.Extensions.desktop', 'org.gnome.Settings.desktop', 'org.gnome.Ptyxis.desktop', 'cups.desktop', 'nixos-manual.desktop', 'net.nokyan.Resources.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Papers.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.Decibels.desktop', 'org.gnome.Showtime.desktop']
+apps=['org.gnome.DiskUtility.desktop', 'org.gnome.baobab.desktop', 'btrfs-assistant.desktop', 'org.gnome.Extensions.desktop', 'org.gnome.Settings.desktop', 'org.gnome.Ptyxis.desktop', 'cups.desktop', 'nixos-manual.desktop', 'org.gnome.Resources.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Papers.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.Decibels.desktop', 'org.gnome.Showtime.desktop']
 
 [org/gnome/shell/app-switcher]
 current-workspace-only=true
