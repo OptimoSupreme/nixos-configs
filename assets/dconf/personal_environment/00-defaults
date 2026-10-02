@@ -2,6 +2,7 @@
 cursor-theme='Breeze_Light'
 color-scheme='prefer-dark'
 accent-color='orange'
+clock-format='12h'
 show-battery-percentage=true
 
 [org/gnome/desktop/wm/preferences]
@@ -57,9 +58,11 @@ old-files-age=uint32 3
 default-sort-order='type'
 
 [org/gtk/settings/file-chooser]
+clock-format='12h'
 sort-directories-first=true
 
 [org/gtk/gtk4/settings/file-chooser]
+clock-format='12h'
 sort-directories-first=true
 
 [org/gnome/TextEditor]
