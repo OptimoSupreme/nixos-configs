@@ -8,13 +8,6 @@ show-battery-percentage=true
 [org/gnome/desktop/wm/preferences]
 button-layout='appmenu:minimize,maximize,close'
 
-[org/gnome/desktop/background]
-picture-uri='file:///etc/backgrounds/default.png'
-picture-uri-dark='file:///etc/backgrounds/default.png'
-
-[org/gnome/desktop/screensaver]
-picture-uri='file:///etc/backgrounds/default.png'
-
 [org/gnome/settings-daemon/plugins/color]
 night-light-enabled=true
 night-light-schedule-automatic=true
