@@ -10,8 +10,8 @@
     ../../../modules/maintenance.nix          # Maintenance
     ../../../modules/fastfetch.nix            # Fastfetch
     ../../../modules/firefox.nix              # Firefox Config
-    ../../../modules/btrfs_snapshots.nix      # BTRFS Snapshots
     ../../../modules/tpm_decryption.nix       # TPM Decryption Setup Script
+    ../../../modules/secure_boot.nix          # Secure Boot (Lanzaboote)
     ../../../modules/personal_environment.nix # Personal Environment
   ];
 
