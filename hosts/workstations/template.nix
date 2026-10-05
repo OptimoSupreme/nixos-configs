@@ -12,6 +12,7 @@
     # ../../../modules/firefox.nix              # Firefox Config
     # ../../../modules/btrfs_snapshots.nix      # BTRFS Snapshots
     # ../../../modules/tpm_decryption.nix       # TPM Decryption Setup Script
+    # ../../../modules/secure_boot.nix          # Secure Boot (Lanzaboote, needs the UEFI lines below)
     # ../../../modules/general_environment.nix  # General Purpose Environment
     # ../../../modules/personal_environment.nix # Personal Environment
   ];

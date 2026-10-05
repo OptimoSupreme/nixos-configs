@@ -74,8 +74,9 @@ that it still evaluates.
 
 ## Installing a machine
 
-UEFI or legacy BIOS both boot it; Secure Boot has to be off, as it is for
-the installed system. Take the default menu entry unless the hardware
+UEFI or legacy BIOS both boot it; Secure Boot has to be off to boot it.
+A host with `secure_boot.nix` turns it back on after the install (see
+"Finishing the machine"). Take the default menu entry unless the hardware
 needs the latest kernel.
 
 ### 1. Calamares
@@ -127,7 +128,9 @@ Then, in the copy:
    - **Modules**: `maintenance.nix` on every host (upgrades, GC, flakes).
      `firefox.nix` and `fastfetch.nix` as wanted. `btrfs_snapshots.nix` on a
      btrfs install. `tpm_decryption.nix` only on an encrypted install; it
-     refuses to evaluate without a LUKS device. Exactly one environment:
+     refuses to evaluate without a LUKS device. `secure_boot.nix` on a UEFI
+     machine that should boot with Secure Boot on; it takes over from
+     systemd-boot, so keep the UEFI boot lines. Exactly one environment:
      `general_environment.nix` for a managed machine,
      `personal_environment.nix` for one of mine. They are siblings, never
      both.
@@ -155,7 +158,10 @@ Then, in the copy:
    ```
 
    `boot` rather than `switch`: on a fresh install a switch leaves the
-   display manager down until the reboot anyway. On the home LAN, add
+   display manager down until the reboot anyway. With `secure_boot.nix`
+   the first rebuild compiles Lanzaboote's `lzbt`, which no binary cache
+   carries, and the first boot reboots once more by itself (see "Finishing
+   the machine"). On the home LAN, add
    `--option http2 false` to the rebuild; cache.nixos.org is several times
    faster over parallel connections from here.
 
@@ -205,12 +211,29 @@ kept), or with `sudo nixos-rebuild switch --rollback`.
 
 ### 4. Finishing the machine
 
+- **Secure Boot**, with `secure_boot.nix`. The first boot into the repo
+  config generates the machine's own keys in `/var/lib/sbctl` (they never
+  leave it), stages them on the ESP, signs everything and reboots by
+  itself. systemd-boot enrolls the keys, alongside Microsoft's, on any boot
+  where the firmware is in **Setup Mode**; until then the machine simply
+  boots with Secure Boot off. To get there, `sudo systemctl reboot
+  --firmware-setup`, turn Secure Boot on and reset its keys to Setup Mode
+  (the wording varies by vendor; skip any option that also erases the dbx
+  revocation list), save and exit. Then check:
+
+  ```bash
+  sudo sbctl status   # Secure Boot: Enabled, Setup Mode: Disabled
+  sudo sbctl verify   # every file on the ESP signed, except the kernel-* ones
+  ```
+
+  A reinstall generates new keys, so it needs Setup Mode again.
 - **TPM unlock**, on an encrypted install, once, after the first boot into
-  the repo config: `sudo enable-tpm-decryption`. It asks for the LUKS
+  the repo config, and after Secure Boot is on if the host has it (turning
+  it on changes PCR 7): `sudo enable-tpm-decryption`. It asks for the LUKS
   passphrase and enrolls the TPM, bound to PCR 7 (the Secure Boot state);
   the passphrase stays as the fallback. If the disk stops unlocking, run it
-  again. Note that with Secure Boot off this protects a pulled drive, not
-  the machine itself.
+  again. Without Secure Boot this protects a pulled drive, not the machine
+  itself.
 - **Firmware updates** can wipe the UEFI boot entries; an HP BIOS update
   did on nazgul, and the firmware did not fall back to the default loader.
   The disk was intact. Recreate the entry, then boot normally:
