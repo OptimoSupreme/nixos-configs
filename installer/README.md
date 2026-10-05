@@ -41,13 +41,15 @@ nix build .#installer-iso
 ls -l result/iso/
 ```
 
-On a machine without nix the:
+On a machine without nix, build it in a container with podman:
 
 ```bash
-podman run --rm -v nixstore:/nix --security-opt label=disable \
-  -v "$PWD":/work:ro -v ~/Downloads:/out docker.io/nixos/nix:latest \
-  bash -c 'iso=$(nix --extra-experimental-features "nix-command flakes" \
-    build --no-link --print-out-paths "path:/work#installer-iso") && cp "$iso"/iso/*.iso /out/'
+podman container exists nixos-iso-build ||
+  podman create --name nixos-iso-build --security-opt label=disable \
+    -v "$PWD":/work:ro -v ~/Downloads:/out docker.io/nixos/nix:latest \
+    bash -c 'iso=$(nix --extra-experimental-features "nix-command flakes" \
+      build --no-link --print-out-paths "path:/work#installer-iso") && cp "$iso"/iso/*.iso /out/'
+podman start -a nixos-iso-build && podman rm nixos-iso-build
 ```
 
 `path:/work` (rather than the git URL nix would infer) means the copy on
@@ -56,6 +58,12 @@ from a clean, committed tree to ship exactly what's on `main`. The config
 filters `.git` out of the copy. `label=disable` keeps SELinux from
 relabeling the repo. Rootless podman maps the container's root to you, so
 the ISO that lands in `~/Downloads` is yours.
+
+Everything nix downloads lives in the container. It is removed only once
+the build and the copy into `~/Downloads` both succeed, which leaves just
+the ISO behind. If anything fails, the container stays; run the same block
+again and it restarts that container, keeping what it already downloaded.
+To give up instead, `podman rm nixos-iso-build`.
 
 Nothing compiles: the time is download plus squashfs compression. The
 image is a snapshot of the repo, so rebuild when the configs change enough
