@@ -1,12 +1,13 @@
 #### Workstation Template ####
 
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
 
     ## Select Modules
+    # inputs.nixos-hardware.nixosModules.changeme # Board quirks (github.com/NixOS/nixos-hardware)
     # ../../../modules/maintenance.nix          # Updates, GC, scrub, flakes
     # ../../../modules/fastfetch.nix            # Fastfetch on login
     # ../../../modules/firefox.nix              # Firefox policies
