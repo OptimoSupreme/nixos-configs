@@ -1,23 +1,26 @@
 # Installer ISO
 
 A bootable live image of this flake: my own desktop (`personal_environment`)
-with NixOS's graphical installer on it, and a copy of this repo in the live
-user's home. Boot it on a machine to be set up, install a stock NixOS with
-Calamares, then hand the machine over to the repo. This file is on the
-stick, so it is also the walkthrough for that.
+with NixOS's graphical installer on it, which clones this repo into the
+live user's home once it is online. Boot it on a machine to be set up,
+install a stock NixOS with Calamares, then hand the machine over to the
+repo. This file comes down with the clone, so it is also the walkthrough
+for that.
 
 ## What's on it
 
 - **The desktop nazgul and balrog run**: GNOME with the extensions, dconf
   defaults, Ptyxis, Codium, podman and libvirt, CAC support. Calamares is
   first in the dock and opens by itself at login.
-- **This repo.** `~/nixos-configs` in the live user's home is a
-  writable copy, made at boot, so Files shows it at once and it can be
-  built from as is. `/iso/nixos-configs` is the read-only original on the
-  stick. Both are the flake source as built, without `.git`.
-- **The locked nixpkgs**, in the store, so `nix` commands against that copy
-  resolve the flake's input without a download. Only `nixpkgs` is bundled;
-  a host on `nixpkgs-unstable` (gollum) still fetches.
+- **This repo, fresh from GitHub.** The stick carries no copy of it.
+  Once the network is up, `nixos-configs-clone.service` clones `main`
+  over HTTPS into `~/nixos-configs`, so the live session always starts
+  from the latest configs, however old the stick. Wired networks connect
+  by themselves; on WiFi, join from the top bar and the clone follows
+  within 15 seconds (the service retries until it gets through).
+  `systemctl status nixos-configs-clone` shows where it is. It is a real
+  git clone, so `git pull` refreshes it; build from it as `path:` (see
+  "Hand the machine to the repo").
 - **Two kernels in the boot menu.** The default entry is the LTS series
   with ZFS, as the installer profile ships it. The "(latest kernel)" entry
   is the newest stable kernel, for hardware LTS doesn't know yet, without
@@ -53,10 +56,9 @@ podman start -a nixos-iso-build && podman rm nixos-iso-build &&
   podman rmi docker.io/nixos/nix:latest
 ```
 
-`path:/work` (rather than the git URL nix would infer) means the copy on
-the ISO is the working tree as it is, untracked files included, so build
-from a clean, committed tree to ship exactly what's on `main`. The config
-filters `.git` out of the copy. `label=disable` keeps SELinux from
+`path:/work` (rather than the git URL nix would infer) builds the working
+tree as it is, untracked files included; only the installer's own config
+ends up in the image, never the repo. `label=disable` keeps SELinux from
 relabeling the repo. Rootless podman maps the container's root to you, so
 the ISO that lands in `~/Downloads` is yours.
 
@@ -68,9 +70,10 @@ keeping what it already downloaded. To give up instead,
 `podman rm nixos-iso-build && podman rmi docker.io/nixos/nix:latest`.
 
 Nothing compiles: the time is download plus squashfs compression. The
-image is a snapshot of the repo, so rebuild when the configs change enough
-to matter. Nothing builds it automatically; the weekly Action only checks
-that it still evaluates.
+repo comes from GitHub at boot, so an old stick still installs the latest
+configs; rebuild it only when the live system itself should change (the
+desktop, the kernels, a newer NixOS release). Nothing builds it
+automatically; the weekly Action only checks that it still evaluates.
 
 ## Installing a machine
 
@@ -104,15 +107,21 @@ to wifi.
 
 ### 2. Hand the machine to the repo
 
-On the installed machine, get the repo. The stick still has it: plug it
-back in, it mounts by its volume label, and copy `nixos-configs` off it to
-`~/nixos-configs`. Or clone from GitHub with a key that has access. A copy
-from the stick has no `.git`; that's fine for building, and it avoids a
-trap: nix reads a git checkout through git and ignores untracked files, so
-in a real clone the new host directory has to be `git add`ed before nix
-sees it.
+On the installed machine, clone the repo. The stock install has no git,
+so borrow it from nixpkgs for the clone; the repo config brings git for
+good:
 
-Then, in the copy:
+```bash
+nix-shell -p git --run 'git clone https://github.com/OptimoSupreme/nixos-configs.git ~/nixos-configs'
+```
+
+Build from it as `path:$HOME/nixos-configs`, never the bare
+`~/nixos-configs`. A bare path to a git checkout makes nix read it through
+git, and as root (under sudo) it then refuses a repo the user owns
+("repository path is not owned by current user"); it would also ignore
+the new, untracked host directory. `path:` takes the directory as it is.
+
+Then, in the clone:
 
 1. Create the host from the template. Groups are `hosts/workstations`,
    `hosts/appliances` and `hosts/servers`:
@@ -153,7 +162,7 @@ Then, in the copy:
 4. Build and stage the new system, then reboot into it:
 
    ```bash
-   sudo nixos-rebuild boot --flake ~/nixos-configs#<name>
+   sudo nixos-rebuild boot --flake path:$HOME/nixos-configs#<name>
    sudo systemctl reboot
    ```
 
@@ -200,10 +209,11 @@ Hosts pick the new lock up at their next daily pull. The same module runs
 a weekly garbage collection (generations older than 14 days) and a weekly
 store dedup.
 
-To apply a change now, from any clone or the stick copy:
+To apply a change now, from any clone (`path:` for the reason in
+"Hand the machine to the repo"):
 
 ```bash
-sudo nixos-rebuild switch --flake ~/nixos-configs#<name>
+sudo nixos-rebuild switch --flake path:$HOME/nixos-configs#<name>
 ```
 
 Roll back by picking an older generation in the boot menu (the last 10 are
@@ -271,17 +281,20 @@ session:
 cd ~/nixos-configs
 # create the host as above; for its hardware config:
 nixos-generate-config --root /mnt --show-hardware-config > hosts/<group>/<name>/hardware-configuration.nix
-sudo nixos-install --flake ~/nixos-configs#<name> --no-root-passwd
+sudo nixos-install --flake path:$HOME/nixos-configs#<name> --no-root-passwd
 sudo nixos-enter --root /mnt -c 'passwd <user>'    # the declared user has no password yet
 ```
 
-Then continue at "Updates". `~/nixos-configs` is a plain directory, so the
-new host directory needs no `git add`; don't `git init` it before building.
+Then continue at "Updates". The clone goes with the live session, so
+bring the new host directory over to a clone with push access, then
+commit and push it.
 
 ## Mind
 
-- The stick carries the whole repo. Nothing in it is secret, so the stick
-  needs no more care than any other install disk.
+- The stick carries no copy of the repo, and nothing in the repo is
+  secret anyway, so the stick needs no more care than any other install
+  disk. Without network there is no repo, but an install needs the
+  network regardless.
 - Physical access to the live stick is full access, by design: `nixos` has
   no password, sudo asks for none, and root can log in over ssh once it
   has been given a password.
