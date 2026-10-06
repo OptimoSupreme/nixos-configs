@@ -39,7 +39,7 @@
       nixosConfigurations = {
 
         ## My Workstations
-        # balrog = mkHost ./hosts/workstations/balrog; # not deployed yet
+        # balrog = mkHost ./hosts/workstations/balrog; # waiting on the Framework Desktop board
         nazgul = mkHost ./hosts/workstations/nazgul;
 
         ## Clients
