@@ -35,7 +35,7 @@
       nixosConfigurations = {
 
         ## My Workstations
-        # balrog = mkHost ./hosts/workstations/balrog;
+        # balrog = mkHost ./hosts/workstations/balrog; # not deployed yet
         nazgul = mkHost ./hosts/workstations/nazgul;
 
         ## Client Workstations
@@ -43,11 +43,11 @@
 
         ## Appliances
         gollum = mkHostOn nixpkgs-unstable ./hosts/appliances/gollum;
-        # osse = mkHost ./hosts/appliances/osse;
-        # palantir = mkHost ./hosts/appliances/palantir;
+        # osse = mkHost ./hosts/appliances/osse; # not deployed yet
+        # palantir = mkHost ./hosts/appliances/palantir; # not deployed yet
 
         ## Servers
-        # morgoth = mkHost ./hosts/servers/morgoth;
+        # morgoth = mkHost ./hosts/servers/morgoth; # runs Debian today
 
         ## Installer
         installer = mkHost ./installer;
