@@ -45,7 +45,7 @@
         installer = mkHost ./installer;
       };
 
-      # `nix build .#installer-iso` -> result/iso/nixos-configs-*.iso
+      # `nix build .#installer-iso` -> result/iso/nixos-gnome-*.iso
       packages.x86_64-linux.installer-iso =
         self.nixosConfigurations.installer.config.system.build.isoImage;
     };

@@ -1,6 +1,6 @@
 #### Installation Media ####
 
-{ config, lib, pkgs, inputs, modulesPath, ... }:
+{ config, lib, pkgs, modulesPath, ... }:
 
 {
   imports = [
@@ -59,24 +59,30 @@
   ## Override plain duplicate Firefox
   environment.systemPackages = [ (lib.hiPrio config.programs.firefox.finalPackage) ];
 
-  ## Copy repo to installation media (cleanSource drops .git, which a path: build carries)
-  isoImage.contents = [
-    { source = lib.cleanSource inputs.self; target = "/nixos-configs"; }
-  ];
-
-  ## Copy repo to home
-  systemd.services.nixos-configs-home = {
-    description = "Copy nixos-configs into the live user's home";
+  ## Clone the repo into the live user's home once the network is up, so the
+  ## stick always starts from the latest main. Retries until it succeeds, so
+  ## joining WiFi after login is fine.
+  systemd.services.nixos-configs-clone = {
+    description = "Clone nixos-configs into the live user's home";
     wantedBy = [ "multi-user.target" ];
-    before = [ "display-manager.service" ];
-    unitConfig.ConditionPathExists = "!/home/nixos/nixos-configs";
+    wants = [ "network-online.target" ];
+    after = [ "network-online.target" ];
+    path = [ pkgs.git ];
+    unitConfig = {
+      ConditionPathExists = "!/home/nixos/nixos-configs";
+      StartLimitIntervalSec = 0;
+    };
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
+      User = "nixos";
+      Restart = "on-failure";
+      RestartSec = 15;
     };
     script = ''
-      cp -r --no-preserve=mode /iso/nixos-configs /home/nixos/nixos-configs
-      chown -R nixos:users /home/nixos/nixos-configs
+      rm -rf /home/nixos/.nixos-configs.tmp
+      git clone https://github.com/OptimoSupreme/nixos-configs.git /home/nixos/.nixos-configs.tmp
+      mv /home/nixos/.nixos-configs.tmp /home/nixos/nixos-configs
     '';
   };
 
@@ -85,9 +91,6 @@
 
   ## Enable experimental features
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  ## Locked nixpkgs in the image, so the repo copy evaluates offline
-  system.extraDependencies = [ inputs.nixpkgs.outPath ];
 
   system.stateVersion = "26.05";
 }
