@@ -45,7 +45,7 @@ hardware.
   backlight (`/sys/class/backlight`, auto-detected) with a 2%-of-max floor so
   the slider can never black out the panel.
 - **Admin over ssh.** `ssh justin@osse.local` (avahi), by password; root has
-  no password and no ssh, and no keys live in the config (ssh.nix). helm
+  no password and no ssh, and no keys live in the config (modules/appliance.nix). helm
   kept a separate locked kiosk user; here the kiosk runs as justin, the way
   palantir's does.
 
@@ -93,7 +93,7 @@ Buy a single-GPU box. Then, from a clone of this repo on it
    (`passwd` to change it; nothing in the repo).
 2. Drop the installed machine's `hardware-configuration.nix` into this
    directory, then settle the choices in `default.nix`: kernel (latest is
-   set; LTS is the other line), the GPU's extras (templates/workstations, "GPU"),
+   set; LTS is the other line), the GPU's extras (hosts/workstations/template.nix, "GPU"),
    and the panel mode (below).
 3. Register `osse = mkHost ./hosts/appliances/osse;` in `flake.nix` (the line
    is there, commented), join the boat's WiFi
@@ -125,8 +125,14 @@ sudo systemctl reboot                        # apply it
 Roll back by picking the previous generation in the systemd-boot menu (hold
 a key at power-on; the last 10 are kept). Package updates arrive with the
 repo's weekly `flake.lock` bump; the Android build only moves when the pin
-in `default.nix` is edited (the comment there says where the newest build
-is listed).
+in `default.nix` (`android.build` and the two hashes) is edited. The newest
+build is the last entry of these two lists (`filename`; `id` is the zip's
+sha256):
+
+- https://waydroid-atv.github.io/ota/a16-qpr2/system/lineage/waydroid_x86_64/GAPPS.json
+- https://waydroid-atv.github.io/ota/a16-qpr2/vendor/waydroid_x86_64/MAINLINE.json
+
+The first rebuild after a bump pulls ~1.6 GB into the store.
 
 ## Hardware profile
 
