@@ -53,7 +53,7 @@ in
     ../../../modules/fastfetch.nix
   ];
 
-  ## GPU: not chosen yet (mesa only; add the GPU's extras from template.nix once the box exists)
+  ## GPU: not chosen yet (mesa only; add the GPU's extras from workstation_template.nix once the box exists)
   hardware.graphics.enable = true;
 
   ## Boot

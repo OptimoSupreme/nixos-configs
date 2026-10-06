@@ -10,11 +10,15 @@ it may be secret, and no IPs, passwords, or tokens belong here.
 - `flake.nix` registers hosts with `mkHost ./hosts/<group>/<name>`. Jovian/Steam
   hosts use `mkHostOn nixpkgs-unstable`; everything else tracks `nixos-26.05`.
   The attribute name must equal `networking.hostName`.
-- `hosts/{workstations,appliances,servers}/<name>/` holds `default.nix` plus the
-  unmodified `nixos-generate-config` output as `hardware-configuration.nix`.
+- `hosts/{workstations,clients,appliances,servers}/<name>/` holds `default.nix`
+  plus the unmodified `nixos-generate-config` output as
+  `hardware-configuration.nix`. `workstations/` are Justin's desktops and
+  laptops; `clients/` are machines he manages for other people. Client hosts
+  import `general_environment.nix` and are named `<owner>-<kind>`
+  (`jeff-laptop`); Justin's hosts get names of their own.
   Hosts commented out of `flake.nix` are missing hardware configs; they are
   debt, not dead. Keep them in mind when changing modules they import.
-- `hosts/workstations/template.nix` is the menu a new workstation starts from.
+- `hosts/workstation_template.nix` is the menu a new desktop host starts from.
 - `modules/` is a flat set of opt-in modules. `desktop.nix` is the shared GNOME
   block; `general_environment.nix` (client machines) and
   `personal_environment.nix` (Justin's) each import it and add their own
@@ -47,9 +51,9 @@ except `hardware-configuration.nix`, which stays exactly as generated.
   a plain assignment. Do not add custom options until three hosts need to vary
   the same thing.
 - Templates and the hosts built from them stay in sync both ways. Editing
-  `template.nix` means checking `nazgul` and `jeff-laptop` for the same change;
-  editing a section in a workstation that the template also has means checking
-  whether the template should change too.
+  `workstation_template.nix` means checking `nazgul` and `jeff-laptop` for the
+  same change; editing a section in a workstation that the template also has
+  means checking whether the template should change too.
 - Every registered host must still evaluate after a change, not just the one
   being edited.
 - No home-manager. Per-user settings are system-level dconf keyfiles in
