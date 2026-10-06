@@ -15,8 +15,11 @@ it may be secret, and no IPs, passwords, or tokens belong here.
   Hosts commented out of `flake.nix` are missing hardware configs; they are
   debt, not dead. Keep them in mind when changing modules they import.
 - `hosts/workstations/template.nix` is the menu a new workstation starts from.
-- `modules/` is a flat set of opt-in modules. `general_environment.nix` and
-  `personal_environment.nix` are mutually exclusive; a host imports exactly one.
+- `modules/` is a flat set of opt-in modules. `desktop.nix` is the shared GNOME
+  block; `general_environment.nix` (client machines) and
+  `personal_environment.nix` (Justin's) each import it and add their own
+  differences. A host imports exactly one of the two environments, never
+  `desktop.nix` directly. Headless hosts import `appliance.nix` instead.
 - `assets/` holds static files modules reference by relative path.
 - `installer/` builds the live ISO. `installer/README.md` is the install,
   update, Secure Boot and TPM manual; link to it rather than repeating it.
@@ -24,9 +27,9 @@ it may be secret, and no IPs, passwords, or tokens belong here.
 ## Writing Nix
 
 **Section order.** Low level first, ending with the user-facing pieces:
-imports, hardware, boot, kernel, swap, networking, timezone and locale, users,
-environment and services, packages, host-specific quirks, and
-`system.stateVersion` last. Within `imports`, `./hardware-configuration.nix`
+imports, hardware (GPU, firmware, udev quirks), boot, kernel, swap,
+networking, timezone and locale, users, environment and services, packages,
+host-specific quirks, and `system.stateVersion` last. Within `imports`, `./hardware-configuration.nix`
 comes first, then modules under a `## Select Modules` heading.
 
 **Comments.** Each file opens with a `#### Title ####` banner. Each block gets
@@ -34,9 +37,8 @@ a short `##` title and nothing more. Add an inline comment only when the
 reason a line exists is not obvious from the line itself, and keep it to a few
 words. No narrative comments, no restating what the code does.
 
-**Formatting.** The standard is nixfmt (`nix fmt`). Run it on files you create.
-Do not reformat existing files beyond your own change; the repo-wide reformat
-waits until the `restructure` branch is merged or dropped.
+**Formatting.** nixfmt, via `nix fmt`. Run it on every `.nix` file you touch
+except `hardware-configuration.nix`, which stays exactly as generated.
 
 **Fleet rules.**
 - A host file holds only what is unique to that machine: hardware, hostname,
