@@ -10,8 +10,12 @@ it may be secret, and no IPs, passwords, or tokens belong here.
 - `flake.nix` registers hosts with `mkHost ./hosts/<group>/<name>`. Jovian/Steam
   hosts use `mkHostOn nixpkgs-unstable`; everything else tracks `nixos-26.05`.
   The attribute name must equal `networking.hostName`.
-- `hosts/{workstations,appliances,servers}/<name>/` holds `default.nix` plus the
-  unmodified `nixos-generate-config` output as `hardware-configuration.nix`.
+- `hosts/{workstations,clients,appliances,servers}/<name>/` holds `default.nix`
+  plus the unmodified `nixos-generate-config` output as
+  `hardware-configuration.nix`. `workstations/` are Justin's desktops and
+  laptops; `clients/` are machines he manages for other people. Client hosts
+  import `general_environment.nix` and are named `<owner>-<kind>`
+  (`jeff-laptop`); Justin's hosts get names of their own.
   Hosts commented out of `flake.nix` are missing hardware configs; they are
   debt, not dead. Keep them in mind when changing modules they import.
 - `hosts/workstations/template.nix` is the menu a new workstation starts from.

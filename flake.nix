@@ -38,8 +38,8 @@
         # balrog = mkHost ./hosts/workstations/balrog; # not deployed yet
         nazgul = mkHost ./hosts/workstations/nazgul;
 
-        ## Client Workstations
-        jeff-laptop = mkHost ./hosts/workstations/jeff-laptop;
+        ## Clients
+        jeff-laptop = mkHost ./hosts/clients/jeff-laptop;
 
         ## Appliances
         gollum = mkHostOn nixpkgs-unstable ./hosts/appliances/gollum;

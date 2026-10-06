@@ -120,13 +120,14 @@ the new, untracked host directory. `path:` takes the directory as it is.
 
 Then, in the clone:
 
-1. Create the host from the template. Groups are `hosts/workstations`,
-   `hosts/appliances` and `hosts/servers`:
+1. Create the host from the template. Groups are `hosts/workstations` (mine),
+   `hosts/clients` (machines I manage for other people), `hosts/appliances`
+   and `hosts/servers`:
 
    ```bash
-   mkdir hosts/workstations/<name>
-   cp hosts/workstations/template.nix hosts/workstations/<name>/default.nix
-   cp /etc/nixos/hardware-configuration.nix hosts/workstations/<name>/
+   mkdir hosts/<group>/<name>
+   cp hosts/workstations/template.nix hosts/<group>/<name>/default.nix
+   cp /etc/nixos/hardware-configuration.nix hosts/<group>/<name>/
    ```
 
 2. Work down `default.nix`; everything is a line to uncomment, and nazgul
@@ -150,7 +151,7 @@ Then, in the clone:
    name equal to the hostname:
 
    ```nix
-   <name> = mkHost ./hosts/workstations/<name>;
+   <name> = mkHost ./hosts/<group>/<name>;
    ```
 
    A Jovian Steam machine registers with `mkHostOn nixpkgs-unstable`
