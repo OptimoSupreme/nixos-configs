@@ -6,23 +6,6 @@ registered machine pulls this repo's `main` from GitHub once a day and stages
 the result for its next boot. Nothing in here is secret; passwords, WiFi
 profiles and per-box data stay on the machines.
 
-## Hosts
-
-| Host | Group | What it is | Status |
-| --- | --- | --- | --- |
-| nazgul | workstation | My laptop, HP EliteBook. Secure Boot, TPM unlock, personal desktop | deployed |
-| jeff-laptop | client | Jeff's HP laptop on the general-purpose desktop | deployed |
-| gollum | appliance | Steam machine on Jovian-NixOS, boots straight into Gaming Mode | deployed |
-| balrog | workstation | My desktop | not deployed yet |
-| osse | appliance | Boat chartplotter: Android in Waydroid as a kiosk | not deployed yet |
-| palantir | appliance | Retro TV launcher: Chromium kiosk on a 1980s console TV | not deployed yet |
-| morgoth | server | Home server. Runs Debian today; the NixOS port is a stub | not started |
-
-Hosts not yet deployed have no `hardware-configuration.nix` committed, so
-they are commented out of `flake.nix` and nothing evaluates them until the
-machine is installed. The two appliances have their own READMEs under
-`hosts/appliances/`.
-
 ## Layout
 
 ```
