@@ -126,7 +126,7 @@ Then, in the clone:
 
    ```bash
    mkdir hosts/<group>/<name>
-   cp hosts/workstations/template.nix hosts/<group>/<name>/default.nix
+   cp hosts/workstation_template.nix hosts/<group>/<name>/default.nix
    cp /etc/nixos/hardware-configuration.nix hosts/<group>/<name>/
    ```
 

@@ -1,4 +1,4 @@
-#### General Purpose Workstation Template ####
+#### Workstation Template ####
 
 { pkgs, ... }:
 
