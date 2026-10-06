@@ -11,7 +11,7 @@ profiles and per-box data stay on the machines.
 | Host | Group | What it is | Status |
 | --- | --- | --- | --- |
 | nazgul | workstation | My laptop, HP EliteBook. Secure Boot, TPM unlock, personal desktop | deployed |
-| jeff-laptop | workstation | A client's HP laptop on the general-purpose desktop | deployed |
+| jeff-laptop | client | Jeff's HP laptop on the general-purpose desktop | deployed |
 | gollum | appliance | Steam machine on Jovian-NixOS, boots straight into Gaming Mode | deployed |
 | balrog | workstation | My desktop | not deployed yet |
 | osse | appliance | Boat chartplotter: Android in Waydroid as a kiosk | not deployed yet |
@@ -28,7 +28,8 @@ machine is installed. The two appliances have their own READMEs under
 ```
 flake.nix        registers hosts; mkHost for nixos-26.05, mkHostOn for another channel
 hosts/           one directory per machine: default.nix + hardware-configuration.nix
-  workstations/  template.nix is the menu a new workstation starts from
+  workstations/  my desktops and laptops; template.nix is the menu a new one starts from
+  clients/       machines I manage for other people
   appliances/
   servers/
 modules/         opt-in modules; desktop.nix is the shared GNOME block,
