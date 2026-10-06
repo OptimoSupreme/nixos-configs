@@ -1,4 +1,4 @@
-##### Weekly flake.lock bump ####
+#### Weekly flake.lock bump ####
 
 name: update-flake-lock
 
@@ -21,8 +21,7 @@ jobs:
       - name: Update flake inputs
         run: nix flake update
 
-      - name: Check every host still evaluates
-        run: nix flake check
+      - uses: ./.github/actions/check
 
       - name: Commit and push if changed
         run: |
@@ -32,5 +31,5 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "flake.lock: weekly update" flake.lock
+          git commit -m "chore(flake): weekly lock update" flake.lock
           git push
