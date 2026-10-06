@@ -65,7 +65,7 @@ in
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  ## Swap (needs configuring)
+  ## Swap
   zramSwap = {
     enable = true;
     algorithm = "zstd";

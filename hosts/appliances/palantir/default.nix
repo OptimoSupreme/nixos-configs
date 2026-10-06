@@ -57,7 +57,7 @@ in
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages; # LTS
 
-  ## Swap (needs configuring)
+  ## Swap
   zramSwap = {
     enable = true;
     algorithm = "zstd";
