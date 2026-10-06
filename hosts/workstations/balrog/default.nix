@@ -16,7 +16,8 @@
     ../../../modules/personal_environment.nix
   ];
 
-  ## GPU: AMD (nothing to add)
+  ## GPU: AMD, with ROCm for compute
+  hardware.amdgpu.opencl.enable = true;
 
   ## Boot
   boot.loader.systemd-boot.enable = true;
@@ -53,6 +54,12 @@
       "networkmanager"
     ];
   };
+
+  ## Packages
+  environment.systemPackages = with pkgs; [
+    rocmPackages.rocminfo
+    clinfo
+  ];
 
   system.stateVersion = "26.05";
 }
