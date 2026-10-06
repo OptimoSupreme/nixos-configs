@@ -1,0 +1,26 @@
+#### Shared repo checks ####
+
+name: check
+description: Evaluate every registered host and check formatting
+
+runs:
+  using: composite
+  steps:
+    - name: Flake check, failing on evaluation warnings
+      shell: bash
+      run: nix flake check --option abort-on-warn true
+
+    - name: Evaluate every host's toplevel
+      shell: bash
+      run: |
+        for host in $(nix eval --json .#nixosConfigurations --apply builtins.attrNames | jq -r '.[]'); do
+          echo "== $host"
+          nix eval --raw ".#nixosConfigurations.$host.config.system.build.toplevel.drvPath"
+          echo
+        done
+
+    - name: nixfmt
+      shell: bash
+      run: |
+        git ls-files '*.nix' | grep -v '/hardware-configuration\.nix$' \
+          | xargs nix run .#formatter.x86_64-linux -- --check
