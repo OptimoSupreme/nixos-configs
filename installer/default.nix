@@ -1,18 +1,24 @@
 #### Installation Media ####
 
-{ config, lib, pkgs, modulesPath, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
 
 {
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix"
 
     ## Select Modules
-    ../modules/fastfetch.nix            # Fastfetch
-    ../modules/firefox.nix              # Firefox Config
-    ../modules/personal_environment.nix # Personal Environment
+    ../modules/fastfetch.nix
+    ../modules/firefox.nix
+    ../modules/personal_environment.nix
   ];
 
-  ## Kernel options, Default LTS with ZFS or Latest Stable
+  ## Kernel: LTS with ZFS by default, latest stable as a boot entry
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages;
   isoImage.configurationName = lib.mkDefault "(LTS kernel)";
   boot.zfs.forceImportRoot = false;
@@ -30,7 +36,7 @@
     priority = 1;
   };
 
-  ## Networking - make sure hostname matches flake.nix
+  ## Networking
   networking = {
     networkmanager.enable = true;
     hostName = "installer";
@@ -40,7 +46,7 @@
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  ## Pinned apps
+  ## Pinned Apps
   programs.dconf.profiles.user.databases = lib.mkBefore [
     {
       settings."org/gnome/shell".favorite-apps = [
@@ -53,15 +59,13 @@
     }
   ];
 
-  ## Don't install flatpaks from personal_environment
+  ## No personal flatpaks on the live stick
   systemd.services.flatpak-apps.enable = false;
 
-  ## Override plain duplicate Firefox
+  ## Shadow the ISO's plain Firefox with the configured one
   environment.systemPackages = [ (lib.hiPrio config.programs.firefox.finalPackage) ];
 
-  ## Clone the repo into the live user's home once the network is up, so the
-  ## stick always starts from the latest main. Retries until it succeeds, so
-  ## joining WiFi after login is fine.
+  ## Clone the repo once the network is up (retries, so joining WiFi after login is fine)
   systemd.services.nixos-configs-clone = {
     description = "Clone nixos-configs into the live user's home";
     wantedBy = [ "multi-user.target" ];
@@ -86,11 +90,14 @@
     '';
   };
 
-  ## Enable SSH
+  ## SSH on at boot (the desktop module turns it off)
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
 
-  ## Enable experimental features
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  ## Flakes
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   system.stateVersion = "26.05";
 }
