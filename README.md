@@ -28,7 +28,8 @@ machine is installed. The two appliances have their own READMEs under
 ```
 flake.nix        registers hosts; mkHost for nixos-26.05, mkHostOn for another channel
 hosts/           one directory per machine: default.nix + hardware-configuration.nix
-  workstations/  my desktops and laptops; template.nix is the menu a new one starts from
+  workstation_template.nix  the menu a new desktop host starts from
+  workstations/  my desktops and laptops
   clients/       machines I manage for other people
   appliances/
   servers/

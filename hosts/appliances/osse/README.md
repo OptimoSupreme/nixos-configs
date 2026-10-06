@@ -93,7 +93,7 @@ Buy a single-GPU box. Then, from a clone of this repo on it
    (`passwd` to change it; nothing in the repo).
 2. Drop the installed machine's `hardware-configuration.nix` into this
    directory, then settle the choices in `default.nix`: kernel (latest is
-   set; LTS is the other line), the GPU's extras (hosts/workstations/template.nix, "GPU"),
+   set; LTS is the other line), the GPU's extras (hosts/workstation_template.nix, "GPU"),
    and the panel mode (below).
 3. Register `osse = mkHost ./hosts/appliances/osse;` in `flake.nix` (the line
    is there, commented), join the boat's WiFi
