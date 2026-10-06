@@ -19,7 +19,8 @@
   ];
 
   ## GPU (choose one)
-  ## AMD (nothing to add)
+  ## AMD (nothing to add; ROCm compute is optional)
+  # hardware.amdgpu.opencl.enable = true;
 
   ## Intel (choose one)
   # hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ]; # Broadwell and newer
