@@ -1,13 +1,18 @@
 #### NixOS Powered Steam Machine ####
 
-{ config, inputs, pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   imports = [
-    inputs.jovian.nixosModules.default
-    ../../../modules/maintenance.nix # staged upgrades, GC/dedup, scrub, flakes
     ./hardware-configuration.nix
+
+    ## Select Modules
+    inputs.jovian.nixosModules.default
+    ../../../modules/maintenance.nix
+    ../../../modules/appliance.nix
   ];
+
+  ## GPU: AMD (nothing to add)
 
   ## Boot
   boot.loader = {
@@ -16,19 +21,15 @@
       configurationLimit = 10;
     };
     efi.canTouchEfiVariables = true;
-    timeout = 0;
   };
 
   ## Kernel
-  boot = {
-    kernelPackages = pkgs.linuxPackages_latest; # Latest Stable
-    kernelParams = [ "quiet" ];
-  };
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   ## Swap
   jovian.steamos.enableZram = true;
 
-  ## Networking - make sure hostname matches flake.nix
+  ## Networking
   networking = {
     networkmanager.enable = true;
     hostName = "gollum";
@@ -42,19 +43,13 @@
   users.users.justin = {
     isNormalUser = true;
     description = "Justin";
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+    ];
   };
 
-  ## SSH
-  services.openssh = {
-    enable = true;
-    settings.PermitRootLogin = "no";
-  };
-
-  ## Select GPU's
-  ## AMD (nothing to add)
-
-  ## Steam - Jovian-NixOS Gaming Mode straight from boot, no desktop session
+  ## Steam Gaming Mode from boot
   nixpkgs.config.allowUnfree = true;
   jovian.steam = {
     enable = true;
@@ -63,17 +58,6 @@
     desktopSession = "gamescope-wayland";
   };
   programs.steam.extraCompatPackages = [ pkgs.proton-ge-bin ];
-
-  ## Firmware - the amdgpu blobs
-  hardware.enableRedistributableFirmware = true;
-
-  ## Audio
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    pulse.enable = true;
-  };
 
   system.stateVersion = "26.05";
 }
