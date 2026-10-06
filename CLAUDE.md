@@ -9,7 +9,9 @@ it may be secret, and no IPs, passwords, or tokens belong here.
 
 - `flake.nix` registers hosts with `mkHost ./hosts/<group>/<name>`. Jovian/Steam
   hosts use `mkHostOn nixpkgs-unstable`; everything else tracks `nixos-26.05`.
-  The attribute name must equal `networking.hostName`.
+  The attribute name must equal `networking.hostName`. Board quirks come
+  from the `nixos-hardware` input, imported first under `## Select Modules`
+  (see `balrog`).
 - `hosts/{workstations,clients,appliances,servers}/<name>/` holds `default.nix`
   plus the unmodified `nixos-generate-config` output as
   `hardware-configuration.nix`. `workstations/` are Justin's desktops and
