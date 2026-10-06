@@ -6,19 +6,20 @@ let
   hasBtrfs = lib.any (fs: fs.fsType == "btrfs") (lib.attrValues config.fileSystems);
 in
 {
-  # Pass TRIM through LUKS so the weekly fstrim (on by default) reaches the SSD
+  ## Pass TRIM through LUKS so the weekly fstrim reaches the SSD
   options.boot.initrd.luks.devices = lib.mkOption {
-    type = lib.types.attrsOf (lib.types.submodule {
-      config.allowDiscards = lib.mkDefault true;
-    });
+    type = lib.types.attrsOf (
+      lib.types.submodule {
+        config.allowDiscards = lib.mkDefault true;
+      }
+    );
   };
 
   config = {
-    # Monthly btrfs scrub
+    ## Btrfs Scrub
     services.btrfs.autoScrub.enable = hasBtrfs;
 
-    # System updates: pull the public repo over HTTPS, so the host holds no
-    # credential for it
+    ## Updates (public repo over HTTPS, so the host holds no credential)
     system.autoUpgrade = {
       enable = true;
       flake = "github:OptimoSupreme/nixos-configs";
@@ -29,7 +30,7 @@ in
       allowReboot = false;
     };
 
-    # Weekly store GC and deduplication
+    ## Store GC and Deduplication
     nix = {
       gc = {
         automatic = true;
@@ -42,7 +43,10 @@ in
       };
     };
 
-    # Enable experimental features
-    nix.settings.experimental-features = [ "nix-command" "flakes" ];
+    ## Flakes
+    nix.settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
   };
 }
