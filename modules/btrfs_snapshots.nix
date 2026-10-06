@@ -29,6 +29,7 @@
     EMPTY_PRE_POST_MIN_AGE = 3600;
   };
 
+  ## Btrfs Assistant
   environment.etc."btrfs-assistant.conf".text = ''
     snapper=/run/current-system/sw/bin/snapper
   '';

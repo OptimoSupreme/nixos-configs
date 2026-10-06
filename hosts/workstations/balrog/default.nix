@@ -1,4 +1,3 @@
-
 #### My Desktop ####
 
 { pkgs, ... }:
@@ -8,12 +7,14 @@
     ./hardware-configuration.nix
 
     ## Select Modules
-    ../../../modules/maintenance.nix          # Maintenance
-    ../../../modules/fastfetch.nix            # Fastfetch
-    ../../../modules/firefox.nix              # Firefox Config
-    ../../../modules/btrfs_snapshots.nix      # BTRFS Snapshots
-    ../../../modules/personal_environment.nix # Personal Environment
+    ../../../modules/maintenance.nix
+    ../../../modules/fastfetch.nix
+    ../../../modules/firefox.nix
+    ../../../modules/btrfs_snapshots.nix
+    ../../../modules/personal_environment.nix
   ];
+
+  ## GPU: AMD (nothing to add)
 
   ## Boot
   boot.loader.systemd-boot.enable = true;
@@ -21,7 +22,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   ## Kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest; # Latest Stable
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   ## Swap
   zramSwap = {
@@ -31,7 +32,7 @@
     priority = 1;
   };
 
-  ## Networking - make sure hostname matches flake.nix
+  ## Networking
   networking = {
     networkmanager.enable = true;
     hostName = "balrog";
@@ -45,13 +46,13 @@
   users.users.justin = {
     isNormalUser = true;
     description = "Justin";
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+    ];
   };
 
-  ## Select GPU's
-  ## AMD (nothing to add)
-
-  ## Corectrl
+  ## CoreCtrl
   programs.corectrl.enable = true;
   users.groups.corectrl.members = [ "justin" ];
   environment.etc."xdg/autostart/org.corectrl.CoreCtrl.desktop".source =

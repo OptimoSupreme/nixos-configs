@@ -1,18 +1,19 @@
 #### Secure Boot (Lanzaboote) ####
 
-# Replaces systemd-boot with Lanzaboote's signed systemd-boot; UEFI only.
-# Keys are generated on the machine at first boot into /var/lib/sbctl and
-# never leave it. The first boot also stages them on the ESP, re-signs
-# everything and reboots; systemd-boot then enrolls them (alongside
-# Microsoft's) if the firmware is in Setup Mode. See installer/README.md.
-
-{ inputs, lib, pkgs, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   imports = [ inputs.lanzaboote.nixosModules.lanzaboote ];
 
+  ## Boot (Lanzaboote replaces systemd-boot; UEFI only)
   boot.loader.systemd-boot.enable = lib.mkForce false;
 
+  ## Keys generated on the machine, enrolled on first boot (see installer/README.md)
   boot.lanzaboote = {
     enable = true;
     pkiBundle = "/var/lib/sbctl";
@@ -23,5 +24,6 @@
     };
   };
 
+  ## Packages
   environment.systemPackages = [ pkgs.sbctl ];
 }
