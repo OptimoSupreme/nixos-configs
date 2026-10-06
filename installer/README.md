@@ -86,9 +86,6 @@ needs the latest kernel.
 
 GNOME logs in and Calamares opens. What matters in it:
 
-- **Desktop**: GNOME, the default. The choice only affects the first boot,
-  the repo replaces the whole config in the next step, but "No desktop"
-  leaves you at a text console for it.
 - **Partitions**: "Erase disk", and pick **btrfs** in the filesystem
   dropdown, whose default is ext4. Tick **Encrypt system** and set a
   passphrase if the machine is to unlock with its TPM; adding encryption
