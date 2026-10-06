@@ -1,19 +1,25 @@
 #### Jeff's HP Laptop ####
 
-{ lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
 
     ## Select Modules
-    ../../../modules/maintenance.nix          # Maintenance
-    ../../../modules/fastfetch.nix            # Fastfetch
-    ../../../modules/firefox.nix              # Firefox Config
-    ../../../modules/btrfs_snapshots.nix      # BTRFS Snapshots
-    ../../../modules/tpm_decryption.nix       # TPM Decryption Setup Script
-    ../../../modules/general_environment.nix  # General Purpose Environment
+    ../../../modules/maintenance.nix
+    ../../../modules/fastfetch.nix
+    ../../../modules/firefox.nix
+    ../../../modules/btrfs_snapshots.nix
+    ../../../modules/tpm_decryption.nix
+    ../../../modules/general_environment.nix
   ];
+
+  ## GPU: Intel
+  hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ];
+
+  ## Keep the AMD dGPU out of D3cold
+  services.udev.extraRules = builtins.readFile ./60-amdgpu-no-d3cold.rules;
 
   ## Boot
   boot.loader.systemd-boot.enable = true;
@@ -21,7 +27,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   ## Kernel
-  boot.kernelPackages = pkgs.linuxPackages;        # Latest LTS
+  boot.kernelPackages = pkgs.linuxPackages; # LTS
 
   ## Swap
   zramSwap = {
@@ -31,7 +37,7 @@
     priority = 1;
   };
 
-  ## Networking - make sure hostname matches flake.nix
+  ## Networking
   networking = {
     networkmanager.enable = true;
     hostName = "jeff-laptop";
@@ -45,21 +51,11 @@
   users.users.jeff = {
     isNormalUser = true;
     description = "Jeff";
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+    ];
   };
-
-  ## Select GPU's
-  ## AMD (nothing to add)
-
-  ## Intel (choose one)
-  hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ]; # Broadwell and newer
-
-  ## GPU Fix
-  services.udev.extraRules = builtins.readFile ./60-amdgpu-no-d3cold.rules;
-
-  ## Disabled SSH Service - Temporary while developing
-  services.openssh.enable = true;
-  systemd.services.sshd.wantedBy = lib.mkForce [ ];
 
   system.stateVersion = "26.05";
 }

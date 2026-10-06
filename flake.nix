@@ -14,42 +14,50 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      nixpkgs-unstable,
+      ...
+    }:
     let
-      mkHostOn = pkgs: path: pkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [ path ];
-      };
+      mkHostOn =
+        pkgs: path:
+        pkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs; };
+          modules = [ path ];
+        };
       mkHost = mkHostOn nixpkgs;
     in
     {
       nixosConfigurations = {
 
-        # My Workstations
+        ## My Workstations
         # balrog = mkHost ./hosts/workstations/balrog;
         nazgul = mkHost ./hosts/workstations/nazgul;
 
-        # Client Workstations
+        ## Client Workstations
         jeff-laptop = mkHost ./hosts/workstations/jeff-laptop;
 
-        # Appliances
+        ## Appliances
         gollum = mkHostOn nixpkgs-unstable ./hosts/appliances/gollum;
         # osse = mkHost ./hosts/appliances/osse;
         # palantir = mkHost ./hosts/appliances/palantir;
 
-        # Servers
+        ## Servers
         # morgoth = mkHost ./hosts/servers/morgoth;
 
-        # Installer
+        ## Installer
         installer = mkHost ./installer;
       };
 
-      # `nix build .#installer-iso` -> result/iso/nixos-gnome-*.iso
+      ## `nix build .#installer-iso` -> result/iso/nixos-gnome-*.iso
       packages.x86_64-linux.installer-iso =
         self.nixosConfigurations.installer.config.system.build.isoImage;
 
-      # `nix fmt`
+      ## `nix fmt`
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt;
     };
 }

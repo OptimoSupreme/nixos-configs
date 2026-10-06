@@ -11,33 +11,34 @@
       DisableFirefoxStudies = true;
       DisableRemoteImprovements = true;
 
-      # Locked (not just defaulted in mozilla.cfg) because Mozilla's Nimbus
-      # experiment system writes user-branch values that override defaultPref.
+      ## Suggestions (locked: Nimbus experiments write user-branch prefs that beat mozilla.cfg)
       FirefoxSuggest = {
         WebSuggestions = false;
         SponsoredSuggestions = false;
         Locked = true;
       };
 
-      # AI features default to blocked but stay user-changeable in Settings
-      # (Locked = false only sets default prefs). Default covers every feature,
-      # including ones Mozilla adds later, and flips each feature's own enable
-      # pref (browser.ml.chat.enabled, browser.ml.linkPreview.enabled, ...).
+      ## AI features off by default, still user-changeable
       AIControls = {
-        Default = { Value = "blocked"; Locked = false; };
+        Default = {
+          Value = "blocked";
+          Locked = false;
+        };
       };
 
-      # The new sidebar (sidebar.revamp, default since Firefox 157) is left on:
-      # the pref is going away at the end of 2027. mozilla.cfg keeps its
-      # toolbar button from being added (open panels with Ctrl+B / Ctrl+H or
-      # View > Sidebar).
-      # Vertical tabs stay locked off so Nimbus rollouts can't switch them on.
+      ## Locked Preferences
       Preferences = {
-        "sidebar.verticalTabs" = { Value = false; Status = "locked"; };
-        "signon.firefoxRelay.feature" = { Value = "disabled"; Status = "locked"; };
+        "sidebar.verticalTabs" = {
+          Value = false;
+          Status = "locked";
+        };
+        "signon.firefoxRelay.feature" = {
+          Value = "disabled";
+          Status = "locked";
+        };
       };
 
-      # Extensions
+      ## Extensions
       ExtensionSettings = {
         "uBlock0@raymondhill.net" = {
           installation_mode = "normal_installed";
@@ -49,7 +50,7 @@
         };
       };
 
-      # Search Engines
+      ## Search Engines
       SearchEngines = {
         Default = "Google";
         Remove = [
@@ -64,6 +65,7 @@
       };
     };
 
+    ## Default Preferences
     autoConfig = builtins.readFile ../assets/firefox/mozilla.cfg;
   };
 }

@@ -1,6 +1,11 @@
 #### TPM Disk Decryption ####
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   luksDevices = lib.mapAttrsToList (_: d: d.device) config.boot.initrd.luks.devices;
@@ -13,17 +18,21 @@ let
         echo "Please run as root (sudo enable-tpm-decryption)" >&2
         exit 1
       fi
-    '' + lib.concatMapStringsSep "\n" (dev: ''
+    ''
+    + lib.concatMapStringsSep "\n" (dev: ''
       echo "Enrolling TPM2 unlock (PCR 7: Secure Boot state) for ${dev}"
       systemd-cryptenroll --wipe-slot=tpm2 --tpm2-device=auto --tpm2-pcrs=7 ${lib.escapeShellArg dev}
     '') luksDevices;
   };
 in
 {
+  ## Unlock every LUKS device from the TPM
   options.boot.initrd.luks.devices = lib.mkOption {
-    type = lib.types.attrsOf (lib.types.submodule {
-      config.crypttabExtraOpts = [ "tpm2-device=auto" ];
-    });
+    type = lib.types.attrsOf (
+      lib.types.submodule {
+        config.crypttabExtraOpts = [ "tpm2-device=auto" ];
+      }
+    );
   };
 
   config = {
@@ -34,8 +43,10 @@ in
       }
     ];
 
+    ## Boot
     boot.initrd.systemd.enable = true;
 
+    ## Packages
     environment.systemPackages = [
       pkgs.tpm2-tools
       tpmEnroll

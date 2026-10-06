@@ -7,13 +7,21 @@
     ./hardware-configuration.nix
 
     ## Select Modules
-    ../../../modules/maintenance.nix          # Maintenance
-    ../../../modules/fastfetch.nix            # Fastfetch
-    ../../../modules/firefox.nix              # Firefox Config
-    ../../../modules/tpm_decryption.nix       # TPM Decryption Setup Script
-    ../../../modules/secure_boot.nix          # Secure Boot (Lanzaboote)
-    ../../../modules/personal_environment.nix # Personal Environment
+    ../../../modules/maintenance.nix
+    ../../../modules/fastfetch.nix
+    ../../../modules/firefox.nix
+    ../../../modules/tpm_decryption.nix
+    ../../../modules/secure_boot.nix
+    ../../../modules/personal_environment.nix
   ];
+
+  ## GPU: AMD (nothing to add)
+
+  ## Screenshot Key Override
+  services.udev.extraHwdb = ''
+    evdev:atkbd:dmi:bvn*:bvr*:bd*:svnHP:pnHPEliteBook84514inchG10*:*
+     KEYBOARD_KEY_68=sysrq
+  '';
 
   ## Boot
   boot.loader.systemd-boot.enable = true;
@@ -21,7 +29,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   ## Kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest; # Latest Stable
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   ## Swap
   zramSwap = {
@@ -31,7 +39,7 @@
     priority = 1;
   };
 
-  ## Networking - make sure hostname matches flake.nix
+  ## Networking
   networking = {
     networkmanager.enable = true;
     hostName = "nazgul";
@@ -45,17 +53,11 @@
   users.users.justin = {
     isNormalUser = true;
     description = "Justin";
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+    ];
   };
-
-  ## Select GPU's
-  ## AMD (nothing to add)
-
-  ## Screenshot Key Override
-  services.udev.extraHwdb = ''
-    evdev:atkbd:dmi:bvn*:bvr*:bd*:svnHP:pnHPEliteBook84514inchG10*:*
-     KEYBOARD_KEY_68=sysrq
-  '';
 
   system.stateVersion = "26.05";
 }
