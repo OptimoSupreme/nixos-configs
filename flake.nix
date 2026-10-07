@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     jovian = {
       url = "github:Jovian-Experiments/Jovian-NixOS";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -35,7 +39,7 @@
       nixosConfigurations = {
 
         ## My Workstations
-        # balrog = mkHost ./hosts/workstations/balrog; # not deployed yet
+        # balrog = mkHost ./hosts/workstations/balrog; # waiting on the Framework Desktop board
         nazgul = mkHost ./hosts/workstations/nazgul;
 
         ## Clients
