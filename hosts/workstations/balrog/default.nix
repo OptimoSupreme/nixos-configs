@@ -1,20 +1,23 @@
 #### My Desktop ####
 
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
 
     ## Select Modules
+    inputs.nixos-hardware.nixosModules.framework-desktop-amd-ai-max-300-series
     ../../../modules/maintenance.nix
     ../../../modules/fastfetch.nix
     ../../../modules/firefox.nix
-    ../../../modules/btrfs_snapshots.nix
+    ../../../modules/tpm_decryption.nix
+    ../../../modules/secure_boot.nix
     ../../../modules/personal_environment.nix
   ];
 
-  ## GPU: AMD (nothing to add)
+  ## GPU: AMD, with ROCm for compute
+  hardware.amdgpu.opencl.enable = true;
 
   ## Boot
   boot.loader.systemd-boot.enable = true;
@@ -52,11 +55,11 @@
     ];
   };
 
-  ## CoreCtrl
-  programs.corectrl.enable = true;
-  users.groups.corectrl.members = [ "justin" ];
-  environment.etc."xdg/autostart/org.corectrl.CoreCtrl.desktop".source =
-    "${pkgs.corectrl}/share/applications/org.corectrl.CoreCtrl.desktop";
+  ## Packages
+  environment.systemPackages = with pkgs; [
+    rocmPackages.rocminfo
+    clinfo
+  ];
 
   system.stateVersion = "26.05";
 }
