@@ -19,7 +19,7 @@
   ];
 
   ## GPU (choose one)
-  ## AMD (nothing to add; ROCm compute is optional)
+  ## AMD (ROCm compute is optional)
   # hardware.amdgpu.opencl.enable = true;
 
   ## Intel (choose one)
