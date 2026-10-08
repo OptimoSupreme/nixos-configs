@@ -38,11 +38,12 @@
     {
       nixosConfigurations = {
 
-        ## My Workstations
+        ## Workstations
         # balrog = mkHost ./hosts/workstations/balrog; # waiting on the Framework Desktop board
         nazgul = mkHost ./hosts/workstations/nazgul;
 
         ## Clients
+        emily-laptop = mkHost ./hosts/clients/emily-laptop;
         jeff-laptop = mkHost ./hosts/clients/jeff-laptop;
 
         ## Appliances
