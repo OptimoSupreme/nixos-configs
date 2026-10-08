@@ -10,6 +10,7 @@
     ../../../modules/maintenance.nix
     ../../../modules/fastfetch.nix
     ../../../modules/tpm_decryption.nix
+    ../../../modules/secure_boot.nix
     ../../../modules/general_environment.nix
   ];
 
