@@ -59,7 +59,7 @@
     ];
   };
 
-  ## Google Chrome instead of Firefox
+  ## Google Chrome
   nixpkgs.config.allowUnfree = true;
   environment.systemPackages = [ pkgs.google-chrome ];
   programs.dconf.profiles.user.databases = lib.mkBefore [ { keyfiles = [ ./dconf ]; } ];
