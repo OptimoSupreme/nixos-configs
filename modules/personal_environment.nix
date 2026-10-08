@@ -34,13 +34,15 @@ in
     };
   };
 
-  ## CAC
+  ## Enable CAC
   services.pcscd.enable = true;
   environment.etc."opensc.conf".source = ../assets/cac/opensc.conf;
   security.pki.certificateFiles = [ ../assets/cac/DoD_PKI_bundle.pem ];
+
+  ## Firefox CAC Config
   programs.firefox.policies.SecurityDevices = pkcs11Modules;
 
-  ## CAC for Chromium: no policy exists, so register the modules in each user's NSS database
+  ## Ungoogled Chromium CAC Config (no Chromium policy exists)
   systemd.user.services.nssdb-pkcs11 = {
     description = "Register PKCS#11 modules in the user NSS database";
     wantedBy = [ "default.target" ];
