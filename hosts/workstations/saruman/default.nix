@@ -1,4 +1,4 @@
-#### My Laptop ####
+#### My Basement Gaming Desktop ####
 
 { pkgs, ... }:
 
@@ -10,19 +10,11 @@
     ../../../modules/maintenance.nix
     ../../../modules/fastfetch.nix
     ../../../modules/firefox.nix
-    ../../../modules/tpm_decryption.nix
     ../../../modules/secure_boot.nix
     ../../../modules/personal_environment.nix
-    ../../../modules/work_patch.nix
   ];
 
   ## GPU: AMD (nothing to add)
-
-  ## Screenshot Key Override
-  services.udev.extraHwdb = ''
-    evdev:atkbd:dmi:bvn*:bvr*:bd*:svnHP:pnHPEliteBook84514inchG10*:*
-     KEYBOARD_KEY_68=sysrq
-  '';
 
   ## Boot
   boot.loader.systemd-boot.enable = true;
@@ -43,11 +35,12 @@
   ## Networking
   networking = {
     networkmanager.enable = true;
-    hostName = "nazgul";
+    hostName = "saruman";
   };
 
   ## Timezone and Locale
   time.timeZone = "America/New_York";
+  time.hardwareClockInLocalTime = true; # Windows dual boot
   i18n.defaultLocale = "en_US.UTF-8";
 
   ## User Account
@@ -59,6 +52,12 @@
       "networkmanager"
     ];
   };
+
+  ## CoreCtrl
+  programs.corectrl.enable = true;
+  users.groups.corectrl.members = [ "justin" ];
+  environment.etc."xdg/autostart/org.corectrl.CoreCtrl.desktop".source =
+    "${pkgs.corectrl}/share/applications/org.corectrl.CoreCtrl.desktop";
 
   system.stateVersion = "26.05";
 }

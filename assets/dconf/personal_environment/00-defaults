@@ -18,7 +18,7 @@ donation-reminder-enabled=false
 
 [org/gnome/shell]
 favorite-apps=['org.gnome.Nautilus.desktop', 'firefox.desktop', 'org.gnome.Ptyxis.desktop']
-app-picker-layout=[{'org.gnome.Software.desktop': <{'position': <0>}>, 'org.gnome.Calendar.desktop': <{'position': <1>}>, 'org.gnome.Calculator.desktop': <{'position': <2>}>, 'org.gnome.SimpleScan.desktop': <{'position': <3>}>, 'codium.desktop': <{'position': <4>}>, 'onlyoffice-desktopeditors.desktop': <{'position': <5>}>, 'com.vixalien.sticky.desktop': <{'position': <6>}>, 'com.slack.Slack.desktop': <{'position': <7>}>, 'us.zoom.Zoom.desktop': <{'position': <8>}>, 'chromium-browser.desktop': <{'position': <9>}>, 'virt-manager.desktop': <{'position': <10>}>, 'Utilities': <{'position': <11>}>}, {'com.discordapp.Discord.desktop': <{'position': <0>}>, 'org.gnome.Fractal.desktop': <{'position': <1>}>, 'org.jellyfin.JellyfinDesktop.desktop': <{'position': <2>}>, 'com.spotify.Client.desktop': <{'position': <3>}>, 'com.valvesoftware.Steam.desktop': <{'position': <4>}>, 'com.usebottles.bottles.desktop': <{'position': <5>}>, 'org.localsend.localsend_app.desktop': <{'position': <6>}>, 'app.drey.Warp.desktop': <{'position': <7>}>, 'org.freecad.FreeCAD.desktop': <{'position': <8>}>, 'org.gimp.GIMP.desktop': <{'position': <9>}>}]
+app-picker-layout=[{'org.gnome.Software.desktop': <{'position': <0>}>, 'org.gnome.Calendar.desktop': <{'position': <1>}>, 'org.gnome.Calculator.desktop': <{'position': <2>}>, 'org.gnome.SimpleScan.desktop': <{'position': <3>}>, 'codium.desktop': <{'position': <4>}>, 'onlyoffice-desktopeditors.desktop': <{'position': <5>}>, 'com.vixalien.sticky.desktop': <{'position': <6>}>, 'virt-manager.desktop': <{'position': <7>}>, 'com.discordapp.Discord.desktop': <{'position': <8>}>, 'org.gnome.Fractal.desktop': <{'position': <9>}>, 'org.jellyfin.JellyfinDesktop.desktop': <{'position': <10>}>, 'com.spotify.Client.desktop': <{'position': <11>}>, 'com.valvesoftware.Steam.desktop': <{'position': <12>}>, 'com.usebottles.bottles.desktop': <{'position': <13>}>, 'org.localsend.localsend_app.desktop': <{'position': <14>}>, 'app.drey.Warp.desktop': <{'position': <15>}>, 'org.freecad.FreeCAD.desktop': <{'position': <16>}>, 'org.gimp.GIMP.desktop': <{'position': <17>}>, 'Utilities': <{'position': <18>}>}]
 enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'blur-my-shell@aunetx', 'caffeine@patapon.info', 'dash-to-panel@jderose9.github.com', 'impatience@gfxmonk.net', 'pip-on-top@rafostar.github.com']
 
 [org/gnome/desktop/app-folders]
@@ -26,7 +26,7 @@ folder-children=['Utilities']
 
 [org/gnome/desktop/app-folders/folders/Utilities]
 name='Utilities'
-apps=['org.gnome.DiskUtility.desktop', 'org.gnome.baobab.desktop', 'btrfs-assistant.desktop', 'org.gnome.Extensions.desktop', 'org.gnome.Settings.desktop', 'cups.desktop', 'nixos-manual.desktop', 'org.gnome.Resources.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Papers.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.Decibels.desktop', 'org.gnome.Showtime.desktop']
+apps=['org.gnome.DiskUtility.desktop', 'org.gnome.baobab.desktop', 'btrfs-assistant.desktop', 'org.gnome.Extensions.desktop', 'org.gnome.Settings.desktop', 'cups.desktop', 'nixos-manual.desktop', 'org.gnome.Resources.desktop', 'org.corectrl.CoreCtrl.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Papers.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.Decibels.desktop', 'org.gnome.Showtime.desktop']
 
 [org/gnome/shell/app-switcher]
 current-workspace-only=true
