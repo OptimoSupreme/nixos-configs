@@ -1,4 +1,4 @@
-#### My Desktop ####
+#### My Primary Desktop ####
 
 { inputs, pkgs, ... }:
 
