@@ -12,6 +12,7 @@
     ../../../modules/firefox.nix
     ../../../modules/secure_boot.nix
     ../../../modules/personal_environment.nix
+    ../../../modules/work_patch.nix # temporary, until balrog arrives
   ];
 
   ## GPU: AMD (nothing to add)
