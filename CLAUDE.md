@@ -110,3 +110,7 @@ reverts itself within a day.
   not obvious; one logical change per commit.
 - `hardware-configuration.nix` is committed as generated, because
   `nix flake check` evaluates every registered host.
+- Upstream contributions: keep PR descriptions, commit bodies and review replies
+  short and to the point. A few lines on the problem, the fix and how it was
+  tested; no long generated write-ups. A nixpkgs maintainer asked for this because
+  long text slows review.
