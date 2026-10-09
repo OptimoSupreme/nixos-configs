@@ -25,7 +25,10 @@ it may be secret, and no IPs, passwords, or tokens belong here.
   block; `general_environment.nix` (client machines) and
   `personal_environment.nix` (Justin's) each import it and add their own
   differences. A host imports exactly one of the two environments, never
-  `desktop.nix` directly. Headless hosts import `appliance.nix` instead.
+  `desktop.nix` directly. `work_patch.nix` layers the work-only pieces (CAC,
+  Chromium, Slack, Zoom) on top of `personal_environment.nix`; a personal
+  host without it is a gaming or home box. Headless hosts import `appliance.nix`
+  instead.
 - `assets/` holds static files modules reference by relative path.
 - `installer/` builds the live ISO. `installer/README.md` is the install,
   update, Secure Boot and TPM manual; link to it rather than repeating it.

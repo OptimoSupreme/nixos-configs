@@ -16,6 +16,7 @@
     # ../../../modules/secure_boot.nix          # Lanzaboote (needs the UEFI lines below)
     # ../../../modules/general_environment.nix  # GNOME desktop, client machines
     # ../../../modules/personal_environment.nix # GNOME desktop, my machines
+    # ../../../modules/work_patch.nix           # CAC, Chromium, Slack, Zoom (on top of personal_environment)
   ];
 
   ## GPU (choose one)

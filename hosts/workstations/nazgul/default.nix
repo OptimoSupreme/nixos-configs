@@ -13,6 +13,7 @@
     ../../../modules/tpm_decryption.nix
     ../../../modules/secure_boot.nix
     ../../../modules/personal_environment.nix
+    ../../../modules/work_patch.nix
   ];
 
   ## GPU: AMD (nothing to add)
