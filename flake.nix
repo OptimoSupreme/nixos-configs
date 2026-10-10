@@ -41,7 +41,7 @@
         ## Workstations
         # balrog = mkHost ./hosts/workstations/balrog; # waiting on the Framework Desktop board
         nazgul = mkHost ./hosts/workstations/nazgul;
-        # saruman = mkHost ./hosts/workstations/saruman; # still running Fedora
+        saruman = mkHost ./hosts/workstations/saruman;
 
         ## Clients
         emily-laptop = mkHost ./hosts/clients/emily-laptop;
