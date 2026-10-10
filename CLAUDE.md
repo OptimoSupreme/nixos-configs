@@ -104,8 +104,9 @@ reverts itself within a day.
 - Work on a new branch, never on main. Leave the changes uncommitted when the
   work is done and ask Justin whether to commit and whether to open a PR; do
   not commit or push until he says so. Merging is Justin's call because it
-  deploys. CI runs the checks above plus `nixfmt --check` on every push and
-  pull request (`.github/actions/check`).
+  deploys. Open PRs as drafts; CI (`.github/actions/check`, the checks above
+  plus `nixfmt --check`) is skipped on drafts and runs once the PR is marked
+  ready for review, on every push after that, and on pushes to main.
 - Conventional Commits: `type(scope): imperative summary`, lowercase, under 72
   characters. Scope is the host or module touched. Types: `feat`, `fix`,
   `refactor`, `docs`, `chore`, `ci`, `revert`. Add a body only when the why is
