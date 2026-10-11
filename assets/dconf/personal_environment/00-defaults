@@ -1,5 +1,9 @@
 [org/gnome/desktop/interface]
 cursor-theme='Breeze_Light'
+font-name='Ubuntu Sans 11'
+document-font-name='Ubuntu Sans 12'
+monospace-font-name='Ubuntu Sans Mono 11'
+font-antialiasing='rgba'
 color-scheme='prefer-dark'
 accent-color='orange'
 clock-format='12h'
@@ -65,8 +69,7 @@ highlight-current-line=true
 restore-session=false
 
 [org/gnome/Ptyxis]
-use-system-font=false
-font-name='Monospace 11'
+use-system-font=true
 cursor-shape='underline'
 cursor-blink-mode='off'
 audible-bell=false
