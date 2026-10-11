@@ -68,6 +68,13 @@
     seahorse
   ];
 
+  ## Fonts
+  fonts.packages = with pkgs; [
+    ubuntu-sans
+    ubuntu-sans-mono
+    noto-fonts
+  ];
+
   ## Packages
   environment.systemPackages = with pkgs; [
     kdePackages.breeze
