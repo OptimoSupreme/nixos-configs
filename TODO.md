@@ -2,7 +2,7 @@
 
 Open work on the fleet. Each item says what, why, and how to tell it is done.
 
-## Evaluate COSMIC and KDE as a GNOME replacement
+## 1. Evaluate COSMIC and KDE as a GNOME replacement
 
 Both `general_environment.nix` and `personal_environment.nix` build on the
 GNOME block in `desktop.nix`. Find out whether COSMIC or KDE Plasma can be
@@ -26,7 +26,7 @@ Plan:
 Done when: a decision is recorded here and either the GNOME block stays or a
 replacement module is wired into one environment.
 
-## Early KMS module for every GPU vendor
+## 2. Early KMS module for every GPU vendor
 
 Loading the GPU's kernel mode setting driver in the initrd gives native
 resolution from the first frame: Plymouth, the LUKS prompt and the console
