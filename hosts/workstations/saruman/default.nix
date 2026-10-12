@@ -38,8 +38,7 @@
     hostName = "saruman";
   };
 
-  ## Timezone and Locale
-  time.timeZone = "America/New_York";
+  ## Clock and Locale
   time.hardwareClockInLocalTime = true; # Windows dual boot
   i18n.defaultLocale = "en_US.UTF-8";
 
