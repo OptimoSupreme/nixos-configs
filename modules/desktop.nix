@@ -46,6 +46,12 @@
     fprintd.enable = true;
   };
 
+  ## Time Zone (set by GNOME from location)
+  time.timeZone = lib.mkDefault null;
+  programs.dconf.profiles.user.databases = [
+    { settings."org/gnome/desktop/datetime".automatic-timezone = true; }
+  ];
+
   ## Fingerprint enrolment workaround for https://github.com/NixOS/nixpkgs/issues/561267
   environment.extraInit = ''
     export XDG_DATA_DIRS=$XDG_DATA_DIRS''${XDG_DATA_DIRS:+:}${pkgs.gdm}/share/gsettings-schemas/${pkgs.gdm.name}
