@@ -103,6 +103,7 @@
   ];
   # Hide CUPS web UI icon
   environment.extraSetup = "rm -f $out/share/applications/cups.desktop";
+  documentation.nixos.enable = false;
 
   ## Fonts
   fonts = {
