@@ -8,9 +8,13 @@ color-scheme='prefer-dark'
 accent-color='orange'
 clock-format='12h'
 show-battery-percentage=true
+enable-hot-corners=false
 
 [org/gnome/desktop/wm/preferences]
 button-layout='appmenu:minimize,maximize,close'
+
+[org/gnome/mutter]
+center-new-windows=true
 
 [org/gnome/settings-daemon/plugins/color]
 night-light-enabled=true
@@ -41,6 +45,9 @@ disabled=['org.gnome.Nautilus.desktop', 'org.gnome.Calculator.desktop', 'org.gno
 
 [org/gnome/desktop/peripherals/mouse]
 accel-profile='flat'
+
+[org/gnome/desktop/peripherals/touchpad]
+tap-to-click=true
 
 [org/gnome/system/location]
 enabled=true
