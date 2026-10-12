@@ -16,6 +16,9 @@
 
   ## GPU: AMD (nothing to add)
 
+  ## Intel CPU
+  services.thermald.enable = true;
+
   ## Boot
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
@@ -29,6 +32,7 @@
     enable = true;
     algorithm = "zstd";
     memoryPercent = 50;
+    memoryMax = 8 * 1024 * 1024 * 1024;
     priority = 1;
   };
 

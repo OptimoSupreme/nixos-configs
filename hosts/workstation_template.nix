@@ -31,12 +31,18 @@
   # hardware.nvidia.open = true; # true on Turing (GTX 16xx / RTX 20xx) and newer, false before
   # nixpkgs.config.allowUnfree = true;
 
-  ## Nvidia PRIME (also enable Nvidia and Intel; bus IDs from `lspci -D -d ::03xx`)
+  ## Hybrid Graphics (Nvidia PRIME) (also enable Nvidia and Intel; bus IDs from `lspci -D -d ::03xx`)
   # hardware.nvidia.prime.offload.enable = true;
   # hardware.nvidia.prime.offload.enableOffloadCmd = true;
   # hardware.nvidia.prime.intelBusId = "PCI:0@0:2:0";
   # hardware.nvidia.prime.nvidiaBusId = "PCI:1@0:0:0";
   # hardware.nvidia.powerManagement.finegrained = true;
+
+  ## Hybrid Graphics (any vendor) (adds "Launch using Discrete Graphics Card")
+  # services.switcherooControl.enable = true;
+
+  ## Intel CPU
+  # services.thermald.enable = true;
 
   ## Boot (choose one)
   ## UEFI
@@ -58,6 +64,7 @@
     enable = true;
     algorithm = "zstd";
     memoryPercent = 50;
+    memoryMax = 8 * 1024 * 1024 * 1024;
     priority = 1;
   };
   swapDevices = [
