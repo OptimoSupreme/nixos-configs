@@ -1,13 +1,7 @@
-[org/gnome/login-screen]
-cursor-theme='Breeze_Light'
-font-antialiasing='rgba'
-clock-format='12h'
-show-battery-percentage=true
-color-scheme='prefer-dark'
-accent-color='orange'
-
 [org/gnome/desktop/interface]
 cursor-theme='Breeze_Light'
+font-name='Ubuntu Sans 11'
+font-antialiasing='rgba'
 color-scheme='prefer-dark'
 accent-color='orange'
 clock-format='12h'
