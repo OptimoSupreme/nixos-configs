@@ -1,4 +1,4 @@
-#### General Purpose Environment ####
+#### Client Environment ####
 
 { ... }:
 
@@ -7,6 +7,6 @@
 
   ## dconf
   programs.dconf.profiles.user.databases = [
-    { keyfiles = [ ../assets/dconf/general_environment ]; }
+    { keyfiles = [ ../assets/dconf/client_environment ]; }
   ];
 }

@@ -140,7 +140,7 @@ Then, in the clone:
      refuses to evaluate without a LUKS device. `secure_boot.nix` on a UEFI
      machine that should boot with Secure Boot on; it takes over from
      systemd-boot, so keep the UEFI boot lines. Exactly one environment:
-     `general_environment.nix` for a managed machine,
+     `client_environment.nix` for a managed machine,
      `personal_environment.nix` for one of mine. They are siblings, never
      both.
    - **Boot**: systemd-boot for UEFI, GRUB for BIOS. **Kernel**: LTS or
