@@ -34,6 +34,9 @@ in
   };
   boot.initrd.kernelModules = [ "i915" ];
 
+  ## Intel CPU
+  services.thermald.enable = true;
+
   ## Remote: let the USB chain wake the box from S3, rebadge the odd buttons
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="1d6b", ATTR{power/wakeup}="enabled"
@@ -61,6 +64,7 @@ in
     enable = true;
     algorithm = "zstd";
     memoryPercent = 50;
+    memoryMax = 8 * 1024 * 1024 * 1024;
     priority = 1;
   };
   swapDevices = [

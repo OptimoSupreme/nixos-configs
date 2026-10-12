@@ -20,6 +20,12 @@
   ## Keep the AMD dGPU out of D3cold
   services.udev.extraRules = builtins.readFile ./60-amdgpu-no-d3cold.rules;
 
+  ## Hybrid Graphics (any vendor)
+  services.switcherooControl.enable = true;
+
+  ## Intel CPU
+  services.thermald.enable = true;
+
   ## Boot
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
@@ -33,6 +39,7 @@
     enable = true;
     algorithm = "zstd";
     memoryPercent = 50;
+    memoryMax = 8 * 1024 * 1024 * 1024;
     priority = 1;
   };
 
