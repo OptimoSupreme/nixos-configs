@@ -21,12 +21,13 @@ in
   programs.virt-manager.enable = true;
   users.groups.libvirtd.members = [ user ];
 
-  ## Git identity
+  ## Git
   programs.git = {
     enable = true;
     config = {
       user.name = "Justin Ward";
       user.email = "jward92@gmail.com";
+      fetch.prune = true;
     };
   };
 
