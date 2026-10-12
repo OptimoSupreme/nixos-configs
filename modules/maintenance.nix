@@ -35,13 +35,16 @@ in
       gc = {
         automatic = true;
         dates = "weekly";
-        options = "--delete-older-than 14d";
       };
       optimise = {
         automatic = true;
         dates = [ "Mon 01:00" ];
       };
     };
+    # nix-collect-garbage has no keep-N; prune the system profile first
+    systemd.services.nix-gc.preStart = ''
+      ${config.nix.package}/bin/nix-env --profile /nix/var/nix/profiles/system --delete-generations +5
+    '';
 
     ## Flakes
     nix.settings.experimental-features = [
