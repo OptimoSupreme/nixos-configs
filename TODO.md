@@ -78,3 +78,5 @@ Add to template (potentially as an import), comment that it's an option best for
 
 ## 5. Sleep then shutdown (option)
 Add to template (potentially as an import), comment that it's an option best for laptops to save battery.
+
+## 6. Blur my shell feature exploration
