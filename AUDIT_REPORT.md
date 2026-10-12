@@ -1,77 +1,95 @@
 # Staleness audit report, 2026-10-12
 
-Actionable findings only. Workarounds that are still needed, assets that
-check out, and settings that match upstream are left out.
+Open items from the audit. Each one says what changed, what I recommend,
+and why. Remove an item once it is decided.
 
 Baseline: nixpkgs `nixos-26.05` at 6fcc160 (2026-10-10): GNOME 50.5,
 Firefox 157.0.1, kernels 6.18.55 LTS / 7.2.9, systemd 260.5, Nix 2.34.8,
-BlueZ 5.86, OpenSC 0.27.1. Checked on saruman, which runs that exact
-commit, so dconf keys, extension metadata and Firefox's omni.ja were
-verified against installed bits. Every registered host evaluates; nixfmt
-and parse are clean.
+BlueZ 5.86, OpenSC 0.27.1. Verified on saruman, which runs that commit.
 
-## Summary
+## Start here
 
-The repo is four weeks old, so almost nothing has rotted. Most findings are
-settings that were already defaults when written, plus Firefox details that
-moved under the config. Worth doing first:
+1. Firefox fixes: 3.1, 3.2, 3.3, 3.4. One small PR.
+2. Delete settings that are now defaults: section 1. One PR, every desktop
+   host touched, no behaviour change.
+3. Bump Lanzaboote and pin the CI actions: 4.7, 4.8.
+4. Doc fixes: 5.8 to 5.12.
+5. Decisions that need a test or a call: 1.9 (BlueZ flag), 5.5 (dconf
+   drift), 4.1 (TPM policy, long term).
 
-1. Firefox: drop the dead quickactions pref (3.1), update FirefoxSuggest to
-   the Firefox 146+ meaning (3.3), fix the sidebar comment (3.2).
-2. Trim settings that are now defaults (section 1). All one-liners.
-3. Bump Lanzaboote to v1.2.0 and pin the CI actions (4.7, 4.8).
-4. Fix the doc statements that no longer match the code (5.9 to 5.13).
-5. Decide on the BlueZ Experimental flag (1.9) and, longer term, the TPM
-   PCR policy (4.1).
+## 1. Settings that are now the default
 
-## 1. Now the default
+Deleting any of these changes nothing on the machines; the value stays the
+same. The point is shorter files and fewer lines that look deliberate but
+are not.
 
-**1.1 systemd initrd.** [tpm_decryption.nix:47](modules/tpm_decryption.nix#L47)
-(also [palantir:56](hosts/appliances/palantir/default.nix#L56),
-[osse:62](hosts/appliances/osse/default.nix#L62)) sets
-`boot.initrd.systemd.enable = true`. Default is `true` in 26.05; scripted
-stage 1 is deprecated for 26.11. Evidence: pinned
-`nixos/modules/system/boot/systemd/initrd.nix:195`,
-[26.05 release notes](https://nixos.org/manual/nixos/stable/release-notes).
-Hosts: nazgul, balrog, emily-laptop, jeff-laptop.
+**1.1 systemd initrd.**
+What changed: NixOS 26.05 made `boot.initrd.systemd.enable` default to
+`true` and deprecated the scripted initrd (removal in 26.11).
+Recommendation: delete the line at
+[tpm_decryption.nix:47](modules/tpm_decryption.nix#L47), and in
+[palantir:56](hosts/appliances/palantir/default.nix#L56) and
+[osse:62](hosts/appliances/osse/default.nix#L62).
+Why: the default will not flip back, so the line only adds noise.
+Evidence: [26.05 release notes](https://nixos.org/manual/nixos/stable/release-notes), first item.
 
-**1.2 `hardware.graphics.enable`.** [desktop.nix:36](modules/desktop.nix#L36).
-`services/misc/graphical-desktop.nix` sets it `mkDefault true` whenever a
-display manager is enabled. Every GNOME host.
+**1.2 `hardware.graphics.enable`.**
+What changed: nixpkgs' graphical-desktop module turns it on whenever a
+display manager is enabled.
+Recommendation: delete [desktop.nix:36](modules/desktop.nix#L36).
+Why: GDM is always on in this module, so the line is redundant.
 
 **1.3 Bluetooth, dconf and avahi enables.**
+What changed: the GNOME module sets `hardware.bluetooth.enable`,
+`programs.dconf.enable` and `services.avahi.enable` itself (gnome.nix
+lines 324, 327, 414).
+Recommendation: delete the three `enable = true` lines at
 [desktop.nix:38](modules/desktop.nix#L38),
-[desktop.nix:78](modules/desktop.nix#L78),
-[desktop.nix:200](modules/desktop.nix#L200). The GNOME module sets
-`hardware.bluetooth.enable = mkDefault true`, `programs.dconf.enable = true`
-and `services.avahi.enable = mkDefault true` (gnome.nix lines 324, 327,
-414). Keep `nssmdns4` and the bluetooth `settings`.
+[desktop.nix:78](modules/desktop.nix#L78) and
+[desktop.nix:200](modules/desktop.nix#L200). Keep the bluetooth
+`settings` block, `nssmdns4` and the dconf `profiles`.
+Why: same value either way; the remaining lines are the ones doing work.
 
-**1.4 zram algorithm and percent.** `algorithm = "zstd"` and
-`memoryPercent = 50` are the module defaults (`config/zram.nix`). Repeated in
-[workstation_template.nix:63](hosts/workstation_template.nix#L63),
+**1.4 zram algorithm and percent.**
+What changed: nothing upstream; `algorithm = "zstd"` and
+`memoryPercent = 50` were always the module defaults.
+Recommendation: delete those two lines from every zram block
+([template:63](hosts/workstation_template.nix#L63),
 [balrog:31](hosts/workstations/balrog/default.nix#L31),
 [nazgul:35](hosts/workstations/nazgul/default.nix#L35),
 [saruman:31](hosts/workstations/saruman/default.nix#L31),
 [emily-laptop:27](hosts/clients/emily-laptop/default.nix#L27),
 [jeff-laptop:38](hosts/clients/jeff-laptop/default.nix#L38),
-[installer:31](installer/default.nix#L31), osse, palantir. Only `enable`,
-`memoryMax` and `priority` do work. See 5.2.
+[installer:31](installer/default.nix#L31), osse, palantir), leaving
+`enable`, `memoryMax` and `priority`. If 5.2 is accepted, the block moves
+to a module instead and this comes for free.
+Why: the three remaining lines are the actual choices (8 GiB cap, higher
+priority than the swapfile).
 
-**1.5 autoUpgrade persistent and allowReboot.**
-[maintenance.nix:29-30](modules/maintenance.nix#L29-L30). Defaults are
-`true` and `false` (`tasks/auto-upgrade.nix:106,171`). All hosts.
+**1.5 autoUpgrade `persistent` and `allowReboot`.**
+What changed: nothing upstream; `persistent` defaults to `true` and
+`allowReboot` to `false`.
+Recommendation: delete
+[maintenance.nix:29-30](modules/maintenance.nix#L29-L30).
+Why: redundant. `allowReboot = false` could be argued as documenting a
+safety choice; if you want that, keep it and drop only `persistent`.
 
-**1.6 smartd x11 notifications.** [desktop.nix:90](modules/desktop.nix#L90).
-Default is `config.services.xserver.enable`, false on the fleet. The
-`wall.enable = false` line is still needed.
+**1.6 smartd x11 notifications.**
+What changed: nothing upstream; the default is
+`config.services.xserver.enable`, which is `false` on the fleet.
+Recommendation: delete [desktop.nix:90](modules/desktop.nix#L90). Keep
+`wall.enable = false` (default is `true`).
+Why: redundant.
 
-**1.7 `time.timeZone = mkDefault null`.**
-[desktop.nix:101](modules/desktop.nix#L101). The option default is already
-`null`. Keep only for the comment.
+**1.7 `time.timeZone = lib.mkDefault null`.**
+What changed: nothing upstream; the option default is already `null`.
+Recommendation: delete [desktop.nix:101](modules/desktop.nix#L101) and
+keep the `## Time Zone` title on the dconf line that follows.
+Why: the dconf `automatic-timezone` line is the real setting.
 
-**1.8 `i18n.defaultLocale = "en_US.UTF-8"`.** NixOS default. Present in the
-template, every host and the installer
+**1.8 `i18n.defaultLocale = "en_US.UTF-8"`.**
+What changed: nothing upstream; it is the NixOS default.
+Recommendation: delete it from every host and the installer
 ([template:86](hosts/workstation_template.nix#L86),
 [balrog:46](hosts/workstations/balrog/default.nix#L46),
 [nazgul:50](hosts/workstations/nazgul/default.nix#L50),
@@ -79,257 +97,370 @@ template, every host and the installer
 [emily:49](hosts/clients/emily-laptop/default.nix#L49),
 [jeff:53](hosts/clients/jeff-laptop/default.nix#L53),
 [gollum:40](hosts/appliances/gollum/default.nix#L40),
-[installer:47](installer/default.nix#L47)). Options: drop everywhere, or keep
-in the template as the documented knob. Recommendation: drop.
+[installer:47](installer/default.nix#L47)). In the template, keep it as a
+commented line next to the timezone one so a non-US host knows the knob.
+Why: eight copies of a default; the template comment preserves the menu.
 
-**1.9 BlueZ `Experimental = true` for battery levels.**
-[desktop.nix:39](modules/desktop.nix#L39). BlueZ made all Battery D-Bus
-APIs non-experimental in 5.72
-([commit](https://github.com/bluez/bluez/commit/495a582675cf0a4b2fee293cc215504ef24a1c43),
-[release](https://github.com/bluez/bluez/releases/tag/5.72)); the fleet
-has 5.86. Neither Fedora 44 nor Ubuntu 26.04 enables the flag. Removable,
-but verify on a host with a BLE mouse or headset first (see 6.1).
+**1.9 BlueZ `Experimental = true`.**
+What changed: BlueZ 5.72 (Jan 2024) made the Battery D-Bus APIs
+non-experimental
+([commit](https://github.com/bluez/bluez/commit/495a582675cf0a4b2fee293cc215504ef24a1c43)).
+The fleet runs 5.86. The comment at
+[desktop.nix:39](modules/desktop.nix#L39) gives battery levels as the
+reason.
+Recommendation: test on nazgul with a BLE mouse or headset
+(`nixos-rebuild test` with the line removed, then check Settings > Power
+or `upower -d`). If levels still show, delete the line.
+Why: the flag also enables other unfinished BlueZ code paths; Fedora and
+Ubuntu ship it off. Only per-earbud levels still need it, and those land
+after BlueZ 5.87.
 
-**1.10 NetworkManager on GNOME hosts.** `networking.networkmanager.enable`
-in every desktop host and the template is `mkDefault true` from the GNOME
-module (gnome.nix:358). Appliances still need it. Low value; the
-`networking` block stays for `hostName`.
+**1.10 `networking.networkmanager.enable` on GNOME hosts.**
+What changed: nothing upstream; the GNOME module sets it `mkDefault true`.
+Recommendation: leave it. Appliances still need the line, and the
+`networking` block stays for `hostName` anyway.
+Why: deleting it on some hosts and not others would make the hosts less
+uniform for no gain.
 
-## 2. Workarounds with an action
+## 2. Workarounds with a follow-up
 
-**2.1 Fingerprint enrolment XDG_DATA_DIRS hack: removable soon.**
-[desktop.nix:119-122](modules/desktop.nix#L119-L122). nixpkgs
-[issue 561267](https://github.com/NixOS/nixpkgs/issues/561267) closed
-2026-10-09 via PR 571973; the backport to release-26.05,
+**2.1 Fingerprint enrolment XDG_DATA_DIRS hack.**
+What changed: nixpkgs fixed
+[issue 561267](https://github.com/NixOS/nixpkgs/issues/561267) on master
+on 2026-10-09; the backport to 26.05,
 [PR 572210](https://github.com/NixOS/nixpkgs/pull/572210), is still open.
-Remove once it merges and the weekly lock bump passes it.
+Recommendation: leave
+[desktop.nix:119-122](modules/desktop.nix#L119-L122) for now. Delete it
+after the first weekly lock bump that follows the backport merge.
+Why: removing it before the backport lands breaks fingerprint enrolment on
+26.05 hosts.
 
-**2.2 `gnome50Extensions."impatience@gfxmonk.net"`: optional backport.**
-[desktop.nix:182](modules/desktop.nix#L182). The manual
-`gnomeExtensions.impatience` on 26.05 supports GNOME 45 to 49 only; master
-has the GNOME 50 bump
-([commit 378aa2a](https://github.com/NixOS/nixpkgs/commit/378aa2a),
-2026-07-19) with no backport. Keep as is, or open a backport PR and switch
-back afterwards.
+**2.2 `gnome50Extensions."impatience@gfxmonk.net"`.**
+What changed: nixpkgs master updated the manual `gnomeExtensions.impatience`
+for GNOME 50 ([commit 378aa2a](https://github.com/NixOS/nixpkgs/commit/378aa2a),
+2026-07-19) but nobody backported it, so 26.05 still has the 45-to-49
+build.
+Recommendation: leave [desktop.nix:182](modules/desktop.nix#L182) as is.
+Optionally open a backport PR for 378aa2a and switch back to
+`gnomeExtensions.impatience` once it merges.
+Why: the e.g.o build works; the backport only buys a tidier attribute name.
 
 **2.3 jeff-laptop D3cold rule comment.**
-[60-amdgpu-no-d3cold.rules:17](hosts/clients/jeff-laptop/60-amdgpu-no-d3cold.rules#L17)
-says "not in mainline as of kernel 7.1.x". Still absent from
-[v7.2 pci.c](https://raw.githubusercontent.com/torvalds/linux/v7.2/drivers/pci/pci.c);
-update to 7.2.
+What changed: kernel 7.2 is out and still has no fix
+([v7.2 pci.c](https://raw.githubusercontent.com/torvalds/linux/v7.2/drivers/pci/pci.c)
+has three `bridge_d3_blacklist` entries, none HP 83BB).
+Recommendation: change "7.1.x" to "7.2.x" at
+[60-amdgpu-no-d3cold.rules:17](hosts/clients/jeff-laptop/60-amdgpu-no-d3cold.rules#L17).
+Why: keeps the note accurate for the next person who checks.
 
-**2.4 palantir `allowUnfree` is unneeded.**
-[palantir:119](hosts/appliances/palantir/default.nix#L119). The host
-evaluates with `allowUnfree` forced to `false` (chromium, dolphin-emu and
-pcsx2 are free). Remove when palantir is registered.
+**2.4 palantir `allowUnfree`.**
+What changed: nothing; the host evaluates with `allowUnfree` forced to
+`false` (chromium, dolphin-emu and pcsx2 are all free).
+Recommendation: delete
+[palantir:119](hosts/appliances/palantir/default.nix#L119) when palantir
+is registered.
+Why: unfree opt-ins should name a real unfree package, as emily-laptop
+(Chrome) and gollum (Steam) do.
 
 ## 3. Stale assets
 
-**3.1 Dead Firefox pref.** [mozilla.cfg:43](assets/firefox/mozilla.cfg#L43)
-`browser.urlbar.quickactions.enabled` left firefox.js in Firefox 127
-([bug 1871206](https://bugzilla.mozilla.org/show_bug.cgi?id=1871206)); no
-urlbar module reads it in 157. Line 44 `browser.urlbar.suggest.quickactions`
-is the live toggle. Remove line 43.
+**3.1 Dead Firefox pref.**
+What changed: `browser.urlbar.quickactions.enabled` was removed in Firefox
+127 ([bug 1871206](https://bugzilla.mozilla.org/show_bug.cgi?id=1871206));
+no code in 157 reads it. `browser.urlbar.suggest.quickactions` on the next
+line is the surviving toggle.
+Recommendation: delete [mozilla.cfg:43](assets/firefox/mozilla.cfg#L43).
+Why: dead line.
 
 **3.2 Sidebar comment states an unsupported date.**
-[mozilla.cfg:79-80](assets/firefox/mozilla.cfg#L79-L80) says the
-`sidebar.revamp` pref "is removed at the end of 2027". It did default to
-true in 157 (bug 2070260), but Mozilla's only published plan said
+What changed: [mozilla.cfg:79-80](assets/firefox/mozilla.cfg#L79-L80)
+says the `sidebar.revamp` pref "is removed at the end of 2027". Mozilla's
+only published plan said
 [Q3 2026](https://blog.nightly.mozilla.org/2026/01/13/phasing-out-the-older-version-of-firefox-sidebar-in-2026/),
-that slipped, and no removal bug exists
+that slipped (the migration shipped in 157), and no removal bug exists
 ([meta 1977232](https://bugzilla.mozilla.org/show_bug.cgi?id=1977232)).
-Reword to "slated for removal after the 157 migration; no removal bug yet".
+Recommendation: reword to "default since 157; Mozilla plans to remove the
+pref after the migration, no removal bug yet".
+Why: a wrong date will mislead the next audit.
 
-**3.3 FirefoxSuggest policy semantics changed in Firefox 146.**
-[firefox.nix:15-19](modules/firefox.nix#L15-L19) and
-[mozilla.cfg:46-51](assets/firefox/mozilla.cfg#L46-L51). In 157
-`WebSuggestions` maps to `browser.urlbar.suggest.quicksuggest.all` (turns
-Suggest off entirely) and a new `OnlineEnabled` key maps to
-`browser.urlbar.quicksuggest.online.enabled` (default true since 146); the
-`.nonsponsored` pref the cfg comments name is no longer what the policy
-sets. "US only" is also out of date (157 expanded Suggest to Europe).
-Options: add `OnlineEnabled = false` and update the comments, or leave it
-since `.all = false` makes online moot. Recommendation: add it and fix the
-comments. Evidence:
+**3.3 FirefoxSuggest policy changed meaning in Firefox 146.**
+What changed: `WebSuggestions` now maps to
+`browser.urlbar.suggest.quicksuggest.all` (turns Suggest off entirely),
+and a new `OnlineEnabled` key maps to
+`browser.urlbar.quicksuggest.online.enabled`, which defaults to `true`
+since 146. The old `.nonsponsored` pref named in
+[mozilla.cfg:46-51](assets/firefox/mozilla.cfg#L46-L51) is no longer what
+the policy sets. The "US only" note is also out of date (157 expanded
+Suggest to Europe). Evidence:
 [policy-templates FirefoxSuggest](https://github.com/mozilla/policy-templates/blob/master/docs/index.md#firefoxsuggest).
+Recommendation: add `OnlineEnabled = false;` to the policy at
+[firefox.nix:15-19](modules/firefox.nix#L15-L19), and replace the three
+`defaultPref` lines at mozilla.cfg 49-51 with one for
+`browser.urlbar.suggest.quicksuggest.all` plus an updated comment.
+Why: `WebSuggestions = false` already disables everything, so this is
+belt and braces, but it makes the config say what Firefox actually does
+and closes the new online pref explicitly.
 
 **3.4 Two search-engine names never existed.**
-[firefox.nix:62-63](modules/firefox.nix#L62-L63) "Perplexity AI" and
-"Ask Perplexity". Every bundled search-config from 140 to 157 and the live
-Remote Settings collection name the engine "Perplexity" only. Harmless;
-remove.
+What changed: nothing; "Perplexity AI" and "Ask Perplexity" at
+[firefox.nix:62-63](modules/firefox.nix#L62-L63) were never built-in
+engine names in any release (140 to 157 bundles and the live Remote
+Settings all say "Perplexity").
+Recommendation: delete the two entries.
+Why: harmless but misleading; "Perplexity" already covers it.
 
-**3.5 New-tab prefs now have a policy equivalent (taste).**
-[mozilla.cfg:18-23](assets/firefox/mozilla.cfg#L18-L23). `FirefoxHome`
-covers `Weather` (since 152, sets both weather prefs), `Stories` and
-`SponsoredStories`; `feeds.system.topstories` and `trending.featureGate`
-have no policy. The prefs still work.
+**3.5 New-tab prefs now have a policy equivalent.**
+What changed: the `FirefoxHome` policy gained `Weather` (152), `Stories`
+and `SponsoredStories`, covering four of the prefs at
+[mozilla.cfg:18-23](assets/firefox/mozilla.cfg#L18-L23).
+Recommendation: leave the prefs as they are.
+Why: they still work, two of the six have no policy anyway, and moving
+them would split one block across two files.
 
-**3.6 dconf keys that restate GNOME 50 or extension defaults (taste).**
-Every key resolves to a real schema with a valid value. These equal the
-compiled default: in both
-[personal](assets/dconf/personal_environment/00-defaults) and
-[client](assets/dconf/client_environment/00-defaults) files
+**3.6 dconf keys that equal the GNOME 50 or extension defaults.**
+What changed: nothing; every key is valid, but these match the compiled
+default. In both [personal](assets/dconf/personal_environment/00-defaults)
+and [client](assets/dconf/client_environment/00-defaults):
 `center-new-windows`, `night-light-schedule-automatic`, `tap-to-click`,
 gtk4 `sort-directories-first`, Ptyxis `use-system-font`, blur-my-shell
-`blur-original-panel`; in the personal file only, 17 dash-to-panel keys
-([lines 109-144](assets/dconf/personal_environment/00-defaults#L109-L144):
-appicon-style, global-border-radius, group-apps, highlight-appicon-hover,
-hotkeys-overlay-combo, intellihide, panel-side-margins,
-panel-top-bottom-margins, panel-top-bottom-padding, show-apps-icon-file,
-stockgs-keep-dash, stockgs-keep-top-panel, trans-use-border,
-trans-use-custom-bg, trans-use-custom-opacity, trans-use-dynamic-opacity,
-window-preview-title-position). Keeping them pins behaviour against
-upstream default changes, so this is a judgment call. The gtk3
-`sort-directories-first` is not default and stays.
+`blur-original-panel`. In the personal file only, 17 dash-to-panel keys at
+[lines 109-144](assets/dconf/personal_environment/00-defaults#L109-L144)
+(appicon-style, global-border-radius, group-apps,
+highlight-appicon-hover, hotkeys-overlay-combo, intellihide,
+panel-side-margins, panel-top-bottom-margins, panel-top-bottom-padding,
+show-apps-icon-file, stockgs-keep-dash, stockgs-keep-top-panel,
+trans-use-border, trans-use-custom-bg, trans-use-custom-opacity,
+trans-use-dynamic-opacity, window-preview-title-position).
+Recommendation: delete the 17 dash-to-panel keys; keep the six shared
+ones.
+Why: the six read like deliberate choices and pin behaviour if an
+upstream default changes; the 17 look like a `dconf dump` that was pasted
+in, and the client file already does without them. The gtk3
+`sort-directories-first` is not a default and stays either way.
 
 ## 4. Upstream has moved
 
-**4.1 TPM unlock bound to literal PCR 7 is the policy systemd stopped
-recommending.** [tpm_decryption.nix:24](modules/tpm_decryption.nix#L24).
-systemd 258 made the default PCR mask for new enrollments empty and
-recommends systemd-pcrlock policies for PCR 7 combined with signed PCR 11;
-fwupd dbx updates invalidate a literal PCR 7 seal. The explicit
-`--tpm2-pcrs=7` still works on 260. Project, not a one-liner; Lanzaboote
-v1.2.0 extends measured boot (4.7) but its pcrlock story was not verified
-(6.4). Hosts: nazgul, balrog, emily-laptop, jeff-laptop. Evidence:
-[systemd NEWS, v258](https://raw.githubusercontent.com/systemd/systemd/main/NEWS).
+**4.1 TPM unlock bound to literal PCR 7.**
+What changed: systemd 258 stopped defaulting new TPM2 enrollments to
+PCR 7 and now recommends systemd-pcrlock policies plus signed PCR 11
+([systemd NEWS, v258](https://raw.githubusercontent.com/systemd/systemd/main/NEWS)).
+The explicit `--tpm2-pcrs=7` at
+[tpm_decryption.nix:24](modules/tpm_decryption.nix#L24) still works on 260.
+Recommendation: leave it and add a TODO item to revisit once Lanzaboote's
+pcrlock support is confirmed (6.4).
+Why: it works today, the passphrase fallback covers a dbx update
+invalidating the seal, and re-enrolling four hosts on a new policy is a
+project, not a fix.
 
-**4.2 chrony with NTS replaced timesyncd on Fedora and Ubuntu 26.04.**
-One-liner in [desktop.nix](modules/desktop.nix)
-(`services.chrony.enable = true`), every desktop host. Taste leaning stale.
-Evidence:
-[Ubuntu 26.04 notes](https://documentation.ubuntu.com/release-notes/26.04/summary-for-lts-users/).
+**4.2 chrony replaced timesyncd on Fedora and Ubuntu 26.04.**
+What changed: both distros now ship chrony with NTS for new installs
+([Ubuntu 26.04 notes](https://documentation.ubuntu.com/release-notes/26.04/summary-for-lts-users/)).
+Recommendation: leave timesyncd.
+Why: it is still the systemd and NixOS default, NTS buys little on a
+desktop, and it is one fewer daemon. Taste, not staleness.
 
 **4.3 tmpfs /tmp is the default on Fedora and Ubuntu 26.04.**
-[desktop.nix:50](modules/desktop.nix#L50) uses `cleanOnBoot` on disk.
-One-liner (`boot.tmp.useTmpfs = true`), taste; btrfs plus zram makes disk
-/tmp defensible.
+What changed: Ubuntu 26.04 joined Fedora in mounting /tmp as tmpfs.
+[desktop.nix:50](modules/desktop.nix#L50) keeps /tmp on disk with
+`cleanOnBoot`.
+Recommendation: leave it.
+Why: zram already spends RAM, large downloads and builds in /tmp are
+safer on disk, and btrfs makes the disk case cheap. Taste.
 
-**4.4 Early KMS is automatic under dracut on both distros.** Already TODO
-item 2. balrog already gets `hardware.amdgpu.initrd.enable = true` from its
-nixos-hardware import (`common/gpu/amd`), so the TODO's "only palantir does
-it" undercounts.
+**4.4 Early KMS is automatic on Fedora and Ubuntu.**
+What changed: both use dracut, which puts the GPU driver in the initrd by
+itself. This is already TODO item 2, but balrog gets
+`hardware.amdgpu.initrd.enable = true` from its nixos-hardware import, so
+"only palantir does it" undercounts.
+Recommendation: no new item; fix the TODO wording (5.12).
+Why: already tracked.
 
-**4.5 systemd-oomd placement (taste).** Fedora 44 kills on `system.slice`
-and user slices at 80 percent pressure and dropped the root-slice swap
-kill; the fleet targets `-.slice` and user slices
-([desktop.nix:107-110](modules/desktop.nix#L107-L110)). A one-liner swap of
-`enableRootSlice` for `enableSystemSlice` would mirror Fedora.
+**4.5 systemd-oomd placement.**
+What changed: Fedora 44 kills on `system.slice` and user slices at 80
+percent memory pressure and dropped its root-slice swap kill. The fleet
+targets `-.slice` and user slices at
+[desktop.nix:107-110](modules/desktop.nix#L107-L110).
+Recommendation: leave it.
+Why: both work; the root slice is a superset and nobody has reported a
+wrong kill. Taste.
 
-**4.6 GNOME 51 changes arriving with NixOS 26.11.** GDM 51 no longer allows
-fingerprint-only login (re-auth only), so fprintd hosts will see a change;
-Fedora 45 moves the keyring to oo7, for which nixpkgs has packages but no
-module. Nothing to do now; a TODO note. Evidence:
-[GDM NEWS](https://gitlab.gnome.org/GNOME/gdm/-/raw/main/NEWS),
-[Fedora oo7 change](https://fedoraproject.org/wiki/Changes/oo7_Secrets_Service_Provider).
+**4.6 GNOME 51 changes arriving with NixOS 26.11.**
+What changed: GDM 51 drops fingerprint-only login (fingerprint becomes
+re-auth only,
+[GDM NEWS](https://gitlab.gnome.org/GNOME/gdm/-/raw/main/NEWS)); Fedora
+45 moves the keyring to oo7
+([change page](https://fedoraproject.org/wiki/Changes/oo7_Secrets_Service_Provider)),
+for which nixpkgs has packages but no module yet.
+Recommendation: add a short TODO note so the 26.11 bump is not a surprise.
+Why: nothing to change on 26.05; the fprintd hosts will see login
+behaviour change and the installer README's fingerprint line will need an
+edit then.
 
-**4.7 Lanzaboote v1.2.0 (2026-09-26).** [flake.nix:18](flake.nix#L18) pins
-v1.1.0. 1.2.0 adds PCR 4 coverage across bootloader updates (caps
-`configurationLimit` at 4 only when measured boot is on, which the fleet
-does not enable), a new `autoEnrollKeys.includeFirmwareBuiltinKeys`, and
-removes only the internal `enrollKeys`. No rename of the options used here.
-Bump plus `nix flake update lanzaboote`; secure-boot hosts. Evidence:
-[release](https://github.com/nix-community/lanzaboote/releases/tag/v1.2.0).
+**4.7 Lanzaboote v1.2.0.**
+What changed: released 2026-09-26
+([release notes](https://github.com/nix-community/lanzaboote/releases/tag/v1.2.0)).
+Adds PCR 4 coverage across bootloader updates, a new
+`autoEnrollKeys.includeFirmwareBuiltinKeys` option, and removes only the
+internal `enrollKeys`. The `configurationLimit` cap of 4 applies only when
+measured boot is on, which the fleet does not enable. No renames of the
+options used in [secure_boot.nix](modules/secure_boot.nix).
+Recommendation: change [flake.nix:18](flake.nix#L18) to `v1.2.0`, run
+`nix flake update lanzaboote`, `nixos-rebuild test` on nazgul, then
+merge.
+Why: staying one release behind on the Secure Boot tool is the kind of
+drift that gets expensive to catch up on; `lzbt` rebuilds once per host.
 
 **4.8 CI actions are behind or unpinned.**
-[check.yml:24,26](.github/workflows/check.yml#L24-L26),
-[update-flake-lock.yml:17,19](.github/workflows/update-flake-lock.yml#L17-L19).
-`actions/checkout@v4` is three majors behind (v7.0.1, 2026-07-20).
-`nix-installer-action@main` has tags (v23, 2026-09-09) and is not
-deprecated, but Determinate now steers pinned CI to
-`determinate-nix-action@v3`. Options: pin `checkout@v7` and
-`nix-installer-action@v23`, or switch to `determinate-nix-action@v3`.
-Recommendation: the first. Evidence:
-[checkout releases](https://github.com/actions/checkout/releases),
-[nix-installer-action tags](https://github.com/DeterminateSystems/nix-installer-action/tags).
+What changed: `actions/checkout@v4` at
+[check.yml:24](.github/workflows/check.yml#L24) and
+[update-flake-lock.yml:17](.github/workflows/update-flake-lock.yml#L17) is
+three majors behind ([v7.0.1](https://github.com/actions/checkout/releases),
+2026-07-20). `DeterminateSystems/nix-installer-action@main` at
+[check.yml:26](.github/workflows/check.yml#L26) and
+[update-flake-lock.yml:19](.github/workflows/update-flake-lock.yml#L19)
+tracks a moving branch; it has tags
+([v23](https://github.com/DeterminateSystems/nix-installer-action/tags),
+2026-09-09) and Determinate now points pinned CI at
+`determinate-nix-action@v3`.
+Recommendation: `actions/checkout@v7` and
+`DeterminateSystems/nix-installer-action@v23` in both workflows.
+Why: a tag cannot change under you; `@main` can break the weekly lock
+bump on its own. Switching to determinate-nix-action is a bigger change
+for no gain here.
 
 ## 5. Normalization
 
-**5.1 Shared modules mostly use plain assignment, against the `mkDefault`
-convention.** [appliance.nix](modules/appliance.nix) uses `mkDefault`
-throughout; [desktop.nix](modules/desktop.nix) uses it on two lines
-(consoleLogLevel, timeZone) and plain `= true` elsewhere, as do
-personal_environment and parts of maintenance. A host wanting to turn off
-fprintd or printing needs `mkForce`. Options: convert desktop.nix to
-`mkDefault`, or amend CLAUDE.md to say plain assignment is the rule for
-environment modules. Recommendation: convert.
+**5.1 Shared modules mostly use plain assignment.**
+What changed: nothing; CLAUDE.md says shared modules set defaults with
+`lib.mkDefault`, but [desktop.nix](modules/desktop.nix) uses it on two
+lines and plain `= true` elsewhere, as do personal_environment and parts
+of maintenance. [appliance.nix](modules/appliance.nix) follows the rule.
+Recommendation: convert the plain assignments in desktop.nix,
+personal_environment.nix and maintenance.nix to `mkDefault`, except
+`mkForce`/`mkBefore`/`mkAfter` lines and list-typed options (lists merge
+anyway).
+Why: a host can then turn off fprintd, printing or the flatpak set with a
+plain assignment instead of `mkForce`, which is what the rule promises.
 
-**5.2 Identical blocks repeated across hosts.** The zram block (1.4), the
-three systemd-boot lines, and the `users.users.<name>` shape appear
-verbatim in five registered hosts, the template and the installer. The
-fleet rule says anything two hosts share lives in `modules/`. zram and
-systemd-boot could move to maintenance.nix or desktop.nix as `mkDefault`.
-Counter-argument: the template is meant to be a visible menu.
-Recommendation: move zram and systemd-boot; keep the user block per host.
+**5.2 Identical blocks repeated across hosts.**
+What changed: nothing; the zram block, the three systemd-boot lines and
+the user block appear verbatim in five registered hosts, the template and
+the installer, against the rule that anything two hosts share lives in
+`modules/`.
+Recommendation: move the zram block to
+[maintenance.nix](modules/maintenance.nix) as `mkDefault` (every host
+imports it; gollum's Jovian zram still wins because Jovian sets it with a
+plain assignment). Leave the systemd-boot lines and the user block in the
+hosts.
+Why: zram is the same everywhere by intent. The bootloader is a per-machine
+choice (one BIOS host would need to override two options), and the user
+block is per-machine by nature.
 
 **5.3 Same thing two ways.**
-[gollum:18-24](hosts/appliances/gollum/default.nix#L18-L24) nests
-`boot.loader = { ... }` while every other host writes three dotted lines.
-Locale section titles drift: "Locale" (nazgul, balrog, emily, jeff), "Clock
-and Locale" (saruman), "Timezone and Locale" (template, gollum, installer).
+What changed: nothing; [gollum:18-24](hosts/appliances/gollum/default.nix#L18-L24)
+nests `boot.loader = { ... }` while every other host writes three dotted
+lines, and the locale section title varies ("Locale", "Clock and Locale",
+"Timezone and Locale").
+Recommendation: flatten gollum's block; use "Timezone and Locale"
+everywhere, as the template does.
+Why: uniform host files are easier to diff against the template.
 
-**5.4 flake.nix has no `####` banner.** [flake.nix:1](flake.nix#L1).
+**5.4 flake.nix has no `####` banner.**
+What changed: nothing; CLAUDE.md says every file opens with one.
+Recommendation: add `#### Flake ####` at [flake.nix:1](flake.nix#L1).
+Why: one line, matches the rule.
 
-**5.5 dconf drift between environments.** The personal keyfile carries 38
-dash-to-panel keys (panel 32, date menu centred) and the client keyfile 12
-(panel 36, date menu right). If deliberate, fine; if not, one file should
-be the source. Both set the same `enabled-extensions`, fonts and privacy
-keys, so the 60-odd common lines could move to a shared keyfile directory
-both environments list.
+**5.5 dconf drift between environments.**
+What changed: nothing; the personal keyfile has 38 dash-to-panel keys
+(panel 32, date menu centred, custom transparency) and the client keyfile
+12 (panel 36, date menu right). Both repeat the same 60-odd lines for
+extensions, fonts, privacy, Ptyxis and Text Editor.
+Recommendation: your call on whether the panel difference is deliberate.
+If it is, leave it. If not, copy the personal dash-to-panel block to the
+client file. Either way, consider a third keyfile directory for the
+shared lines, listed by both environments.
+Why: today a change to a shared key has to be made twice, and the panel
+difference is not documented anywhere.
 
 **5.6 `nixos-hardware` input is consumed only by the unregistered balrog.**
-Idle until balrog registers; the weekly lock bump keeps fetching it.
+What changed: nothing.
+Recommendation: leave it.
+Why: balrog is waiting on hardware; the input costs one fetch per weekly
+lock bump.
 
-**5.7 `boot.kernelParams = [ "quiet" ]` is set in both desktop.nix and
-appliance.nix.** Harmless, but the one duplicated line between the two
-shared blocks.
+**5.7 `boot.kernelParams = [ "quiet" ]` in both desktop.nix and appliance.nix.**
+What changed: nothing.
+Recommendation: leave it.
+Why: no host imports both, and lists merge if one ever did.
 
-**5.8 installer/README.md says the ISO has CAC support.**
-[installer/README.md:11-13](installer/README.md#L11-L13).
-[installer/default.nix:16-17](installer/default.nix#L16-L17) imports
-firefox.nix and personal_environment.nix only, not work_patch.nix. Import
-work_patch or drop the claim.
+**5.8 installer/README.md claims CAC support on the ISO.**
+What changed: nothing; [installer/README.md:11-13](installer/README.md#L11-L13)
+lists CAC, but [installer/default.nix:16-17](installer/default.nix#L16-L17)
+imports firefox.nix and personal_environment.nix only.
+Recommendation: drop "CAC support" from the sentence.
+Why: a live stick has no use for pcscd and the DoD bundle; importing
+work_patch just to make the doc true would add Chromium, Slack and Zoom
+to the ISO.
 
-**5.9 installer/README.md describes GC as "generations older than 14
-days".** [installer/README.md:208-209](installer/README.md#L208-L209).
-maintenance.nix runs `nix-collect-garbage` with no `--delete-older-than`
-and a preStart that keeps the last 5 system generations. The next
-paragraph's "the last 10 are kept" is also wrong after the first weekly GC.
-Pick a number and make doc and code agree.
+**5.9 installer/README.md describes GC wrongly.**
+What changed: nothing; [installer/README.md:208-209](installer/README.md#L208-L209)
+says "generations older than 14 days", but maintenance.nix runs
+`nix-collect-garbage` with no age option and a preStart that keeps the
+last 5 system generations. The next paragraph's "the last 10 are kept" is
+only true until the first weekly GC.
+Recommendation: change both sentences to say the last 5 generations are
+kept; leave the code alone.
+Why: five bootable rollbacks is plenty and the code has been that way
+since the first commit; the doc is what drifted.
 
 **5.10 CLAUDE.md says commented-out hosts are "missing hardware configs".**
-[CLAUDE.md:19-20](CLAUDE.md#L19-L20). palantir has one and is commented out
-as "not deployed yet"; osse and morgoth are the ones without.
+What changed: nothing; [CLAUDE.md:19-20](CLAUDE.md#L19-L20). palantir has
+a hardware config and is commented out as "not deployed yet"; osse and
+morgoth are the ones without.
+Recommendation: reword to "are not deployed yet (some have no hardware
+config)".
+Why: the sentence tells Claude how to treat those hosts; it should be
+accurate.
 
 **5.11 README.md says checks run on "every push and pull request".**
-[README.md:37-38](README.md#L37-L38). check.yml runs on pushes to main and
-non-draft PRs only, as CLAUDE.md states.
+What changed: nothing; [README.md:37-38](README.md#L37-L38). check.yml
+runs on pushes to main and on non-draft PRs, as CLAUDE.md says.
+Recommendation: reword to "pushes to main and pull requests marked ready
+for review".
+Why: matches the workflow.
 
 **5.12 TODO item 2 undercounts early KMS.**
-[TODO.md:31-32](TODO.md#L31-L32): balrog gets amdgpu in the initrd from
-nixos-hardware (4.4).
+What changed: nothing; [TODO.md:31-32](TODO.md#L31-L32) says only
+palantir has it, but balrog gets amdgpu in the initrd from nixos-hardware.
+Recommendation: mention balrog there.
+Why: accuracy; see 4.4.
 
-## 6. Unverified
+## 6. Open questions
 
-**6.1** Whether removing BlueZ `Experimental` keeps battery levels for BLE
-HID devices as well as headsets. Confirm by toggling it on nazgul and
-checking Settings > Power or `upower -d`.
+Things I could not settle; each says what would settle it.
 
-**6.2** Whether OpenSC
-[PR 3703](https://github.com/OpenSC/OpenSC/pull/3703) (master only, not in
-0.27.1) fixes the DF30 hang that
-[opensc.conf:6-11](assets/cac/opensc.conf#L6-L11) describes; the upstream
-thread covers a different SCE7 ATR and symptom. The `card_atr` block stays
-until a release with 3703 lands and is tested.
+**6.1 BLE battery without the Experimental flag.** Settled by the test in
+1.9.
 
-**6.3** Whether the nazgul screenshot-key hwdb override
-([nazgul:21-24](hosts/workstations/nazgul/default.nix#L21-L24)) is covered
-by systemd 260's generic `pnHPEliteBook*` entries. No G10 entry exists in
-`60-keyboard.hwdb`; assume still needed.
+**6.2 OpenSC fix for the G&D card.** OpenSC master merged
+[PR 3703](https://github.com/OpenSC/OpenSC/pull/3703) for the SCE7, but
+it is not in 0.27.1 and covers a different ATR and symptom than
+[opensc.conf:6-11](assets/cac/opensc.conf#L6-L11). Settled by testing the
+card on a nixpkgs that ships OpenSC 0.28 or later with the `card_atr`
+block removed. Until then the block stays.
 
-**6.4** Lanzaboote's support for systemd-pcrlock or signed PCR 11 policies,
-which decides whether 4.1 is a module change or a wait.
+**6.3 nazgul screenshot-key hwdb override.** systemd 260's
+`60-keyboard.hwdb` has no EliteBook 845 G10 entry, only generic
+`pnHPEliteBook*` ones that I did not read for key 68. Settled by
+`nixos-rebuild test` on nazgul with
+[nazgul:21-24](hosts/workstations/nazgul/default.nix#L21-L24) removed and
+pressing the key. Assume still needed.
 
-**6.5** The four certificates in DoD bundle v5.14 that the repo omits
-(ID/EMAIL CA-59, SW CA-60/61): presumably expired and pruned, not checked.
+**6.4 Lanzaboote support for pcrlock or signed PCR 11.** Settled by
+reading the v1.2.0 module docs; decides whether 4.1 is a module change or
+a wait.
+
+**6.5 The four DoD certificates not in the repo's bundle.** The published
+v5.14 bundle has 49 certs; the repo has 45 (missing ID/EMAIL CA-59 and SW
+CA-60/61). Settled by checking their expiry dates in the bundle; if they
+are expired, nothing to do.
