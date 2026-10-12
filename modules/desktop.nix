@@ -1,8 +1,15 @@
 #### Shared GNOME Desktop ####
 
-{ lib, pkgs, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
+  imports = [ inputs.nix-index-database.nixosModules.nix-index ];
+
   ## Hardware
   hardware = {
     graphics.enable = true;
@@ -96,6 +103,9 @@
   ## Flatpak with Flathub
   services.flatpak.enable = true;
   environment.etc."flatpak/remotes.d/flathub.flatpakrepo".source = ../assets/flathub.flatpakrepo;
+
+  ## Command Not Found hint and `,` runner
+  programs.nix-index-database.comma.enable = true;
 
   ## Microfetch on login
   programs.bash.interactiveShellInit = ''
