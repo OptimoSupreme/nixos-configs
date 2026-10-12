@@ -13,7 +13,6 @@
     "${modulesPath}/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix"
 
     ## Select Modules
-    ../modules/microfetch.nix
     ../modules/firefox.nix
     ../modules/personal_environment.nix
   ];

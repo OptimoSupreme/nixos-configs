@@ -9,7 +9,6 @@
     ## Select Modules
     # inputs.nixos-hardware.nixosModules.changeme # Board quirks (github.com/NixOS/nixos-hardware)
     # ../../../modules/maintenance.nix          # Updates, GC, scrub, flakes
-    # ../../../modules/microfetch.nix           # Microfetch on login
     # ../../../modules/firefox.nix              # Firefox policies
     # ../../../modules/btrfs_snapshots.nix      # Snapper on /home
     # ../../../modules/tpm_decryption.nix       # TPM unlock enrollment script
