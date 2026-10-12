@@ -8,7 +8,7 @@
 
     ## Select Modules
     ../../../modules/maintenance.nix
-    ../../../modules/fastfetch.nix
+    ../../../modules/microfetch.nix
     ../../../modules/firefox.nix
     ../../../modules/secure_boot.nix
     ../../../modules/personal_environment.nix
