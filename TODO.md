@@ -80,3 +80,5 @@ Add to template (potentially as an import), comment that it's an option best for
 Add to template (potentially as an import), comment that it's an option best for laptops to save battery.
 
 ## 6. Blur my shell feature exploration
+
+## Get through audit report
