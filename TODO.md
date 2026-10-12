@@ -55,3 +55,20 @@ turns out to be more than a few lines.
 
 Done when: every registered desktop host has early KMS on and the template
 shows the choice for all three vendors.
+
+## 3. Customize the shell
+
+Every host runs stock bash with the default prompt. The only shell setup in
+the repo is the fastfetch hook in `modules/fastfetch.nix`. Decide what the
+interactive shell should look like across the fleet (prompt, aliases,
+completion, history, whether to stay on bash or move to zsh or fish) and put
+it in a module that both environments import.
+
+Keep it system-level: no home-manager, so the config goes through
+`programs.bash` (or the chosen shell's `programs.*` block) and
+`environment.shellAliases`, not per-user dotfiles. Client machines should get
+the same defaults as Justin's, so it belongs under `desktop.nix` or a module
+both environments import, not in `personal_environment.nix` alone.
+
+Done when: a shell module is imported by both environments and every
+registered desktop host evaluates with it.
