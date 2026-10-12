@@ -4,7 +4,7 @@ Open work on the fleet. Each item says what, why, and how to tell it is done.
 
 ## 1. Evaluate COSMIC and KDE as a GNOME replacement
 
-Both `general_environment.nix` and `personal_environment.nix` build on the
+Both `client_environment.nix` and `personal_environment.nix` build on the
 GNOME block in `desktop.nix`. Find out whether COSMIC or KDE Plasma can be
 configured to a point where it would replace GNOME in one or both
 environments.
@@ -72,3 +72,5 @@ both environments import, not in `personal_environment.nix` alone.
 
 Done when: a shell module is imported by both environments and every
 registered desktop host evaluates with it.
+
+## 4. choose from ubuntu feature list

@@ -10,7 +10,7 @@
     ../../../modules/maintenance.nix
     ../../../modules/tpm_decryption.nix
     ../../../modules/secure_boot.nix
-    ../../../modules/general_environment.nix
+    ../../../modules/client_environment.nix
   ];
 
   ## GPU: AMD (nothing to add)
