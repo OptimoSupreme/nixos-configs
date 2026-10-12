@@ -13,7 +13,7 @@
     # ../../../modules/btrfs_snapshots.nix      # Snapper on /home
     # ../../../modules/tpm_decryption.nix       # TPM unlock enrollment script
     # ../../../modules/secure_boot.nix          # Lanzaboote (needs the UEFI lines below)
-    # ../../../modules/general_environment.nix  # GNOME desktop, client machines
+    # ../../../modules/client_environment.nix   # GNOME desktop, client machines
     # ../../../modules/personal_environment.nix # GNOME desktop, my machines
     # ../../../modules/work_patch.nix           # CAC, Chromium, Slack, Zoom (on top of personal_environment)
   ];

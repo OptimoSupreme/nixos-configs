@@ -16,13 +16,13 @@ it may be secret, and no IPs, passwords, or tokens belong here.
   plus the unmodified `nixos-generate-config` output as
   `hardware-configuration.nix`. `workstations/` are Justin's desktops and
   laptops; `clients/` are machines he manages for other people. Client hosts
-  import `general_environment.nix` and are named `<owner>-<kind>`
+  import `client_environment.nix` and are named `<owner>-<kind>`
   (`jeff-laptop`); Justin's hosts get names of their own.
   Hosts commented out of `flake.nix` are missing hardware configs; they are
   debt, not dead. Keep them in mind when changing modules they import.
 - `hosts/workstation_template.nix` is the menu a new desktop host starts from.
 - `modules/` is a flat set of opt-in modules. `desktop.nix` is the shared GNOME
-  block; `general_environment.nix` (client machines) and
+  block; `client_environment.nix` (client machines) and
   `personal_environment.nix` (Justin's) each import it and add their own
   differences. A host imports exactly one of the two environments, never
   `desktop.nix` directly. `work_patch.nix` layers the work-only pieces (CAC,

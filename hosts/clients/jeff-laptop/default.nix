@@ -11,7 +11,7 @@
     ../../../modules/firefox.nix
     ../../../modules/btrfs_snapshots.nix
     ../../../modules/tpm_decryption.nix
-    ../../../modules/general_environment.nix
+    ../../../modules/client_environment.nix
   ];
 
   ## GPU: Intel
