@@ -12,6 +12,9 @@ show-battery-percentage=true
 [org/gnome/desktop/wm/preferences]
 button-layout='appmenu:minimize,close'
 
+[org/gnome/mutter]
+center-new-windows=true
+
 [org/gnome/settings-daemon/plugins/color]
 night-light-enabled=true
 night-light-schedule-automatic=true
@@ -41,6 +44,9 @@ disabled=['org.gnome.Nautilus.desktop', 'org.gnome.Calculator.desktop', 'org.gno
 
 [org/gnome/desktop/peripherals/mouse]
 accel-profile='flat'
+
+[org/gnome/desktop/peripherals/touchpad]
+tap-to-click=true
 
 [org/gnome/system/location]
 enabled=true

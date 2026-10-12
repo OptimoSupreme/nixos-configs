@@ -72,5 +72,3 @@ both environments import, not in `personal_environment.nix` alone.
 
 Done when: a shell module is imported by both environments and every
 registered desktop host evaluates with it.
-
-## 4. choose from ubuntu feature list

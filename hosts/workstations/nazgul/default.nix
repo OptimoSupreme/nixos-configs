@@ -45,8 +45,7 @@
     hostName = "nazgul";
   };
 
-  ## Timezone and Locale
-  time.timeZone = "America/New_York";
+  ## Locale
   i18n.defaultLocale = "en_US.UTF-8";
 
   ## User Account
