@@ -72,3 +72,11 @@ both environments import, not in `personal_environment.nix` alone.
 
 Done when: a shell module is imported by both environments and every
 registered desktop host evaluates with it.
+
+## 4. Fedora feature adoption
+
+## 5. Wake from sleep automatic updates (option)
+Add to template (potentially as an import), comment that it's an option best for desktops that are left powered on.
+
+## 6. Sleep then shutdown (option)
+Add to template (potentially as an import), comment that it's an option best for laptops to save battery.
