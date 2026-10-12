@@ -13,14 +13,27 @@
   ## Hardware
   hardware = {
     graphics.enable = true;
-    bluetooth.enable = true;
-    sane.enable = true;
+    bluetooth = {
+      enable = true;
+      settings.General.Experimental = true; # device battery levels
+    };
+    sane = {
+      enable = true;
+      extraBackends = [ pkgs.sane-airscan ];
+    };
     enableRedistributableFirmware = true;
   };
 
   ## Boot Splash
   boot = {
-    kernelParams = [ "quiet" ];
+    consoleLogLevel = lib.mkDefault 3;
+    initrd.verbose = false;
+    kernelParams = [
+      "quiet"
+      "udev.log_level=3"
+      "rd.udev.log_level=3"
+      "rd.systemd.show_status=auto"
+    ];
     plymouth = {
       enable = true;
       theme = "nixos-bgrt";
@@ -38,10 +51,12 @@
       pulse.enable = true;
     };
     printing.enable = true;
+    ipp-usb.enable = true;
     avahi = {
       enable = true;
       nssmdns4 = true;
     };
+    resolved.enable = true;
     fwupd.enable = true;
     fprintd.enable = true;
   };
@@ -52,12 +67,18 @@
     { settings."org/gnome/desktop/datetime".automatic-timezone = true; }
   ];
 
+  ## Out of Memory Killer
+  systemd.oomd = {
+    enableRootSlice = true;
+    enableUserSlices = true;
+  };
+
   ## Fingerprint enrolment workaround for https://github.com/NixOS/nixpkgs/issues/561267
   environment.extraInit = ''
     export XDG_DATA_DIRS=$XDG_DATA_DIRS''${XDG_DATA_DIRS:+:}${pkgs.gdm}/share/gsettings-schemas/${pkgs.gdm.name}
   '';
 
-  ## SSH installed, started by hand
+  ## SSH installed, started manually
   services.openssh.enable = true;
   systemd.services.sshd.wantedBy = lib.mkForce [ ];
 
@@ -82,11 +103,17 @@
   ];
 
   ## Fonts
-  fonts.packages = with pkgs; [
-    ubuntu-sans
-    nerd-fonts.ubuntu-sans
-    noto-fonts
-  ];
+  fonts = {
+    packages = with pkgs; [
+      ubuntu-sans
+      nerd-fonts.ubuntu-sans
+      noto-fonts
+    ];
+    fontconfig.defaultFonts = {
+      sansSerif = [ "Ubuntu Sans" ];
+      monospace = [ "UbuntuSansMono Nerd Font Mono" ];
+    };
+  };
 
   ## Packages
   environment.systemPackages = with pkgs; [
