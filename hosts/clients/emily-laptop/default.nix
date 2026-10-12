@@ -8,7 +8,7 @@
 
     ## Select Modules
     ../../../modules/maintenance.nix
-    ../../../modules/fastfetch.nix
+    ../../../modules/microfetch.nix
     ../../../modules/tpm_decryption.nix
     ../../../modules/secure_boot.nix
     ../../../modules/general_environment.nix

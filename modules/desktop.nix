@@ -71,7 +71,7 @@
   ## Fonts
   fonts.packages = with pkgs; [
     ubuntu-sans
-    ubuntu-sans-mono
+    nerd-fonts.ubuntu-sans
     noto-fonts
   ];
 

@@ -59,7 +59,7 @@ shows the choice for all three vendors.
 ## 3. Customize the shell
 
 Every host runs stock bash with the default prompt. The only shell setup in
-the repo is the fastfetch hook in `modules/fastfetch.nix`. Decide what the
+the repo is the microfetch hook in `modules/microfetch.nix`. Decide what the
 interactive shell should look like across the fleet (prompt, aliases,
 completion, history, whether to stay on bash or move to zsh or fish) and put
 it in a module that both environments import.

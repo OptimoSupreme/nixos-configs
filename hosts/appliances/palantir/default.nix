@@ -25,7 +25,7 @@ in
     ## Select Modules
     ../../../modules/maintenance.nix
     ../../../modules/appliance.nix
-    ../../../modules/fastfetch.nix
+    ../../../modules/microfetch.nix
   ];
 
   ## GPU: Intel UHD 630
