@@ -111,6 +111,9 @@ reverts itself within a day.
   characters. Scope is the host or module touched. Types: `feat`, `fix`,
   `refactor`, `docs`, `chore`, `ci`, `revert`. Add a body only when the why is
   not obvious; one logical change per commit.
+- Claude attribution lines (`Co-Authored-By`, the "Generated with" footer)
+  are fine on commits and PRs in this repo. Anywhere else, including upstream
+  contributions, add one only when that project's policy requires it.
 - `hardware-configuration.nix` is committed as generated, because
   `nix flake check` evaluates every registered host.
 - Upstream contributions: keep PR descriptions, commit bodies and review replies
