@@ -79,6 +79,7 @@
   environment.systemPackages = with pkgs; [
     kdePackages.breeze
     git
+    microfetch
     unzip
     ptyxis
     onlyoffice-desktopeditors
@@ -95,6 +96,11 @@
   ## Flatpak with Flathub
   services.flatpak.enable = true;
   environment.etc."flatpak/remotes.d/flathub.flatpakrepo".source = ../assets/flathub.flatpakrepo;
+
+  ## Microfetch on login
+  programs.bash.interactiveShellInit = ''
+    command -v microfetch >/dev/null && microfetch
+  '';
 
   ## dconf
   programs.dconf = {

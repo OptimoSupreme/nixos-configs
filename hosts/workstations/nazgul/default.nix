@@ -8,7 +8,6 @@
 
     ## Select Modules
     ../../../modules/maintenance.nix
-    ../../../modules/microfetch.nix
     ../../../modules/firefox.nix
     ../../../modules/tpm_decryption.nix
     ../../../modules/secure_boot.nix
