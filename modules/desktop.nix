@@ -7,6 +7,27 @@
   ...
 }:
 
+let
+  smartdNotify = pkgs.writeShellApplication {
+    name = "smartd-notify";
+    runtimeInputs = with pkgs; [
+      coreutils
+      gawk
+      libnotify
+      systemd
+      util-linux
+    ];
+    text = ''
+      loginctl list-users --no-legend | awk '{ print $2 }' | while read -r user; do
+        bus="/run/user/$(id -u "$user")/bus"
+        [ -S "$bus" ] || continue
+        runuser -u "$user" -- env DBUS_SESSION_BUS_ADDRESS="unix:path=$bus" \
+          notify-send --urgency=critical --app-name=smartd --icon=drive-harddisk \
+          "Disk problem: $SMARTD_DEVICESTRING" "$SMARTD_MESSAGE"
+      done
+    '';
+  };
+in
 {
   imports = [ inputs.nix-index-database.nixosModules.nix-index ];
 
@@ -26,6 +47,7 @@
 
   ## Boot Splash
   boot = {
+    tmp.cleanOnBoot = true;
     consoleLogLevel = lib.mkDefault 3;
     initrd.verbose = false;
     kernelParams = [
@@ -61,6 +83,20 @@
     fprintd.enable = true;
   };
 
+  ## Disk Health (SMART warnings as desktop notifications)
+  services.smartd = {
+    enable = true;
+    notifications.wall.enable = false;
+    notifications.x11.enable = false;
+    defaults.autodetected = "-a -m <nomailer> -M exec ${lib.getExe smartdNotify}";
+  };
+
+  ## Captive Portal Detection
+  networking.networkmanager.settings.connectivity = {
+    uri = "http://nmcheck.gnome.org/check_network_status.txt";
+    interval = 300;
+  };
+
   ## Time Zone (set by GNOME from location)
   time.timeZone = lib.mkDefault null;
   programs.dconf.profiles.user.databases = [
@@ -72,6 +108,13 @@
     enableRootSlice = true;
     enableUserSlices = true;
   };
+
+  ## Faster Shutdown
+  systemd.settings.Manager.DefaultTimeoutStopSec = "45s";
+  systemd.user.extraConfig = "DefaultTimeoutStopSec=45s";
+
+  ## Wayland for Electron and Chromium apps
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   ## Fingerprint enrolment workaround for https://github.com/NixOS/nixpkgs/issues/561267
   environment.extraInit = ''
@@ -112,9 +155,13 @@
       nerd-fonts.ubuntu-sans
       noto-fonts
     ];
-    fontconfig.defaultFonts = {
-      sansSerif = [ "Ubuntu Sans" ];
-      monospace = [ "UbuntuSansMono Nerd Font Mono" ];
+    fontconfig = {
+      defaultFonts = {
+        sansSerif = [ "Ubuntu Sans" ];
+        serif = [ "Noto Serif" ];
+        monospace = [ "UbuntuSansMono Nerd Font Mono" ];
+      };
+      subpixel.rgba = "rgb"; # matches font-antialiasing='rgba' in dconf for non-GTK apps
     };
   };
 
