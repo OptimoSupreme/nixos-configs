@@ -135,7 +135,7 @@ Then, in the clone:
    - **Modules**: if [nixos-hardware](https://github.com/NixOS/nixos-hardware)
      has a module for the board, import it first, as balrog does.
      `maintenance.nix` on every host (upgrades, GC, flakes).
-     `firefox.nix` and `fastfetch.nix` as wanted. `btrfs_snapshots.nix` on a
+     `firefox.nix` and `microfetch.nix` as wanted. `btrfs_snapshots.nix` on a
      btrfs install. `tpm_decryption.nix` only on an encrypted install; it
      refuses to evaluate without a LUKS device. `secure_boot.nix` on a UEFI
      machine that should boot with Secure Boot on; it takes over from

@@ -13,7 +13,7 @@
     "${modulesPath}/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix"
 
     ## Select Modules
-    ../modules/fastfetch.nix
+    ../modules/microfetch.nix
     ../modules/firefox.nix
     ../modules/personal_environment.nix
   ];
