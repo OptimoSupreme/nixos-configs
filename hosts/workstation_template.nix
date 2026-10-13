@@ -59,7 +59,7 @@
   # boot.kernelPackages = pkgs.linuxPackages;        # LTS
   # boot.kernelPackages = pkgs.linuxPackages_latest; # Latest stable
 
-  ## Swap
+  ## Swapfile (if zram alone isn't enough)
   swapDevices = [
     {
       device = "/swapfile";

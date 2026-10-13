@@ -64,10 +64,15 @@ in
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   ## Swap
+  zramSwap = {
+    enable = true;
+    memoryMax = 8 * 1024 * 1024 * 1024;
+    priority = 1;
+  };
   swapDevices = [
     {
       device = "/swapfile";
-      size = 8 * 1024;
+      size = 1024;
       priority = 0;
     }
   ];
