@@ -34,8 +34,8 @@ installer/       the live ISO, and the manual for installing a machine
   `sudo nixos-rebuild test --flake github:OptimoSupreme/nixos-configs/<branch>#<host>`.
   The daily upgrade pulls `main` back over it within a day.
 - **Updates**: `flake.lock` is bumped weekly by a GitHub Action that first
-  checks every host still evaluates. Every push and pull request runs the
-  same checks plus `nixfmt`.
+  checks every host still evaluates. Pushes to main and pull requests marked
+  ready for review run the same checks plus `nixfmt`.
 
 ## Contributing
 
