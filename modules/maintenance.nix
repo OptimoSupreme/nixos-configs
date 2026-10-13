@@ -16,6 +16,13 @@ in
   };
 
   config = {
+    ## Swap
+    zramSwap = {
+      enable = lib.mkDefault true;
+      memoryMax = lib.mkDefault (8 * 1024 * 1024 * 1024);
+      priority = lib.mkDefault 1;
+    };
+
     ## Btrfs Scrub
     services.btrfs.autoScrub.enable = lib.mkDefault hasBtrfs;
 
@@ -25,9 +32,7 @@ in
       flake = lib.mkDefault "github:OptimoSupreme/nixos-configs";
       operation = lib.mkDefault "boot";
       dates = lib.mkDefault "10:00";
-      randomizedDelaySec = "20m";
-      persistent = true;
-      allowReboot = false;
+      randomizedDelaySec = lib.mkDefault "20m";
     };
 
     ## Store GC and Deduplication

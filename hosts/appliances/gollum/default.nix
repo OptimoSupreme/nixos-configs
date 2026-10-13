@@ -22,8 +22,8 @@
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  ## Swap
-  jovian.steamos.enableZram = true;
+  ## Swap (the fleet block in maintenance.nix replaces the SteamOS one)
+  jovian.steamos.enableZram = false;
 
   ## Networking
   networking = {
@@ -31,9 +31,8 @@
     hostName = "gollum";
   };
 
-  ## Timezone and Locale
+  ## Timezone
   time.timeZone = "America/New_York";
-  i18n.defaultLocale = "en_US.UTF-8";
 
   ## User Account
   users.users.justin = {

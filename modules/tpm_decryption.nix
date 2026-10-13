@@ -42,10 +42,6 @@ in
         message = "tpm_decryption.nix is imported but this host declares no boot.initrd.luks.devices: remove it from the host's imports, or declare the encrypted device in hardware-configuration.nix.";
       }
     ];
-
-    ## Boot
-    boot.initrd.systemd.enable = true;
-
     ## Packages
     environment.systemPackages = [
       pkgs.tpm2-tools

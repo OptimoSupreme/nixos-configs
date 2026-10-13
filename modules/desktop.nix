@@ -33,13 +33,9 @@ in
 
   ## Hardware
   hardware = {
-    graphics.enable = true;
-    bluetooth = {
-      enable = lib.mkDefault true;
-      settings.General.Experimental = true; # device battery levels
-    };
+    bluetooth.settings.General.Experimental = lib.mkDefault true; # device battery levels
     sane = {
-      enable = true;
+      enable = lib.mkDefault true;
       extraBackends = [ pkgs.sane-airscan ];
     };
     enableRedistributableFirmware = lib.mkDefault true;
@@ -68,19 +64,16 @@ in
     displayManager.gdm.enable = lib.mkDefault true;
     desktopManager.gnome.enable = lib.mkDefault true;
     pipewire = {
-      enable = true;
-      alsa.enable = true;
-      pulse.enable = true;
+      enable = lib.mkDefault true;
+      alsa.enable = lib.mkDefault true;
+      pulse.enable = lib.mkDefault true;
     };
-    printing.enable = true;
-    ipp-usb.enable = true;
-    avahi = {
-      enable = true;
-      nssmdns4 = true;
-    };
-    resolved.enable = true;
-    fwupd.enable = true;
-    fprintd.enable = true;
+    printing.enable = lib.mkDefault true;
+    ipp-usb.enable = lib.mkDefault true;
+    avahi.nssmdns4 = lib.mkDefault true;
+    resolved.enable = lib.mkDefault true;
+    fwupd.enable = lib.mkDefault true;
+    fprintd.enable = lib.mkDefault true;
   };
 
   ## Disk Health (SMART warnings as desktop notifications)
@@ -98,7 +91,6 @@ in
   };
 
   ## Time Zone (set by GNOME from location)
-  time.timeZone = lib.mkDefault null;
   programs.dconf.profiles.user.databases = [
     { settings."org/gnome/desktop/datetime".automatic-timezone = true; }
   ];
@@ -196,10 +188,7 @@ in
   '';
 
   ## dconf
-  programs.dconf = {
-    enable = true;
-    profiles.gdm.databases = [
-      { keyfiles = [ ../assets/dconf/gdm ]; }
-    ];
-  };
+  programs.dconf.profiles.gdm.databases = [
+    { keyfiles = [ ../assets/dconf/gdm ]; }
+  ];
 }

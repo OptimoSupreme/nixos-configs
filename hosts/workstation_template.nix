@@ -60,13 +60,6 @@
   # boot.kernelPackages = pkgs.linuxPackages_latest; # Latest stable
 
   ## Swap
-  zramSwap = {
-    enable = true;
-    algorithm = "zstd";
-    memoryPercent = 50;
-    memoryMax = 8 * 1024 * 1024 * 1024;
-    priority = 1;
-  };
   swapDevices = [
     {
       device = "/swapfile";
@@ -76,14 +69,10 @@
   ];
 
   ## Networking (hostName must match the flake attribute)
-  networking = {
-    networkmanager.enable = true;
-    hostName = "changeme";
-  };
+  networking.hostName = "changeme";
 
-  ## Timezone and Locale
+  ## Timezone
   # time.timeZone = "America/New_York"; # pin a zone instead of GNOME setting it from location
-  i18n.defaultLocale = "en_US.UTF-8";
 
   ## User Account
   users.users.changeme = {

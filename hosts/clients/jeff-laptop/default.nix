@@ -34,23 +34,8 @@
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages; # LTS
 
-  ## Swap
-  zramSwap = {
-    enable = true;
-    algorithm = "zstd";
-    memoryPercent = 50;
-    memoryMax = 8 * 1024 * 1024 * 1024;
-    priority = 1;
-  };
-
   ## Networking
-  networking = {
-    networkmanager.enable = true;
-    hostName = "jeff-laptop";
-  };
-
-  ## Locale
-  i18n.defaultLocale = "en_US.UTF-8";
+  networking.hostName = "jeff-laptop";
 
   ## User Account
   users.users.jeff = {
