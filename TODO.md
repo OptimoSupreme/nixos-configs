@@ -56,7 +56,7 @@ Add to template (potentially as an import), comment that it's an option best for
 ## 4. Sleep then shutdown (option)
 Add to template (potentially as an import), comment that it's an option best for laptops to save battery.
 
-## 6. Move TPM unlock off a literal PCR 7 binding
+## 5. Move TPM unlock off a literal PCR 7 binding
 
 `modules/tpm_decryption.nix` enrolls with `--tpm2-pcrs=7`. systemd 258
 stopped defaulting to that and recommends systemd-pcrlock policies for
