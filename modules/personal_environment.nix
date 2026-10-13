@@ -11,6 +11,7 @@ in
   ## Networking
   networking.firewall.allowedTCPPorts = [ 53317 ]; # LocalSend
   networking.firewall.allowedUDPPorts = [ 53317 ];
+  networking.hosts."10.0.1.2" = [ "morgoth" ];
 
   ## Passwordless sudo for wheel
   security.sudo.wheelNeedsPassword = lib.mkDefault false;
