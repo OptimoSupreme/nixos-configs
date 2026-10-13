@@ -30,21 +30,15 @@
   ## Swap
   zramSwap = {
     enable = true;
-    algorithm = "zstd";
-    memoryPercent = 50;
     memoryMax = 8 * 1024 * 1024 * 1024;
     priority = 1;
   };
 
   ## Networking
-  networking = {
-    networkmanager.enable = true;
-    hostName = "installer";
-  };
+  networking.hostName = "installer";
 
-  ## Timezone and Locale
+  ## Timezone
   time.timeZone = "America/New_York";
-  i18n.defaultLocale = "en_US.UTF-8";
 
   ## Pinned Apps
   programs.dconf.profiles.user.databases = lib.mkBefore [

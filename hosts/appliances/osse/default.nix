@@ -59,19 +59,11 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.initrd.systemd.enable = true;
 
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   ## Swap
-  zramSwap = {
-    enable = true;
-    algorithm = "zstd";
-    memoryPercent = 50;
-    memoryMax = 8 * 1024 * 1024 * 1024;
-    priority = 1;
-  };
   swapDevices = [
     {
       device = "/swapfile";

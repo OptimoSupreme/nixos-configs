@@ -27,24 +27,11 @@
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  ## Swap
-  zramSwap = {
-    enable = true;
-    algorithm = "zstd";
-    memoryPercent = 50;
-    memoryMax = 8 * 1024 * 1024 * 1024;
-    priority = 1;
-  };
-
   ## Networking
-  networking = {
-    networkmanager.enable = true;
-    hostName = "saruman";
-  };
+  networking.hostName = "saruman";
 
-  ## Clock and Locale
+  ## Clock
   time.hardwareClockInLocalTime = true; # Windows dual boot
-  i18n.defaultLocale = "en_US.UTF-8";
 
   ## User Account
   users.users.justin = {

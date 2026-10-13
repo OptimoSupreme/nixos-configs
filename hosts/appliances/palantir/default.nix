@@ -53,20 +53,12 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.initrd.systemd.enable = true;
   boot.kernelParams = [ "video=HDMI-A-1:640x480@60" ]; # 1:1 onto NTSC's 480 lines, see README "CRT / display notes"
 
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages; # LTS
 
   ## Swap
-  zramSwap = {
-    enable = true;
-    algorithm = "zstd";
-    memoryPercent = 50;
-    memoryMax = 8 * 1024 * 1024 * 1024;
-    priority = 1;
-  };
   swapDevices = [
     {
       device = "/swapfile";
@@ -116,7 +108,6 @@ in
   };
 
   ## Kiosk: Cage running Chromium on tty1
-  nixpkgs.config.allowUnfree = true;
   services.cage = {
     enable = true;
     user = "justin";

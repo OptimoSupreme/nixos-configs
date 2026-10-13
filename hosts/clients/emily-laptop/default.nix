@@ -24,13 +24,6 @@
   boot.kernelPackages = pkgs.linuxPackages; # LTS
 
   ## Swap
-  zramSwap = {
-    enable = true;
-    algorithm = "zstd";
-    memoryPercent = 50;
-    memoryMax = 8 * 1024 * 1024 * 1024;
-    priority = 1;
-  };
   swapDevices = [
     {
       device = "/swapfile";
@@ -40,13 +33,7 @@
   ];
 
   ## Networking
-  networking = {
-    networkmanager.enable = true;
-    hostName = "emily-laptop";
-  };
-
-  ## Locale
-  i18n.defaultLocale = "en_US.UTF-8";
+  networking.hostName = "emily-laptop";
 
   ## User Account
   users.users.emily = {
