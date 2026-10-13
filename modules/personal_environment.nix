@@ -13,26 +13,26 @@ in
   networking.firewall.allowedUDPPorts = [ 53317 ];
 
   ## Passwordless sudo for wheel
-  security.sudo.wheelNeedsPassword = false;
+  security.sudo.wheelNeedsPassword = lib.mkDefault false;
 
   ## Containers and VMs
-  virtualisation.podman.enable = true;
-  virtualisation.libvirtd.enable = true;
-  programs.virt-manager.enable = true;
+  virtualisation.podman.enable = lib.mkDefault true;
+  virtualisation.libvirtd.enable = lib.mkDefault true;
+  programs.virt-manager.enable = lib.mkDefault true;
   users.groups.libvirtd.members = [ user ];
 
   ## Git
   programs.git = {
-    enable = true;
+    enable = lib.mkDefault true;
     config = {
-      user.name = "Justin Ward";
-      user.email = "jward92@gmail.com";
-      fetch.prune = true;
+      user.name = lib.mkDefault "Justin Ward";
+      user.email = lib.mkDefault "jward92@gmail.com";
+      fetch.prune = lib.mkDefault true;
     };
   };
 
   ## Shim for non-Nix binaries (some Codium extensions)
-  programs.nix-ld.enable = true;
+  programs.nix-ld.enable = lib.mkDefault true;
 
   ## Packages
   environment.systemPackages = with pkgs; [

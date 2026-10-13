@@ -35,21 +35,21 @@ in
   hardware = {
     graphics.enable = true;
     bluetooth = {
-      enable = true;
+      enable = lib.mkDefault true;
       settings.General.Experimental = true; # device battery levels
     };
     sane = {
       enable = true;
       extraBackends = [ pkgs.sane-airscan ];
     };
-    enableRedistributableFirmware = true;
+    enableRedistributableFirmware = lib.mkDefault true;
   };
 
   ## Boot Splash
   boot = {
-    tmp.cleanOnBoot = true;
+    tmp.cleanOnBoot = lib.mkDefault true;
     consoleLogLevel = lib.mkDefault 3;
-    initrd.verbose = false;
+    initrd.verbose = lib.mkDefault false;
     kernelParams = [
       "quiet"
       "udev.log_level=3"
@@ -57,16 +57,16 @@ in
       "rd.systemd.show_status=auto"
     ];
     plymouth = {
-      enable = true;
-      theme = "nixos-bgrt";
+      enable = lib.mkDefault true;
+      theme = lib.mkDefault "nixos-bgrt";
       themePackages = [ pkgs.nixos-bgrt-plymouth ];
     };
   };
 
   ## Desktop Services
   services = {
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
+    displayManager.gdm.enable = lib.mkDefault true;
+    desktopManager.gnome.enable = lib.mkDefault true;
     pipewire = {
       enable = true;
       alsa.enable = true;
@@ -85,16 +85,16 @@ in
 
   ## Disk Health (SMART warnings as desktop notifications)
   services.smartd = {
-    enable = true;
-    notifications.wall.enable = false;
-    notifications.x11.enable = false;
-    defaults.autodetected = "-a -m <nomailer> -M exec ${lib.getExe smartdNotify}";
+    enable = lib.mkDefault true;
+    notifications.wall.enable = lib.mkDefault false;
+    notifications.x11.enable = lib.mkDefault false; # the installer ISO has X enabled
+    defaults.autodetected = lib.mkDefault "-a -m <nomailer> -M exec ${lib.getExe smartdNotify}";
   };
 
   ## Captive Portal Detection
   networking.networkmanager.settings.connectivity = {
-    uri = "http://nmcheck.gnome.org/check_network_status.txt";
-    interval = 300;
+    uri = lib.mkDefault "http://nmcheck.gnome.org/check_network_status.txt";
+    interval = lib.mkDefault 300;
   };
 
   ## Time Zone (set by GNOME from location)
@@ -105,16 +105,16 @@ in
 
   ## Out of Memory Killer
   systemd.oomd = {
-    enableRootSlice = true;
-    enableUserSlices = true;
+    enableRootSlice = lib.mkDefault true;
+    enableUserSlices = lib.mkDefault true;
   };
 
   ## Faster Shutdown
-  systemd.settings.Manager.DefaultTimeoutStopSec = "45s";
+  systemd.settings.Manager.DefaultTimeoutStopSec = lib.mkDefault "45s";
   systemd.user.extraConfig = "DefaultTimeoutStopSec=45s";
 
   ## Wayland for Electron and Chromium apps
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+  environment.sessionVariables.NIXOS_OZONE_WL = lib.mkDefault "1";
 
   ## Fingerprint enrolment workaround for https://github.com/NixOS/nixpkgs/issues/561267
   environment.extraInit = ''
@@ -122,7 +122,7 @@ in
   '';
 
   ## SSH installed, started manually
-  services.openssh.enable = true;
+  services.openssh.enable = lib.mkDefault true;
   systemd.services.sshd.wantedBy = lib.mkForce [ ];
 
   ## Package Removals
@@ -146,7 +146,7 @@ in
   ];
   # Hide CUPS web UI icon
   environment.extraSetup = "rm -f $out/share/applications/cups.desktop";
-  documentation.nixos.enable = false;
+  documentation.nixos.enable = lib.mkDefault false;
 
   ## Fonts
   fonts = {
@@ -161,7 +161,7 @@ in
         serif = [ "Noto Serif" ];
         monospace = [ "UbuntuSansMono Nerd Font Mono" ];
       };
-      subpixel.rgba = "rgb"; # matches font-antialiasing='rgba' in dconf for non-GTK apps
+      subpixel.rgba = lib.mkDefault "rgb"; # matches font-antialiasing='rgba' in dconf for non-GTK apps
     };
   };
 
@@ -184,11 +184,11 @@ in
   ];
 
   ## Flatpak with Flathub
-  services.flatpak.enable = true;
+  services.flatpak.enable = lib.mkDefault true;
   environment.etc."flatpak/remotes.d/flathub.flatpakrepo".source = ../assets/flathub.flatpakrepo;
 
   ## Command Not Found hint and `,` runner
-  programs.nix-index-database.comma.enable = true;
+  programs.nix-index-database.comma.enable = lib.mkDefault true;
 
   ## Microfetch on login
   programs.bash.interactiveShellInit = ''
