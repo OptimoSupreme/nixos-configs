@@ -31,8 +31,9 @@ replacement module is wired into one environment.
 Loading the GPU's kernel mode setting driver in the initrd gives native
 resolution from the first frame: Plymouth, the LUKS prompt and the console
 all render at the panel's resolution instead of the firmware's. The right
-knob is different for each vendor, and today only palantir does it
-(`boot.initrd.kernelModules = [ "i915" ]`).
+knob is different for each vendor, and today only palantir
+(`boot.initrd.kernelModules = [ "i915" ]`) and balrog
+(`hardware.amdgpu.initrd.enable`, set by its nixos-hardware module) do it.
 
 Write a module, or a section of `workstation_template.nix`, that makes the
 correct setting one line to pick:
@@ -80,5 +81,54 @@ Add to template (potentially as an import), comment that it's an option best for
 Add to template (potentially as an import), comment that it's an option best for laptops to save battery.
 
 ## 6. Blur my shell feature exploration
+
+## 7. Drop two workarounds once their nixpkgs backports reach nixos-26.05
+
+Both fixes are on nixpkgs master; the fleet waits on the release-26.05
+backports and the weekly lock bump that follows each merge.
+
+- Fingerprint enrolment: `environment.extraInit` in `modules/desktop.nix`
+  puts gdm's gsettings schema on `XDG_DATA_DIRS`. Delete it once
+  https://github.com/NixOS/nixpkgs/pull/572210 is merged.
+- Impatience: `modules/desktop.nix` uses
+  `gnome50Extensions."impatience@gfxmonk.net"` because the manual package
+  on 26.05 stops at GNOME 49. Switch back to `gnomeExtensions.impatience`
+  and drop the comment once https://github.com/NixOS/nixpkgs/pull/573338 is
+  merged.
+
+Done when: both lines are gone and every registered desktop host evaluates.
+
+## 8. Move TPM unlock off a literal PCR 7 binding
+
+`modules/tpm_decryption.nix` enrolls with `--tpm2-pcrs=7`. systemd 258
+stopped defaulting to that and recommends systemd-pcrlock policies for
+PCR 7 combined with signed PCR 11; a literal PCR 7 seal is invalidated by
+every fwupd dbx update and falls back to the passphrase. It still works on
+systemd 260, so this is not urgent.
+
+First find out whether Lanzaboote v1.2.0 can produce the signed PCR 11
+policy and whether its measured-boot mode fits the fleet (it caps
+`configurationLimit` at 4). Then decide between pcrlock, signed PCR 11, or
+both, and re-enroll the four TPM hosts (nazgul, balrog, emily-laptop,
+jeff-laptop) with the new policy via `enable-tpm-decryption`.
+
+Done when: a dbx update no longer drops a host to the passphrase prompt,
+and the enrollment script encodes the chosen policy.
+
+## 9. Expect changes at the NixOS 26.11 bump (GNOME 51)
+
+Two things the 26.11 upgrade will bring that touch this repo:
+
+- GDM 51 no longer allows fingerprint-only login; fingerprint becomes
+  re-authentication only. The fprintd hosts will behave differently at the
+  login screen and the fingerprint line in `installer/README.md` needs
+  rewording.
+- Fedora 45 and GNOME OS replace gnome-keyring with oo7 as the Secrets
+  Service. nixpkgs has the packages but no NixOS module yet; check whether
+  26.11 wires it into the GNOME module and whether anything (CAC, Chromium
+  NSS database) notices.
+
+Done when: the fleet is on 26.11 and both points are checked off or
+reworked.
 
 ## Get through audit report
