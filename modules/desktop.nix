@@ -33,7 +33,6 @@ in
 
   ## Hardware
   hardware = {
-    bluetooth.settings.General.Experimental = lib.mkDefault true; # device battery levels
     sane = {
       enable = lib.mkDefault true;
       extraBackends = [ pkgs.sane-airscan ];
