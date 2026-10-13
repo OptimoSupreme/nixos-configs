@@ -230,7 +230,10 @@ Roll back by picking an older generation in the boot menu (10 are listed,
   boots with Secure Boot off. To get there, `sudo systemctl reboot
   --firmware-setup`, turn Secure Boot on and reset its keys to Setup Mode
   (the wording varies by vendor; skip any option that also erases the dbx
-  revocation list), save and exit. Then check:
+  revocation list), save and exit. HP consumer firmware greys out "Clear
+  All Secure Boot Keys" while Secure Boot is enabled: disable it, clear
+  the keys, save, type the confirmation code it shows on reboot, then go
+  back in and enable Secure Boot. Then check:
 
   ```bash
   sudo sbctl status   # Secure Boot: Enabled, Setup Mode: Disabled
@@ -250,12 +253,17 @@ Roll back by picking an older generation in the boot menu (10 are listed,
   update invalidates for good. With `secure_boot.nix` as well, Lanzaboote
   turns on measured boot: a systemd-pcrlock policy over PCRs 0, 4 and 7
   (firmware, boot chain, Secure Boot) that every rebuild re-predicts, so
-  the TPM keeps unlocking across updates. Before importing the module on
-  an encrypted host, check the TPM is supported:
+  the TPM keeps unlocking across updates. Not every TPM can: before
+  importing the module on an encrypted host, ask it.
 
   ```bash
   /run/current-system/systemd/lib/systemd/systemd-pcrlock is-supported   # yes
   ```
+
+  Anything else means the TPM lacks an operation pcrlock needs (Jeff's
+  Infineon SLB9670 says `obsolete`), and the host sets
+  `boot.lanzaboote.measuredBoot.enable = false` to keep the PCR 7 seal
+  with Secure Boot on top.
 
   On such a host `auto-cryptenroll.service` migrates an existing PCR 7
   slot to the policy by itself on the first boot with Secure Boot on. It
