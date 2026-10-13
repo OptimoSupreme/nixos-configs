@@ -22,9 +22,6 @@
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  ## Swap (the fleet block in maintenance.nix replaces the SteamOS one)
-  jovian.steamos.enableZram = false;
-
   ## Networking
   networking = {
     networkmanager.enable = true;

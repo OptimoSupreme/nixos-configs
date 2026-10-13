@@ -58,6 +58,13 @@ in
     };
   };
 
+  ## zramSwap
+  zramSwap = {
+    enable = lib.mkDefault true;
+    memoryMax = lib.mkDefault (8 * 1024 * 1024 * 1024);
+    priority = lib.mkDefault 1;
+  };
+
   ## Desktop Services
   services = {
     displayManager.gdm.enable = lib.mkDefault true;
