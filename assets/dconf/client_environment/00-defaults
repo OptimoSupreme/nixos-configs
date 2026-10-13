@@ -88,13 +88,23 @@ label='Default'
 palette='Dark Pastel'
 
 [org/gnome/shell/extensions/blur-my-shell/dash-to-panel]
-blur-original-panel=true
+blur-original-panel=false
 
 [org/gnome/shell/extensions/blur-my-shell/appfolder]
 style-dialogs=2
 
 [org/gnome/shell/extensions/blur-my-shell/dash-to-dock]
 override-background=false
+
+[org/gnome/shell/extensions/blur-my-shell/panel]
+override-background=false
+unblur-in-overview=false
+
+[org/gnome/shell/extensions/blur-my-shell/applications]
+blur=true
+sigma=10
+opacity=210
+whitelist=['org.gnome.Ptyxis', 'org.gnome.Nautilus', 'org.gnome.Calculator', 'org.gnome.Calendar', 'org.gnome.Resources']
 
 [org/gnome/shell/keybindings]
 screenshot=['Print']
@@ -105,7 +115,7 @@ screenshot-window=@as []
 stick=true
 
 [org/gnome/shell/extensions/dash-to-panel]
-appicon-margin=2
+appicon-margin=1
 dot-style-focused='DOTS'
 dot-style-unfocused='DOTS'
 focus-highlight-dominant=true
@@ -117,3 +127,11 @@ overview-click-to-exit=true
 show-window-previews=false
 panel-sizes='{"0":36}'
 panel-element-positions='{"0":[{"element":"showAppsButton","visible":true,"position":"stackedTL"},{"element":"activitiesButton","visible":false,"position":"stackedTL"},{"element":"leftBox","visible":true,"position":"stackedTL"},{"element":"taskbar","visible":true,"position":"stackedTL"},{"element":"centerBox","visible":true,"position":"stackedBR"},{"element":"rightBox","visible":true,"position":"stackedBR"},{"element":"dateMenu","visible":true,"position":"stackedBR"},{"element":"systemMenu","visible":true,"position":"stackedBR"},{"element":"desktopButton","visible":false,"position":"stackedBR"}]}'
+trans-bg-color='#000000'
+trans-dynamic-anim-target=1.0
+trans-dynamic-anim-time=200
+trans-dynamic-distance=1
+trans-panel-opacity=0.8
+trans-use-custom-bg=true
+trans-use-custom-opacity=true
+trans-use-dynamic-opacity=true
