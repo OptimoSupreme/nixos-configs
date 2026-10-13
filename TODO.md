@@ -2,29 +2,7 @@
 
 Open work on the fleet. Each item says what, why, and how to tell it is done.
 
-## 1. Evaluate COSMIC and KDE as a GNOME replacement
-
-Both `client_environment.nix` and `personal_environment.nix` build on the
-GNOME block in `desktop.nix`. Find out whether COSMIC or KDE Plasma can be
-configured to a point where it would replace GNOME in one or both
-environments.
-
-Plan:
-
-1. Install stock NixOS in a VM and expose it over SSH so Claude can rebuild
-   and inspect it directly.
-2. Iterate on COSMIC (`services.desktopManager.cosmic`, `services.displayManager.cosmic-greeter`)
-   until it is as good as it gets or it is clearly a dead end. Capture the
-   finished config as a candidate `modules/cosmic_desktop.nix`.
-3. Do the same for KDE Plasma 6 (`services.desktopManager.plasma6`, `services.displayManager.sddm`).
-4. For each, note what the current GNOME setup provides that was lost or
-   needs a workaround: the dconf keyfiles in `assets/dconf/`, GDM login
-   screen settings, Plymouth handoff, fonts, the CAC pieces in `work_patch.nix`,
-   whatever the clients rely on.
-5. Decide per environment: keep GNOME, switch personal only, or switch both.
-
-Done when: a decision is recorded here and either the GNOME block stays or a
-replacement module is wired into one environment.
+## 1. Blur my shell feature exploration plus tweak person top bar.
 
 ## 2. Early KMS module for every GPU vendor
 
@@ -80,25 +58,7 @@ Add to template (potentially as an import), comment that it's an option best for
 ## 5. Sleep then shutdown (option)
 Add to template (potentially as an import), comment that it's an option best for laptops to save battery.
 
-## 6. Blur my shell feature exploration
-
-## 7. Drop two workarounds once their nixpkgs backports reach nixos-26.05
-
-Both fixes are on nixpkgs master; the fleet waits on the release-26.05
-backports and the weekly lock bump that follows each merge.
-
-- Fingerprint enrolment: `environment.extraInit` in `modules/desktop.nix`
-  puts gdm's gsettings schema on `XDG_DATA_DIRS`. Delete it once
-  https://github.com/NixOS/nixpkgs/pull/572210 is merged.
-- Impatience: `modules/desktop.nix` uses
-  `gnome50Extensions."impatience@gfxmonk.net"` because the manual package
-  on 26.05 stops at GNOME 49. Switch back to `gnomeExtensions.impatience`
-  and drop the comment once https://github.com/NixOS/nixpkgs/pull/573338 is
-  merged.
-
-Done when: both lines are gone and every registered desktop host evaluates.
-
-## 8. Move TPM unlock off a literal PCR 7 binding
+## 6. Move TPM unlock off a literal PCR 7 binding
 
 `modules/tpm_decryption.nix` enrolls with `--tpm2-pcrs=7`. systemd 258
 stopped defaulting to that and recommends systemd-pcrlock policies for
@@ -122,7 +82,28 @@ re-enroll the other TPM hosts (balrog, emily-laptop, jeff-laptop).
 Done when: a dbx update no longer drops a host to the passphrase prompt,
 and the enrollment script encodes the chosen policy.
 
-## 9. Expect changes at the NixOS 26.11 bump (GNOME 51)
+#### Waiting on upstream ####
+
+Items that cannot be finished yet, or that are a heads-up for a future
+change. Nothing to do until the named event happens.
+
+### Drop two workarounds once their nixpkgs backports reach nixos-26.05
+
+Both fixes are on nixpkgs master; the fleet waits on the release-26.05
+backports and the weekly lock bump that follows each merge.
+
+- Fingerprint enrolment: `environment.extraInit` in `modules/desktop.nix`
+  puts gdm's gsettings schema on `XDG_DATA_DIRS`. Delete it once
+  https://github.com/NixOS/nixpkgs/pull/572210 is merged.
+- Impatience: `modules/desktop.nix` uses
+  `gnome50Extensions."impatience@gfxmonk.net"` because the manual package
+  on 26.05 stops at GNOME 49. Switch back to `gnomeExtensions.impatience`
+  and drop the comment once https://github.com/NixOS/nixpkgs/pull/573338 is
+  merged.
+
+Done when: both lines are gone and every registered desktop host evaluates.
+
+### Expect changes at the NixOS 26.11 bump (GNOME 51)
 
 Two things the 26.11 upgrade will bring that touch this repo:
 
