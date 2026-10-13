@@ -1,3 +1,5 @@
+#### Flake ####
+
 {
   description = "My custom NixOS configurations.";
 
