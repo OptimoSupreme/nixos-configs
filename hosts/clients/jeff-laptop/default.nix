@@ -11,6 +11,7 @@
     ../../../modules/firefox.nix
     ../../../modules/btrfs_snapshots.nix
     ../../../modules/tpm_decryption.nix
+    ../../../modules/secure_boot.nix
     ../../../modules/client_environment.nix
   ];
 
@@ -30,6 +31,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.lanzaboote.measuredBoot.enable = false; # Infineon SLB9670 fw 7.62 lacks PolicyAuthorizeNV; pcrlock says obsolete
 
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages; # LTS

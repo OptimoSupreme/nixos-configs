@@ -139,8 +139,9 @@ Then, in the clone:
      btrfs install. `tpm_decryption.nix` only on an encrypted install; it
      refuses to evaluate without a LUKS device. `secure_boot.nix` on a UEFI
      machine that should boot with Secure Boot on; it takes over from
-     systemd-boot, so keep the UEFI boot lines. Exactly one environment:
-     `client_environment.nix` for a managed machine,
+     systemd-boot, so keep the UEFI boot lines; on an encrypted disk it also
+     turns on measured boot (see "Finishing the machine"). Exactly one
+     environment: `client_environment.nix` for a managed machine,
      `personal_environment.nix` for one of mine. They are siblings, never
      both.
    - **Boot**: systemd-boot for UEFI, GRUB for BIOS. **Kernel**: LTS or
@@ -216,8 +217,8 @@ To apply a change now, from any clone (`path:` for the reason in
 sudo nixos-rebuild switch --flake path:$HOME/nixos-configs#<name>
 ```
 
-Roll back by picking an older generation in the boot menu (the last 5 are
-kept), or with `sudo nixos-rebuild switch --rollback`.
+Roll back by picking an older generation in the boot menu (10 are listed,
+4 on a measured boot host), or with `sudo nixos-rebuild switch --rollback`.
 
 ### 4. Finishing the machine
 
@@ -229,7 +230,10 @@ kept), or with `sudo nixos-rebuild switch --rollback`.
   boots with Secure Boot off. To get there, `sudo systemctl reboot
   --firmware-setup`, turn Secure Boot on and reset its keys to Setup Mode
   (the wording varies by vendor; skip any option that also erases the dbx
-  revocation list), save and exit. Then check:
+  revocation list), save and exit. HP consumer firmware greys out "Clear
+  All Secure Boot Keys" while Secure Boot is enabled: disable it, clear
+  the keys, save, type the confirmation code it shows on reboot, then go
+  back in and enable Secure Boot. Then check:
 
   ```bash
   sudo sbctl status   # Secure Boot: Enabled, Setup Mode: Disabled
@@ -240,10 +244,41 @@ kept), or with `sudo nixos-rebuild switch --rollback`.
 - **TPM unlock**, on an encrypted install, once, after the first boot into
   the repo config, and after Secure Boot is on if the host has it (turning
   it on changes PCR 7): `sudo enable-tpm-decryption`. It asks for the LUKS
-  passphrase and enrolls the TPM, bound to PCR 7 (the Secure Boot state);
-  the passphrase stays as the fallback. If the disk stops unlocking, run it
-  again. Without Secure Boot this protects a pulled drive, not the machine
-  itself.
+  passphrase and enrolls the TPM; the passphrase stays as the fallback. If
+  the disk stops unlocking, run it again. Without Secure Boot this protects
+  a pulled drive, not the machine itself.
+
+  What the TPM is bound to depends on the host. With `tpm_decryption.nix`
+  alone it is a literal PCR 7, the Secure Boot state, which every dbx
+  update invalidates for good. With `secure_boot.nix` as well, Lanzaboote
+  turns on measured boot: a systemd-pcrlock policy over PCRs 0, 4 and 7
+  (firmware, boot chain, Secure Boot) that every rebuild re-predicts, so
+  the TPM keeps unlocking across updates. Not every TPM can: before
+  importing the module on an encrypted host, ask it.
+
+  ```bash
+  /run/current-system/systemd/lib/systemd/systemd-pcrlock is-supported   # yes
+  ```
+
+  Anything else means the TPM lacks an operation pcrlock needs (Jeff's
+  Infineon SLB9670 says `obsolete`), and the host sets
+  `boot.lanzaboote.measuredBoot.enable = false` to keep the PCR 7 seal
+  with Secure Boot on top.
+
+  On such a host `auto-cryptenroll.service` migrates an existing PCR 7
+  slot to the policy by itself on the first boot with Secure Boot on. It
+  fails, and keeps retrying at each boot, while the old slot no longer
+  unlocks; `sudo enable-tpm-decryption` fixes that with the passphrase.
+  The policy caps the boot menu at 4 generations. A firmware or dbx update
+  still moves PCR 0 or 7, so the boot after one asks for the passphrase
+  once; the policy is relocked for the new values during that boot and the
+  next one is back on the TPM. To check a host:
+
+  ```bash
+  systemctl status auto-cryptenroll                     # inactive (dead), Condition check... was not met
+  sudo cryptsetup luksDump --dump-json-metadata /dev/disk/by-uuid/<uuid> | grep tpm2_pcrlock
+  journalctl -b -u 'systemd-cryptsetup@*'               # unlocked with TPM2, no passphrase prompt
+  ```
 - **Firmware updates** can wipe the UEFI boot entries; an HP BIOS update
   did on nazgul, and the firmware did not fall back to the default loader.
   The disk was intact. Recreate the entry, then boot normally:
