@@ -36,17 +36,17 @@ in
     };
 
     ## Measured boot on an encrypted disk: a pcrlock policy the TPM unlock follows across updates
-    configurationLimit = lib.mkIf encrypted (lib.mkDefault 4); # systemd-pcrlock policy size
-    measuredBoot = lib.mkIf encrypted {
-      enable = true;
+    configurationLimit = lib.mkIf config.boot.lanzaboote.measuredBoot.enable (lib.mkDefault 4); # systemd-pcrlock policy size
+    measuredBoot = {
+      enable = lib.mkDefault encrypted; # false where `systemd-pcrlock is-supported` is not yes
       pcrs = [
         0
         4
         7
       ];
       autoCryptenroll = {
-        enable = true;
-        device = lib.head luksDevices;
+        enable = lib.mkDefault config.boot.lanzaboote.measuredBoot.enable;
+        device = lib.mkIf encrypted (lib.head luksDevices);
       };
     };
   };
