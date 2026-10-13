@@ -56,49 +56,6 @@ Add to template (potentially as an import), comment that it's an option best for
 ## 4. Sleep then shutdown (option)
 Add to template (potentially as an import), comment that it's an option best for laptops to save battery.
 
-## 5. Move TPM unlock off a literal PCR 7 binding
-
-`modules/tpm_decryption.nix` enrolls with `--tpm2-pcrs=7`. systemd 258
-stopped defaulting to that and recommends systemd-pcrlock policies for
-PCR 7 combined with signed PCR 11; a literal PCR 7 seal is invalidated by
-every fwupd dbx update and falls back to the passphrase. It still works on
-systemd 260, so this is not urgent.
-
-What Lanzaboote v1.2.0 offers (checked 2026-10-12): `measuredBoot` builds
-a systemd-pcrlock policy for any of PCRs 0 to 4 and 7, and
-`measuredBoot.autoCryptenroll` migrates a LUKS2 volume from a static PCR
-seal to that policy. It has nothing for signed PCR 11, so the route is
-pcrlock, not signed UKI policies. Constraints: `configurationLimit` drops
-from 10 to at most 4 (systemd-pcrlock policy size), systemd still calls
-pcrlock experimental, the guide recommends `--tpm2-with-pin` on attended
-machines, and `systemd-pcrlock is-supported` must say yes on each host.
-
-In progress on `feat/measured-boot` (2026-10-12). `secure_boot.nix` turns
-on `measuredBoot` with `pcrs = [ 0 4 7 ]` and `autoCryptenroll` by default
-whenever the host declares a LUKS device, and `enable-tpm-decryption`
-enrolls the pcrlock policy instead of PCR 7 on such a host. No PIN: the
-fleet enrolls unattended and the client laptops should not gain a prompt
-before login. The host list changed on inspection: jeff-laptop is
-encrypted but had no Secure Boot, so it gains `secure_boot.nix`; its TPM
-(Infineon SLB9670, firmware 7.62) answers `obsolete` to
-`systemd-pcrlock is-supported`, so it opts out of measured boot and keeps
-the PCR 7 seal, now meaningful with Secure Boot on. saruman has Secure
-Boot and no encryption, so measured boot stays off there. balrog has no
-LUKS device in the repo yet (its hardware configuration waits on the
-board), so it only joins once it does.
-
-Canary: jeff-laptop proves Secure Boot plus the opt-out path on the
-branch. The pcrlock path still needs a first host: run `is-supported` on
-nazgul and emily-laptop before merging, and if neither says yes the
-measured boot default is dead weight and should come out. Once merged,
-the hosts that qualify migrate on their own at the next daily upgrade and
-reboot (`installer/README.md`, "Finishing the machine").
-
-Done when: every encrypted host whose TPM qualifies unlocks from a pcrlock
-policy (its LUKS header carries a `tpm2_pcrlock` token), a dbx or firmware
-update there costs at most one passphrase boot and recovers without
-re-enrollment, and the enrollment script encodes the policy.
-
 #### Waiting on upstream ####
 
 Items that cannot be finished yet, or that are a heads-up for a future
