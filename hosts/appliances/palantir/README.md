@@ -34,6 +34,7 @@ hosts/appliances/palantir/
   hardware-configuration.nix
   site/                       # the launcher: index/games pages, tiles.js is the config
   bridge/                     # retrotv-bridge.py: localhost API that launches Dolphin/PCSX2
+                              # and watches the remote; retrotv_osd.py: the volume OSD
   extension/                  # home-key / UA-rewrite Chromium extension
 ```
 
@@ -48,33 +49,39 @@ they move to their own repo and come back in as a flake input.
 
 A **Dell OptiPlex 3060 Micro** (i5-8500T, UHD 630, 8 GB, 128 GB SATA SSD)
 running NixOS, installed 2026-08-31 with nixos-anywhere (1 GB ESP + one ext4
-root, no swap — zram instead). It lives headless behind the TV:
-`ssh justin@palantir.local` (avahi), on WiFi via a NetworkManager profile
-joined once on the box ("Local config on the box", below), auto-connecting
-from power-on with no interaction.
+root; `default.nix` adds zram and a 1 GiB swapfile). It lives headless
+behind the TV: `ssh justin@palantir.local` (avahi), on WiFi via a
+NetworkManager profile joined once on the box ("Local config on the box",
+below), auto-connecting from power-on with no interaction.
 
-- **Deploying:** from a clone of this repo on the box,
-  `sudo nixos-rebuild switch --flake .#palantir`. The fleet's daily
-  auto-upgrade (modules/maintenance.nix) pulls the public repo over HTTPS,
-  nothing to register — on this host applied on the spot (`switch`, not
-  `boot`: nobody is around to click Restart Now) — but only once the host
-  is registered in `flake.nix` (the line is there, commented). Package
-  updates arrive with the repo's weekly `flake.lock` bump.
+- **Deploying:** the host line in `flake.nix` is still commented out, so
+  uncomment it in the clone on the box, then
+  `sudo nixos-rebuild switch --flake path:.#palantir`. Once that line is
+  committed, the fleet's daily auto-upgrade (`modules/maintenance.nix`)
+  takes over: it pulls the public repo over HTTPS, nothing to register,
+  and on this host applies on the spot (`switch`, not `boot`: nobody is
+  around to click Restart Now). Package updates arrive with the repo's
+  weekly `flake.lock` bump.
 - **WiFi:** Dell DW1810 (Qualcomm QCA9377, `ath10k_pci`). It needs
   `hardware.enableRedistributableFirmware` or it's a paperweight. A moody
   card — it logs correctable PCIe errors; if it ever flakes for real, try
   `boot.kernelParams = [ "pcie_aspm=off" ]` first, then swap in an Intel
   9260/AX200-class M.2 card.
 - **Firmware:** F12 = one-time boot menu, F2 = setup. Secure Boot stays off
-  (NixOS's bootloader is unsigned). Boot order was fixed from Linux with
-  `efibootmgr` so a plugged USB stick can't preempt the SSD. Still TODO in
-  the BIOS: AC power recovery, so it self-starts after an outage.
-- **Remote:** a cheap 2.4 GHz USB remote (XING WEI dongle). Volume, arrows,
-  OK, back, and the mouse mode are stock keys; an hwdb block in
-  default.nix rebadges the odd ones — Home becomes a real Home key
-  (back to the launcher, stops a running game), the three-line menu button
-  becomes mute, and the AI button becomes F13, which the extension turns
-  into "jump to the games page" from anywhere in the browser.
+  (this host does not import `secure_boot.nix`). Boot order was fixed from
+  Linux with `efibootmgr` so a plugged USB stick can't preempt the SSD.
+  Still TODO in the BIOS: AC power recovery, so it self-starts after an
+  outage.
+- **Remote:** a cheap 2.4 GHz USB remote (XING WEI dongle). Arrows, OK,
+  back, and the mouse mode are stock keys. Volume up/down/mute are too, but
+  the bridge's input watcher handles them itself: it moves the default
+  PipeWire sink with `wpctl` and paints a green TV-style volume bar over
+  whatever is on screen (`bridge/retrotv_osd.py`), launcher, web tiles and
+  games alike. An hwdb block in default.nix rebadges the odd ones — Home
+  becomes a real Home key (back to the launcher, stops a running game), the
+  three-line menu button becomes mute, and the AI button becomes F13, which
+  the extension turns into "jump to the games page" from anywhere in the
+  browser.
 - **Power:** the remote's power button (and the chassis button) suspends to
   S3 — a two-second "boot" at single-digit watts — and the remote wakes it
   back up (udev arms the USB wake chain). Nothing ever sleeps on its own.
@@ -196,7 +203,8 @@ everything in `/var/lib/retrotv/games`, each row tagged with its console
   `input` group), so the key works even though the emulator holds keyboard
   focus — SIGTERM for a clean stop (~2-3s, memory-card writes land),
   SIGKILL if it hangs. Dolphin's own stop hotkey (`Esc`, or a gamepad combo
-  mapped in its hotkey settings) also works.
+  mapped in its hotkey settings) also works. The same watcher is what
+  makes the volume keys and the OSD work over a running game.
 - Test note: Swiss (homebrew loader) boots and JITs but renders black in
   Dolphin — use a real game image to see pixels.
 - Add games with `scp game.rvz justin@palantir.local:/var/lib/retrotv/games/` and
