@@ -102,8 +102,9 @@ unblur-in-overview=false
 [org/gnome/shell/extensions/blur-my-shell/applications]
 blur=true
 sigma=10
-opacity=210
-whitelist=['org.gnome.Ptyxis', 'org.gnome.Nautilus', 'org.gnome.Calculator', 'org.gnome.Calendar', 'org.gnome.Resources']
+opacity=220
+dynamic-opacity=false
+whitelist=['org.gnome.Ptyxis', 'org.gnome.Nautilus', 'org.gnome.Calculator', 'org.gnome.Calendar', 'org.gnome.Resources', 'org.gnome.SimpleScan', 'com.vixalien.sticky', 'gnome-disks', 'org.gnome.baobab']
 
 [org/gnome/shell/keybindings]
 screenshot=['Print']
