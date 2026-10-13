@@ -23,7 +23,7 @@
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages; # LTS
 
-  ## Swap
+  ## Swapfile
   swapDevices = [
     {
       device = "/swapfile";
