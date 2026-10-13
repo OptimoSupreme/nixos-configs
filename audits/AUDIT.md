@@ -1,12 +1,19 @@
 # Staleness audit
 
 A prompt to hand to an agent now and then. It asks for a report, not changes.
-Run it with: "Read AUDIT.md and do what it says."
+Run it with: "Read audits/AUDIT.md and do what it says."
 
 ## Ground rules
 
-- Output the whole report in the chat. Do not create or edit any file in the
-  repo, and do not open a branch. Justin picks which findings to act on.
+- Write two files to `audits/` on a new branch, and change nothing else in
+  the repo. The report goes to `audits/<YYYY-MM-DD>-report.md` (today's
+  date); it is the record of what the audit found and is edited later only
+  to correct an inaccuracy, with a dated correction note on the finding.
+  The working list goes to `audits/<YYYY-MM-DD>-actions.md`: the same
+  findings, same numbers, no baseline or summary. Justin works from the
+  action list; an item is removed once he accepts the recommendation or
+  gives direction on it. File links in both are relative to `audits/`, so
+  they start with `../`.
 - Read `CLAUDE.md` first. It explains the layout, the fleet rules and the
   conventions you will be checking against.
 - Every finding needs evidence. Quote the file and line, and link the
@@ -36,6 +43,13 @@ hardware module from `nixos-hardware` already loads, a service a desktop
 module now enables, a `lib.mkDefault` whose default is now the same as the
 module's own. Also flag any option that is deprecated, renamed or
 scheduled for removal in the pinned nixpkgs or the next stable release.
+
+Prove every "now the default" claim before reporting it: record
+`config.system.build.toplevel.drvPath` for every registered host, remove the
+line, and confirm the path is unchanged on every host. If it moves, diff the
+two derivations (`nix-diff`) and say what changed. A setting that is the
+default on most hosts but not on one (the installer ISO has X enabled, Jovian
+sets its own zram) is not redundant; report it as such or drop it.
 
 ### 2. Workarounds and temporary fixes
 
@@ -105,9 +119,28 @@ itself:
 - Dead references: assets no module uses, modules no host imports, inputs in
   `flake.nix` nothing consumes.
 
+### 6. Audit the audit
+
+This prompt goes stale too. While working through it, note where it no
+longer fits the repo as it is on the day you run it:
+
+- Paths, hosts, modules and assets it names that no longer exist, and new
+  ones it does not mention (a new host group, a new asset type, a new
+  workflow, a desktop other than GNOME).
+- Questions that no longer apply, examples that point at things since
+  removed, and checks the repo now needs that are missing here.
+- Steps that turned out to be the wrong way to verify something, and better
+  ones you used instead.
+- Whether the report format still serves how the reports are used.
+
+Put concrete edits for this file in the report (section 8). Do not edit
+this file yourself.
+
 ## Report format
 
-One report in chat with these sections, in this order. Number every finding
+One report at `audits/<YYYY-MM-DD>-report.md` with these sections, in
+this order, and the same findings copied into
+`audits/<YYYY-MM-DD>-actions.md` without the summary. Number every finding
 so Justin can refer to it by number when picking.
 
 1. **Summary**: a few lines on the overall state and the handful of findings
@@ -121,9 +154,13 @@ so Justin can refer to it by number when picking.
 6. **Normalization**: findings from section 5.
 7. **Unverified**: anything you suspect but could not confirm, with what
    would confirm it.
+8. **Audit prompt updates**: findings from section 6, as concrete edits to
+   this file.
 
-Each finding: a one-line title, the file and line, what is stale and why,
-the evidence link, what changing it would involve, and which hosts it
-touches. Keep each to a short paragraph. Where there is more than one
-reasonable way to act on it, list the options with a recommendation. Do not
-pad; a finding that is only a style nit can be one line.
+Each finding: a one-line title, then three labelled parts: **What changed**
+(the file and line, what is stale, the evidence link), **Recommendation**
+(the one change to make, or the options with one recommended, and which
+hosts it touches), and **Why**. Keep each to a short paragraph. Do not pad;
+a finding that is only a style nit can be one line. Leave out anything you
+confirmed is still correct; the report lists decisions to make, not checks
+that passed.
