@@ -16,13 +16,6 @@ in
   };
 
   config = {
-    ## Swap
-    zramSwap = {
-      enable = lib.mkDefault true;
-      memoryMax = lib.mkDefault (8 * 1024 * 1024 * 1024);
-      priority = lib.mkDefault 1;
-    };
-
     ## Btrfs Scrub
     services.btrfs.autoScrub.enable = lib.mkDefault hasBtrfs;
 
