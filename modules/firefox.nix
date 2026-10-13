@@ -15,6 +15,7 @@
       FirefoxSuggest = {
         WebSuggestions = false;
         SponsoredSuggestions = false;
+        OnlineEnabled = false;
         Locked = true;
       };
 
@@ -59,8 +60,6 @@
           "eBay"
           "Wikipedia (en)"
           "Perplexity"
-          "Perplexity AI"
-          "Ask Perplexity"
         ];
       };
     };
