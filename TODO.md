@@ -2,9 +2,7 @@
 
 Open work on the fleet. Each item says what, why, and how to tell it is done.
 
-## 1. Blur my shell feature exploration plus tweak person top bar.
-
-## 2. Early KMS module for every GPU vendor
+## 1. Early KMS module for every GPU vendor
 
 Loading the GPU's kernel mode setting driver in the initrd gives native
 resolution from the first frame: Plymouth, the LUKS prompt and the console
@@ -35,7 +33,7 @@ turns out to be more than a few lines.
 Done when: every registered desktop host has early KMS on and the template
 shows the choice for all three vendors.
 
-## 3. Customize the shell
+## 2. Customize the shell
 
 Every host runs stock bash with the default prompt. The only shell setup in
 the repo is the microfetch hook in `modules/desktop.nix`. Decide what the
@@ -52,10 +50,10 @@ both environments import, not in `personal_environment.nix` alone.
 Done when: a shell module is imported by both environments and every
 registered desktop host evaluates with it.
 
-## 4. Wake from sleep automatic updates (option)
+## 3. Wake from sleep automatic updates (option)
 Add to template (potentially as an import), comment that it's an option best for desktops that are left powered on.
 
-## 5. Sleep then shutdown (option)
+## 4. Sleep then shutdown (option)
 Add to template (potentially as an import), comment that it's an option best for laptops to save battery.
 
 ## 6. Move TPM unlock off a literal PCR 7 binding
