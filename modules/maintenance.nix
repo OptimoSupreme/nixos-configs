@@ -17,12 +17,12 @@ in
 
   config = {
     ## Btrfs Scrub
-    services.btrfs.autoScrub.enable = hasBtrfs;
+    services.btrfs.autoScrub.enable = lib.mkDefault hasBtrfs;
 
     ## Updates (public repo over HTTPS, so the host holds no credential)
     system.autoUpgrade = {
-      enable = true;
-      flake = "github:OptimoSupreme/nixos-configs";
+      enable = lib.mkDefault true;
+      flake = lib.mkDefault "github:OptimoSupreme/nixos-configs";
       operation = lib.mkDefault "boot";
       dates = lib.mkDefault "10:00";
       randomizedDelaySec = "20m";
@@ -33,11 +33,11 @@ in
     ## Store GC and Deduplication
     nix = {
       gc = {
-        automatic = true;
-        dates = "weekly";
+        automatic = lib.mkDefault true;
+        dates = lib.mkDefault "weekly";
       };
       optimise = {
-        automatic = true;
+        automatic = lib.mkDefault true;
         dates = [ "Mon 01:00" ];
       };
     };
