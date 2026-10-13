@@ -10,7 +10,7 @@ for that.
 ## What's on it
 
 - **The desktop nazgul and balrog run**: GNOME with the extensions, dconf
-  defaults, Ptyxis, Codium, podman and libvirt, CAC support. Calamares is
+  defaults, Ptyxis, Codium, podman and libvirt. Calamares is
   first in the dock and opens by itself at login.
 - **This repo, fresh from GitHub.** The stick carries no copy of it.
   Once the network is up, `nixos-configs-clone.service` clones `main`
@@ -206,7 +206,7 @@ Action bumps it weekly (Sunday 04:00 UTC), gated on `nix flake check`, so a
 lock that breaks any host never lands on `main`. That check evaluates every
 registered host, which is why the hardware config has to be committed.
 Hosts pick the new lock up at their next daily pull. The same module runs
-a weekly garbage collection (generations older than 14 days) and a weekly
+a weekly garbage collection (all but the last 5 system generations) and a weekly
 store dedup.
 
 To apply a change now, from any clone (`path:` for the reason in
@@ -216,7 +216,7 @@ To apply a change now, from any clone (`path:` for the reason in
 sudo nixos-rebuild switch --flake path:$HOME/nixos-configs#<name>
 ```
 
-Roll back by picking an older generation in the boot menu (the last 10 are
+Roll back by picking an older generation in the boot menu (the last 5 are
 kept), or with `sudo nixos-rebuild switch --rollback`.
 
 ### 4. Finishing the machine
