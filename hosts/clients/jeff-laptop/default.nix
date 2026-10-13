@@ -11,6 +11,7 @@
     ../../../modules/firefox.nix
     ../../../modules/btrfs_snapshots.nix
     ../../../modules/tpm_decryption.nix
+    ../../../modules/secure_boot.nix
     ../../../modules/client_environment.nix
   ];
 
@@ -28,7 +29,6 @@
 
   ## Boot
   boot.loader.systemd-boot.enable = true;
-  boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
 
   ## Kernel
