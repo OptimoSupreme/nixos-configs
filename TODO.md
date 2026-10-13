@@ -106,11 +106,18 @@ PCR 7 combined with signed PCR 11; a literal PCR 7 seal is invalidated by
 every fwupd dbx update and falls back to the passphrase. It still works on
 systemd 260, so this is not urgent.
 
-First find out whether Lanzaboote v1.2.0 can produce the signed PCR 11
-policy and whether its measured-boot mode fits the fleet (it caps
-`configurationLimit` at 4). Then decide between pcrlock, signed PCR 11, or
-both, and re-enroll the four TPM hosts (nazgul, balrog, emily-laptop,
-jeff-laptop) with the new policy via `enable-tpm-decryption`.
+What Lanzaboote v1.2.0 offers (checked 2026-10-12): `measuredBoot` builds
+a systemd-pcrlock policy for any of PCRs 0 to 4 and 7, and
+`measuredBoot.autoCryptenroll` migrates a LUKS2 volume from a static PCR
+seal to that policy. It has nothing for signed PCR 11, so the route is
+pcrlock, not signed UKI policies. Constraints: `configurationLimit` drops
+from 10 to at most 4 (systemd-pcrlock policy size), systemd still calls
+pcrlock experimental, the guide recommends `--tpm2-with-pin` on attended
+machines, and `systemd-pcrlock is-supported` must say yes on each host.
+
+Plan: try it on one host first (nazgul) with `pcrs = [ 0 4 7 ]`, then fold
+the enrollment into `enable-tpm-decryption` and `secure_boot.nix` and
+re-enroll the other TPM hosts (balrog, emily-laptop, jeff-laptop).
 
 Done when: a dbx update no longer drops a host to the passphrase prompt,
 and the enrollment script encodes the chosen policy.
@@ -130,5 +137,3 @@ Two things the 26.11 upgrade will bring that touch this repo:
 
 Done when: the fleet is on 26.11 and both points are checked off or
 reworked.
-
-## Get through audit report
