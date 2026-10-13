@@ -73,12 +73,27 @@ from 10 to at most 4 (systemd-pcrlock policy size), systemd still calls
 pcrlock experimental, the guide recommends `--tpm2-with-pin` on attended
 machines, and `systemd-pcrlock is-supported` must say yes on each host.
 
-Plan: try it on one host first (nazgul) with `pcrs = [ 0 4 7 ]`, then fold
-the enrollment into `enable-tpm-decryption` and `secure_boot.nix` and
-re-enroll the other TPM hosts (balrog, emily-laptop, jeff-laptop).
+In progress on `feat/measured-boot` (2026-10-12). `secure_boot.nix` turns
+on `measuredBoot` with `pcrs = [ 0 4 7 ]` and `autoCryptenroll` whenever
+the host declares a LUKS device, and `enable-tpm-decryption` enrolls the
+pcrlock policy instead of PCR 7 on such a host. No PIN: the fleet enrolls
+unattended and the client laptops should not gain a prompt before login.
+The host list changed on inspection: jeff-laptop is encrypted but had no
+Secure Boot, so it gains `secure_boot.nix` and is the canary; saruman has
+Secure Boot and no encryption, so measured boot stays off there; balrog
+has no LUKS device in the repo yet (its hardware configuration waits on
+the board), so it only joins once it does.
 
-Done when: a dbx update no longer drops a host to the passphrase prompt,
-and the enrollment script encodes the chosen policy.
+Canary: rebuild jeff-laptop onto the branch, enroll Secure Boot, run
+`enable-tpm-decryption` once Secure Boot is on, reboot twice and confirm
+the TPM unlocks with `auto-cryptenroll` done (`installer/README.md`,
+"Finishing the machine"). Then merge: nazgul and emily-laptop migrate on
+their own at the next daily upgrade and reboot.
+
+Done when: every encrypted host unlocks from a pcrlock policy (its LUKS
+header carries a `tpm2_pcrlock` token), a dbx or firmware update costs at
+most one passphrase boot and recovers without re-enrollment, and the
+enrollment script encodes the policy.
 
 #### Waiting on upstream ####
 

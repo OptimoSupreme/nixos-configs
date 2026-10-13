@@ -47,7 +47,7 @@
   ## Boot (choose one)
   ## UEFI
   # boot.loader.systemd-boot.enable = true;
-  # boot.loader.systemd-boot.configurationLimit = 10;
+  # boot.loader.systemd-boot.configurationLimit = 10; # measured boot (secure_boot.nix on LUKS) sets 4
   # boot.loader.efi.canTouchEfiVariables = true;
 
   ## Legacy BIOS
