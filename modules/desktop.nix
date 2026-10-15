@@ -27,8 +27,6 @@ let
       done
     '';
   };
-
-  ## Blur my Shell
   # blurMyShell is a workaround: drop it and assets/blur-my-shell-metadata.json once nixpkgs ships 73+
   blurMyShell = pkgs.gnomeExtensions.blur-my-shell.overrideAttrs {
     version = "75"; # 73+ keep windows opaque in the overview
