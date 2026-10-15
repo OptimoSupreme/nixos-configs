@@ -27,6 +27,16 @@ let
       done
     '';
   };
+
+  blurMyShell = pkgs.gnomeExtensions.blur-my-shell.overrideAttrs {
+    version = "75"; # 73+ keep windows opaque in the overview
+    src = pkgs.fetchzip {
+      url = "https://extensions.gnome.org/extension-data/blur-my-shellaunetx.v75.shell-extension.zip";
+      hash = "sha256-ux2sG504kemK0qKhDfAtwXMzP3Rb5YdtPSTKg5mX0sA=";
+      stripRoot = false;
+      postFetch = "cp ${../assets/blur-my-shell-metadata.json} $out/metadata.json"; # EGO rewrites it in place
+    };
+  };
 in
 {
   imports = [ inputs.nix-index-database.nixosModules.nix-index ];
@@ -174,7 +184,7 @@ in
     sticky-notes
     resources
     gnomeExtensions.appindicator
-    gnomeExtensions.blur-my-shell
+    blurMyShell
     gnomeExtensions.caffeine
     gnomeExtensions.dash-to-panel
     gnome50Extensions."impatience@gfxmonk.net" # gnomeExtensions.impatience is stuck on GNOME 45-49
