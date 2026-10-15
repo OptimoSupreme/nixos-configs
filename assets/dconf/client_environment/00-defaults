@@ -100,11 +100,15 @@ override-background=false
 override-background=false
 unblur-in-overview=false
 
+[org/gnome/shell/extensions/blur-my-shell/popup]
+blur=true
+
 [org/gnome/shell/extensions/blur-my-shell/applications]
 blur=true
 sigma=10
 opacity=220
 dynamic-opacity=false
+blur-on-overview=false
 whitelist=['org.gnome.Ptyxis', 'org.gnome.Nautilus', 'org.gnome.Calculator', 'org.gnome.Calendar', 'org.gnome.Resources', 'org.gnome.SimpleScan', 'com.vixalien.sticky', 'gnome-disks', 'org.gnome.baobab']
 
 [org/gnome/shell/keybindings]

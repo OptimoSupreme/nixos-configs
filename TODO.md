@@ -79,7 +79,7 @@ Done when: both lines are gone and every registered desktop host evaluates.
 
 ### Expect changes at the NixOS 26.11 bump (GNOME 51)
 
-Two things the 26.11 upgrade will bring that touch this repo:
+Three things the 26.11 upgrade will bring that touch this repo:
 
 - GDM 51 no longer allows fingerprint-only login; fingerprint becomes
   re-authentication only. The fprintd hosts will behave differently at the
@@ -89,6 +89,14 @@ Two things the 26.11 upgrade will bring that touch this repo:
   Service. nixpkgs has the packages but no NixOS module yet; check whether
   26.11 wires it into the GNOME module and whether anything (CAC, Chromium
   NSS database) notices.
+- Blur my Shell: `blurMyShell` in `modules/desktop.nix` pins version 75 from
+  extensions.gnome.org because 26.05 ships 72, which flickers blurred windows
+  in the overview (fixed in 73). Release branches never get extension
+  updates, so this waits for 26.11. Replace it with
+  `gnomeExtensions.blur-my-shell` and delete `assets/blur-my-shell-metadata.json`
+  once `gnomeExtensions.blur-my-shell.version` is 73 or more. At the same
+  time check that `gnomeRoundedBlur` in `modules/desktop.nix` still builds against
+  mutter 51 and bump its tag if upstream needed changes.
 
-Done when: the fleet is on 26.11 and both points are checked off or
+Done when: the fleet is on 26.11 and all three points are checked off or
 reworked.
