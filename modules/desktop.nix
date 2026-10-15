@@ -27,6 +27,58 @@ let
       done
     '';
   };
+
+  ## Blur my Shell
+  # blurMyShell is a workaround: drop it and assets/blur-my-shell-metadata.json once nixpkgs ships 73+
+  blurMyShell = pkgs.gnomeExtensions.blur-my-shell.overrideAttrs {
+    version = "75"; # 73+ keep windows opaque in the overview
+    src = pkgs.fetchzip {
+      url = "https://extensions.gnome.org/extension-data/blur-my-shellaunetx.v75.shell-extension.zip";
+      hash = "sha256-ux2sG504kemK0qKhDfAtwXMzP3Rb5YdtPSTKg5mX0sA=";
+      stripRoot = false;
+      postFetch = "cp ${../assets/blur-my-shell-metadata.json} $out/metadata.json"; # EGO rewrites it in place
+    };
+  };
+  gnomeRoundedBlur = pkgs.stdenv.mkDerivation (finalAttrs: {
+    pname = "gnome-rounded-blur"; # rounded corners for dynamic blur
+    version = "1.0.2";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "kancko";
+      repo = "gnome-rounded-blur";
+      tag = "v${finalAttrs.version}";
+      hash = "sha256-2zRQnORmVQMuubLOZ+0mHDQhDoc7V/+2JM3gmYPia2s=";
+    };
+
+    nativeBuildInputs = with pkgs; [
+      meson
+      ninja
+      pkg-config
+      gobject-introspection
+    ];
+
+    buildInputs =
+      with pkgs;
+      [
+        glib
+        mutter
+      ]
+      ++ mutter.buildInputs; # libmutter.pc requires mutter's whole dependency set
+
+    strictDeps = true;
+
+    # clutter and cogl live in mutter's private libdir, mutter-18 today, mutter-51 on GNOME 51
+    postFixup = ''
+      patchelf --add-rpath "$(echo ${pkgs.mutter}/lib/mutter-*)" $out/lib/libblur-effect-1.0.so.1.0.0
+    '';
+
+    meta = {
+      description = "Blur.BlurEffect with corner radius support for GNOME Shell extensions";
+      homepage = "https://github.com/kancko/gnome-rounded-blur";
+      license = pkgs.lib.licenses.gpl3Plus;
+      platforms = pkgs.lib.platforms.linux;
+    };
+  });
 in
 {
   imports = [ inputs.nix-index-database.nixosModules.nix-index ];
@@ -174,7 +226,7 @@ in
     sticky-notes
     resources
     gnomeExtensions.appindicator
-    gnomeExtensions.blur-my-shell
+    blurMyShell
     gnomeExtensions.caffeine
     gnomeExtensions.dash-to-panel
     gnome50Extensions."impatience@gfxmonk.net" # gnomeExtensions.impatience is stuck on GNOME 45-49
@@ -197,4 +249,7 @@ in
   programs.dconf.profiles.gdm.databases = [
     { keyfiles = [ ../assets/dconf/gdm ]; }
   ];
+
+  ## Blur my Shell
+  services.desktopManager.gnome.sessionPath = [ gnomeRoundedBlur ]; # Blur typelib for the shell
 }
