@@ -50,18 +50,18 @@ both environments import, not in `personal_environment.nix` alone.
 Done when: a shell module is imported by both environments and every
 registered desktop host evaluates with it.
 
-## 3. Wake from sleep automatic updates (option)
-Add to template (potentially as an import), comment that it's an option best for desktops that are left powered on.
+## 3. Wake from sleep automatic updates
+Add to template, comment that it's an option best for desktops that are left powered on. Need to decide how I want to implement this, whether it should be an optional import module or something else.
 
-## 4. Sleep then shutdown (option)
-Add to template (potentially as an import), comment that it's an option best for laptops to save battery.
+## 4. Sleep then shutdown
+Add to template, comment that it's an option best for laptops to save battery. Need to decide how I want to implement this, whether it should be an optional import module or something else.
 
 #### Waiting on upstream ####
 
 Items that cannot be finished yet, or that are a heads-up for a future
 change. Nothing to do until the named event happens.
 
-### Drop two workarounds once their nixpkgs backports reach nixos-26.05
+## 1. Drop workarounds once their nixpkgs backports reach nixos-26.05
 
 Both fixes are on nixpkgs master; the fleet waits on the release-26.05
 backports and the weekly lock bump that follows each merge.
@@ -77,7 +77,7 @@ backports and the weekly lock bump that follows each merge.
 
 Done when: both lines are gone and every registered desktop host evaluates.
 
-### Expect changes at the NixOS 26.11 bump (GNOME 51)
+## 2. Expect changes at the NixOS 26.11 bump
 
 Three things the 26.11 upgrade will bring that touch this repo:
 
