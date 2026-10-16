@@ -86,25 +86,33 @@ profile-uuids=['00000000-0000-0000-0000-000000000000']
 label='Default'
 palette='Dark Pastel'
 
+[org/gnome/shell/extensions/blur-my-shell]
+settings-version=2
+
 [org/gnome/shell/extensions/blur-my-shell/dash-to-panel]
-blur-original-panel=false
+blur-original-panel=true
 
 [org/gnome/shell/extensions/blur-my-shell/appfolder]
 style-dialogs=2
+sigma=12
+brightness=0.9
 
 [org/gnome/shell/extensions/blur-my-shell/dash-to-dock]
+blur=false
 override-background=false
 
 [org/gnome/shell/extensions/blur-my-shell/panel]
 override-background=false
 unblur-in-overview=false
+static-blur=false
 
 [org/gnome/shell/extensions/blur-my-shell/popup]
 blur=true
 
 [org/gnome/shell/extensions/blur-my-shell/applications]
 blur=true
-sigma=10
+sigma=12
+brightness=0.9
 opacity=220
 dynamic-opacity=false
 blur-on-overview=false
@@ -141,7 +149,7 @@ trans-bg-color='#000000'
 trans-dynamic-anim-target=1.0
 trans-dynamic-anim-time=200
 trans-dynamic-distance=1
-trans-panel-opacity=0.55
+trans-panel-opacity=0.5
 trans-use-custom-bg=true
 trans-use-custom-opacity=true
 trans-use-dynamic-opacity=true
