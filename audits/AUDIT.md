@@ -49,8 +49,9 @@ Run it with: "Read audits/AUDIT.md and do what it says."
 ## What to look for
 
 Walk every `.nix` file under `flake.nix`, `hosts/`, `modules/` and
-`installer/`, every file under `assets/`, and the GitHub workflows under
-`.github/`. For each, ask the questions below.
+`installer/`, every file under `assets/`, the GitHub workflows under
+`.github/`, and every Markdown file in the repo, including this one and
+the earlier audits. For each, ask the questions below.
 
 ### 1. Explicit settings that are now the default
 
@@ -137,7 +138,18 @@ itself:
 - Dead references: assets no module uses, modules no host imports, inputs in
   `flake.nix` nothing consumes.
 
-### 6. Audit the audit
+### 6. Plain errors
+
+Mistakes anywhere in the walk, not staleness. Spelling in comments, docs,
+titles and user-facing strings. References that do not resolve: a file
+path, link, line number, option name, package attribute, hostname or
+issue URL that points at nothing or at the wrong thing. Factual claims
+that the code, the git history or the upstream source disproves, such as
+a comment giving the wrong reason for a line, a README step that does not
+match the module, or a status in an action list that the commits
+contradict. Say what is wrong and what it should say.
+
+### 7. Audit the audit
 
 This prompt goes stale too. While working through it, note where it no
 longer fits the repo as it is on the day you run it:
@@ -153,7 +165,7 @@ longer fits the repo as it is on the day you run it:
   follow, or that uses a term it never defines.
 - Whether the report format still serves how the reports are used.
 
-Put concrete edits for this file in the report (section 8). Do not edit
+Put concrete edits for this file in the report (section 9). Do not edit
 this file yourself.
 
 ## Report format
@@ -173,9 +185,10 @@ picking.
 5. **Upstream has moved**: findings from section 4, split into "they
    adopted, we have not" and "we use, they dropped".
 6. **Normalization**: findings from section 5.
-7. **Unverified**: anything you suspect but could not confirm, with what
+7. **Errors**: findings from section 6, each with the fix.
+8. **Unverified**: anything you suspect but could not confirm, with what
    would confirm it.
-8. **Audit prompt updates**: findings from section 6, as concrete edits to
+9. **Audit prompt updates**: findings from section 7, as concrete edits to
    this file.
 
 Each finding: a one-line title, then three labelled parts: **What changed**
