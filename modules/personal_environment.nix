@@ -20,6 +20,7 @@ in
   virtualisation.podman.enable = lib.mkDefault true;
   virtualisation.libvirtd.enable = lib.mkDefault true;
   programs.virt-manager.enable = lib.mkDefault true;
+  virtualisation.libvirtd.qemu.swtpm.enable = lib.mkDefault true; # emulated TPM 2.0 for VMs
   users.groups.libvirtd.members = [ user ];
 
   ## Git
