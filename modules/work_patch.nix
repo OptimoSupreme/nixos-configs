@@ -3,9 +3,10 @@
 { lib, pkgs, ... }:
 
 let
+  ## Stable paths: NSS databases keep the registered path, and store paths die on upgrade
   pkcs11Modules = {
-    OpenSC = "${pkgs.opensc}/lib/opensc-pkcs11.so";
-    "p11-kit-trust" = "${pkgs.p11-kit}/lib/pkcs11/p11-kit-trust.so";
+    OpenSC = "/run/current-system/sw/lib/pkcs11/opensc-pkcs11.so";
+    "p11-kit-trust" = "/run/current-system/sw/lib/pkcs11/p11-kit-trust.so";
   };
 in
 {
@@ -14,8 +15,11 @@ in
   environment.etc."opensc.conf".source = ../assets/cac/opensc.conf;
   security.pki.certificateFiles = [ ../assets/cac/DoD_PKI_bundle.pem ];
 
-  ## Firefox CAC Config
-  programs.firefox.policies.SecurityDevices = pkcs11Modules;
+  ## Firefox CAC Config (Delete runs first, so Add can replace a stale entry of the same name)
+  programs.firefox.policies.SecurityDevices = {
+    Add = pkcs11Modules;
+    Delete = builtins.attrNames pkcs11Modules;
+  };
 
   ## Ungoogled Chromium CAC Config (no Chromium policy exists)
   systemd.user.services.nssdb-pkcs11 = {
@@ -54,6 +58,7 @@ in
   environment.systemPackages = with pkgs; [
     ungoogled-chromium
     opensc
+    p11-kit.out # the default bin output has no lib/pkcs11
   ];
 
   ## Flatpaks (appended to the personal_environment install set)
