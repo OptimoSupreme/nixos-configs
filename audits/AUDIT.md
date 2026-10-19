@@ -9,11 +9,29 @@ Run it with: "Read audits/AUDIT.md and do what it says."
   the repo. The report goes to `audits/<YYYY-MM-DD>-report.md` (today's
   date); it is the record of what the audit found and is edited later only
   to correct an inaccuracy, with a dated correction note on the finding.
-  The working list goes to `audits/<YYYY-MM-DD>-actions.md`: the same
-  findings, same numbers, no baseline or summary. Justin works from the
-  action list; an item is removed once he accepts the recommendation or
-  gives direction on it. File links in both are relative to `audits/`, so
-  they start with `../`.
+- The working list goes to `audits/<YYYY-MM-DD>-actions.md`: the same
+  findings, same numbers, no baseline or summary, each with a status line
+  that starts as **Open**. Justin works from it. Items are never removed;
+  as he decides or lands them the status changes in place to **Done** with
+  the commit ids that made the change, **Kept** when the report said to
+  leave something alone and he agreed, **Waiting** on a named upstream
+  event, or **Declined**, with a few words on why when he gave one. An
+  agent making a fix in response to an audit updates the list in the same
+  change. Once an item is settled its text may be trimmed to the title and
+  status, since the report holds the detail.
+- The action list's first heading ends with `: open` while any item is
+  Open, then `: settled <YYYY-MM-DD>`, so a reader knows at a glance
+  whether anything is left. Whichever agent marks it settled also moves
+  both files to `audits/archive/` in the same change, without asking. File
+  links in both are relative to the file, so they start with `../` in
+  `audits/` and are rewritten to `../../` on the move.
+- Read every earlier action list, in `audits/` and `audits/archive/`,
+  before starting. It shows what was done, with the commits, what is
+  waiting, and what was declined. Report a declined finding again if it is
+  still stale: the reason may not hold any more, and Justin wants the
+  reminder. A Waiting item whose event has happened is a finding too. When
+  a finding repeats an earlier one, say so with the old date and number,
+  as in "declined in 2026-10-12 as 6.3".
 - Read `CLAUDE.md` first. It explains the layout, the fleet rules and the
   conventions you will be checking against.
 - Every finding needs evidence. Quote the file and line, and link the
@@ -31,8 +49,9 @@ Run it with: "Read audits/AUDIT.md and do what it says."
 ## What to look for
 
 Walk every `.nix` file under `flake.nix`, `hosts/`, `modules/` and
-`installer/`, every file under `assets/`, and the GitHub workflows under
-`.github/`. For each, ask the questions below.
+`installer/`, every file under `assets/`, the GitHub workflows under
+`.github/`, and every Markdown file in the repo, including this one and
+the earlier audits. For each, ask the questions below.
 
 ### 1. Explicit settings that are now the default
 
@@ -119,7 +138,18 @@ itself:
 - Dead references: assets no module uses, modules no host imports, inputs in
   `flake.nix` nothing consumes.
 
-### 6. Audit the audit
+### 6. Plain errors
+
+Mistakes anywhere in the walk, not staleness. Spelling in comments, docs,
+titles and user-facing strings. References that do not resolve: a file
+path, link, line number, option name, package attribute, hostname or
+issue URL that points at nothing or at the wrong thing. Factual claims
+that the code, the git history or the upstream source disproves, such as
+a comment giving the wrong reason for a line, a README step that does not
+match the module, or a status in an action list that the commits
+contradict. Say what is wrong and what it should say.
+
+### 7. Audit the audit
 
 This prompt goes stale too. While working through it, note where it no
 longer fits the repo as it is on the day you run it:
@@ -131,17 +161,20 @@ longer fits the repo as it is on the day you run it:
   removed, and checks the repo now needs that are missing here.
 - Steps that turned out to be the wrong way to verify something, and better
   ones you used instead.
+- A rule here that contradicts another, that an action list does not
+  follow, or that uses a term it never defines.
 - Whether the report format still serves how the reports are used.
 
-Put concrete edits for this file in the report (section 8). Do not edit
+Put concrete edits for this file in the report (section 9). Do not edit
 this file yourself.
 
 ## Report format
 
 One report at `audits/<YYYY-MM-DD>-report.md` with these sections, in
 this order, and the same findings copied into
-`audits/<YYYY-MM-DD>-actions.md` without the summary. Number every finding
-so Justin can refer to it by number when picking.
+`audits/<YYYY-MM-DD>-actions.md` without the summary, each marked
+**Open**. Number every finding so Justin can refer to it by number when
+picking.
 
 1. **Summary**: a few lines on the overall state and the handful of findings
    worth acting on first.
@@ -152,9 +185,10 @@ so Justin can refer to it by number when picking.
 5. **Upstream has moved**: findings from section 4, split into "they
    adopted, we have not" and "we use, they dropped".
 6. **Normalization**: findings from section 5.
-7. **Unverified**: anything you suspect but could not confirm, with what
+7. **Errors**: findings from section 6, each with the fix.
+8. **Unverified**: anything you suspect but could not confirm, with what
    would confirm it.
-8. **Audit prompt updates**: findings from section 6, as concrete edits to
+9. **Audit prompt updates**: findings from section 7, as concrete edits to
    this file.
 
 Each finding: a one-line title, then three labelled parts: **What changed**
