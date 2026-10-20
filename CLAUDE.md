@@ -66,6 +66,24 @@ except `hardware-configuration.nix`, which stays exactly as generated.
   `assets/dconf/`.
 - Never hand-edit `hardware-configuration.nix`; regenerate it on the machine.
 
+## Tools that are not on the machine
+
+Nothing beyond coreutils is installed system-wide, and `python3` is not on
+`PATH`. Do not fall back to `sed` or `awk` gymnastics when a Python script is
+the right tool; get it from nixpkgs instead:
+
+```
+nix shell nixpkgs#python3 -c python3 -I script.py
+nix shell nixpkgs#python3 -c python3 -I - <<'EOF'
+...
+EOF
+```
+
+The system registry pins `nixpkgs` to the running system's nixpkgs, so this
+starts instantly and needs no network. Add packages the same way
+(`nixpkgs#python3Packages.pyyaml`, `nixpkgs#jq`). The same goes for any other
+tool that is missing.
+
 ## Verifying a change
 
 Before reporting a change as done:
