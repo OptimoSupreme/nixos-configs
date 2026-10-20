@@ -16,8 +16,8 @@ hosts/           one directory per machine: default.nix + hardware-configuration
   clients/       machines I manage for other people
   appliances/
   servers/
-modules/         opt-in modules; desktop.nix is the shared GNOME block,
-                 appliance.nix the shared headless block
+modules/         opt-in modules; workstation_core.nix is the shared workstation
+                 configuration, appliance.nix the shared headless block
 assets/          dconf keyfiles, Firefox autoconfig, CAC certs, other static files
 installer/       the live ISO, and the manual for installing a machine
 ```

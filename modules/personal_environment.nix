@@ -6,7 +6,7 @@ let
   user = "justin";
 in
 {
-  imports = [ ./desktop.nix ];
+  imports = [ ./workstation_core.nix ];
 
   ## Networking
   networking.firewall.allowedTCPPorts = [ 53317 ]; # LocalSend
