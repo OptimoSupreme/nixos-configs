@@ -43,7 +43,7 @@ Add to template, comment that it's an option best for laptops to save battery. N
 
 ## 5. What's up with the lanzaboot 4 generation limit? Should we make maintenance.nix match?
 
-## 6. rename desktop.nix to something that makes sense since we are already using the term 'workstation' elsewhere
+## 6. Choose a license
 
 #### Waiting on upstream ####
 
@@ -55,10 +55,10 @@ change. Nothing to do until the named event happens.
 Both fixes are on nixpkgs master; the fleet waits on the release-26.05
 backports and the weekly lock bump that follows each merge.
 
-- Fingerprint enrolment: `environment.extraInit` in `modules/desktop.nix`
+- Fingerprint enrolment: `environment.extraInit` in `modules/workstation_core.nix`
   puts gdm's gsettings schema on `XDG_DATA_DIRS`. Delete it once
   https://github.com/NixOS/nixpkgs/pull/572210 is merged.
-- Impatience: `modules/desktop.nix` uses
+- Impatience: `modules/workstation_core.nix` uses
   `gnome50Extensions."impatience@gfxmonk.net"` because the manual package
   on 26.05 stops at GNOME 49. Switch back to `gnomeExtensions.impatience`
   and drop the comment once https://github.com/NixOS/nixpkgs/pull/573338 is
@@ -78,13 +78,13 @@ Three things the 26.11 upgrade will bring that touch this repo:
   Service. nixpkgs has the packages but no NixOS module yet; check whether
   26.11 wires it into the GNOME module and whether anything (CAC, Chromium
   NSS database) notices.
-- Blur my Shell: `blurMyShell` in `modules/desktop.nix` pins version 75 from
+- Blur my Shell: `blurMyShell` in `modules/workstation_core.nix` pins version 75 from
   extensions.gnome.org because 26.05 ships 72, which flickers blurred windows
   in the overview (fixed in 73). Release branches never get extension
   updates, so this waits for 26.11. Replace it with
   `gnomeExtensions.blur-my-shell` and delete `assets/blur-my-shell-metadata.json`
   once `gnomeExtensions.blur-my-shell.version` is 73 or more. At the same
-  time check that `gnomeRoundedBlur` in `modules/desktop.nix` still builds against
+  time check that `gnomeRoundedBlur` in `modules/workstation_core.nix` still builds against
   mutter 51 and bump its tag if upstream needed changes.
 
 Done when: the fleet is on 26.11 and all three points are checked off or

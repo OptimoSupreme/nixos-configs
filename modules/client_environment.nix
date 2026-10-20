@@ -3,7 +3,7 @@
 { ... }:
 
 {
-  imports = [ ./desktop.nix ];
+  imports = [ ./workstation_core.nix ];
 
   ## dconf
   programs.dconf.profiles.user.databases = [

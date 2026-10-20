@@ -1,4 +1,4 @@
-#### Shared GNOME Desktop ####
+#### Shared Workstation Configuration ####
 
 {
   inputs,
