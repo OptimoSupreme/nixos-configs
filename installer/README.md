@@ -217,8 +217,10 @@ To apply a change now, from any clone (`path:` for the reason in
 sudo nixos-rebuild switch --flake path:$HOME/nixos-configs#<name>
 ```
 
-Roll back by picking an older generation in the boot menu (10 are listed,
-4 on a measured boot host), or with `sudo nixos-rebuild switch --rollback`.
+Roll back by picking an older generation in the boot menu, or with
+`sudo nixos-rebuild switch --rollback`. The menu lists up to 10 generations,
+4 on a measured boot host, but only the 5 the weekly garbage collection
+keeps, plus anything built since, are still there to boot.
 
 ### 4. Finishing the machine
 

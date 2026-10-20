@@ -41,8 +41,6 @@ Add to template, comment that it's an option best for laptops to save battery. N
 
 ## 4. PS1 titles look bad when SSH'd
 
-## 5. What's up with the lanzaboot 4 generation limit? Should we make maintenance.nix match?
-
 #### Waiting on upstream ####
 
 Items that cannot be finished yet, or that are a heads-up for a future
@@ -87,3 +85,19 @@ Three things the 26.11 upgrade will bring that touch this repo:
 
 Done when: the fleet is on 26.11 and all three points are checked off or
 reworked.
+
+## 3. Lift the 4-generation cap on measured boot hosts
+
+`secure_boot.nix` sets `boot.lanzaboote.configurationLimit = 4` on measured
+boot hosts because the lanzaboote module asserts it. systemd-pcrlock puts
+every alternative value for a PCR into one `TPM2_PolicyOR`, which takes at
+most 8 digests, and lanzaboote 1.2 covers a bootloader update in the policy,
+so PCR 4 holds 2 loader variants times 4 generations. The cap is only on
+boot entries; `maintenance.nix` keeping 5 store generations is independent
+and stays as is. Upstream fix: https://github.com/systemd/systemd/pull/43982
+(PolicyOR tree) for https://github.com/systemd/systemd/issues/41526.
+
+Done when: the lanzaboote release in `flake.lock` no longer asserts the
+limit, the `configurationLimit` line in `secure_boot.nix` is deleted so
+measured hosts fall back to `boot.loader.systemd-boot.configurationLimit`
+like every other host, and nazgul and emily-laptop evaluate.
