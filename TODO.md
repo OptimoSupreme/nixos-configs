@@ -43,8 +43,6 @@ Add to template, comment that it's an option best for laptops to save battery. N
 
 ## 5. What's up with the lanzaboot 4 generation limit? Should we make maintenance.nix match?
 
-## 6. Choose a license
-
 #### Waiting on upstream ####
 
 Items that cannot be finished yet, or that are a heads-up for a future
