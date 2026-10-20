@@ -33,27 +33,10 @@ turns out to be more than a few lines.
 Done when: every registered desktop host has early KMS on and the template
 shows the choice for all three vendors.
 
-## 2. Customize the shell
-
-Every host runs stock bash with the default prompt. The only shell setup in
-the repo is the microfetch hook in `modules/desktop.nix`. Decide what the
-interactive shell should look like across the fleet (prompt, aliases,
-completion, history, whether to stay on bash or move to zsh or fish) and put
-it in a module that both environments import.
-
-Keep it system-level: no home-manager, so the config goes through
-`programs.bash` (or the chosen shell's `programs.*` block) and
-`environment.shellAliases`, not per-user dotfiles. Client machines should get
-the same defaults as Justin's, so it belongs under `desktop.nix` or a module
-both environments import, not in `personal_environment.nix` alone.
-
-Done when: a shell module is imported by both environments and every
-registered desktop host evaluates with it.
-
-## 3. Wake from sleep automatic updates
+## 2. Wake from sleep automatic updates
 Add to template, comment that it's an option best for desktops that are left powered on. Need to decide how I want to implement this, whether it should be an optional import module or something else.
 
-## 4. Sleep then shutdown
+## 3. Sleep then shutdown
 Add to template, comment that it's an option best for laptops to save battery. Need to decide how I want to implement this, whether it should be an optional import module or something else.
 
 #### Waiting on upstream ####

@@ -235,13 +235,21 @@ in
   services.flatpak.enable = lib.mkDefault true;
   environment.etc."flatpak/remotes.d/flathub.flatpakrepo".source = ../assets/flathub.flatpakrepo;
 
-  ## Command Not Found hint and `,` runner
-  programs.nix-index-database.comma.enable = lib.mkDefault true;
-
-  ## Microfetch on login
-  programs.bash.interactiveShellInit = ''
-    command -v microfetch >/dev/null && microfetch
-  '';
+  ## Shell Config
+  programs = {
+    bash = {
+      promptInit = lib.mkDefault ''
+        if [ "$TERM" != "dumb" ]; then
+          PS1='\n\[\e]0;\u@\h\a\]''${SSH_TTY:+\[\e[33m\]\u\[\e[31m\]@\[\e[32m\]\h\[\e[0m\] }\[\e[33m\]\w\[\e[0m\] \[\e[$(($? ? 31 : 32))m\]\$\[\e[0m\] '
+        fi
+      '';
+      interactiveShellInit = ''
+        shopt -s histappend
+        command -v microfetch >/dev/null && microfetch
+      '';
+    };
+    nix-index-database.comma.enable = lib.mkDefault true; # Command Not Found hint and `,` runner
+  };
 
   ## dconf
   programs.dconf.profiles.gdm.databases = [
