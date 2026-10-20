@@ -43,3 +43,7 @@ Conventions for files, comments, modules and commits are in
 [CLAUDE.md](CLAUDE.md). The short version: hosts hold only what is unique to
 the machine, anything two hosts share becomes a module, and a merge to `main`
 is a fleet rollout, so changes go through a pull request.
+
+## License
+
+GPL-3.0-or-later. See [LICENSE](LICENSE).
