@@ -39,6 +39,12 @@ Add to template, comment that it's an option best for desktops that are left pow
 ## 3. Sleep then shutdown
 Add to template, comment that it's an option best for laptops to save battery. Need to decide how I want to implement this, whether it should be an optional import module or something else.
 
+## 4. PS1 titles look bad when SSH'd
+
+## 5. What's up with the lanzaboot 4 generation limit? Should we make maintenance.nix match?
+
+## 6. rename desktop.nix to something that makes sense since we are already using the term 'workstation' elsewhere
+
 #### Waiting on upstream ####
 
 Items that cannot be finished yet, or that are a heads-up for a future
