@@ -24,7 +24,6 @@ in
 
     ## Select Modules
     ../../../modules/maintenance.nix
-    ../../../modules/appliance.nix
   ];
 
   ## GPU: Intel UHD 630
@@ -36,6 +35,9 @@ in
 
   ## Intel CPU
   services.thermald.enable = true;
+
+  ## Firmware: losing WiFi strands the box
+  hardware.enableRedistributableFirmware = true;
 
   ## Remote: let the USB chain wake the box from S3, rebadge the odd buttons
   services.udev.extraRules = ''
@@ -53,7 +55,11 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelParams = [ "video=HDMI-A-1:640x480@60" ]; # 1:1 onto NTSC's 480 lines, see README "CRT / display notes"
+  boot.loader.timeout = 0;
+  boot.kernelParams = [
+    "quiet"
+    "video=HDMI-A-1:640x480@60" # 1:1 onto NTSC's 480 lines, see README "CRT / display notes"
+  ];
 
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages; # LTS
@@ -111,6 +117,33 @@ in
     AllowSuspendThenHibernate = false;
     AllowHybridSleep = false;
   };
+
+  ## Audio
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+  };
+
+  ## SSH: the only way in, always on
+  services.openssh = {
+    enable = true;
+    settings.PermitRootLogin = "no";
+  };
+
+  ## Updates: apply on the spot, nobody is around to reboot
+  system.autoUpgrade.operation = "switch";
+
+  ## Packages
+  environment.systemPackages = with pkgs; [
+    vim
+    git
+    curl
+    wget
+    tree
+    grim # kiosk screenshots over ssh (WAYLAND_DISPLAY=wayland-0)
+  ];
 
   ## Kiosk: Cage running Chromium on tty1
   services.cage = {
@@ -224,19 +257,6 @@ in
       }
     });
   '';
-
-  ## Updates: apply on the spot, nobody is around to reboot
-  system.autoUpgrade.operation = "switch";
-
-  ## Packages
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-    curl
-    wget
-    tree
-    grim # kiosk screenshots over ssh (WAYLAND_DISPLAY=wayland-0)
-  ];
 
   system.stateVersion = "26.05";
 }

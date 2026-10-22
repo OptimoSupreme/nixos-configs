@@ -9,18 +9,22 @@
     ## Select Modules
     inputs.jovian.nixosModules.default
     ../../../modules/maintenance.nix
-    ../../../modules/appliance.nix
   ];
 
   ## GPU: AMD (nothing to add)
+
+  ## Firmware: the amdgpu blobs
+  hardware.enableRedistributableFirmware = true;
 
   ## Boot
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.timeout = 0;
 
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelParams = [ "quiet" ];
 
   ## Networking
   networking = {
@@ -39,6 +43,20 @@
       "wheel"
       "networkmanager"
     ];
+  };
+
+  ## Audio
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+  };
+
+  ## SSH: the only way in, always on
+  services.openssh = {
+    enable = true;
+    settings.PermitRootLogin = "no";
   };
 
   ## Steam Gaming Mode from boot
