@@ -43,10 +43,7 @@ in
   programs.nix-ld.enable = lib.mkDefault true;
 
   ## Packages
-  environment.systemPackages = with pkgs; [
-    vscodium
-    distrobox
-  ];
+  environment.systemPackages = with pkgs; [ distrobox ];
 
   ## Flatpaks
   systemd.services.flatpak-apps =
