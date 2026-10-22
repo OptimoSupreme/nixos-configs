@@ -53,8 +53,9 @@
     }
   ];
 
-  ## No personal flatpaks on the live stick
+  ## No personal flatpaks or home-manager on the live stick (its user is nixos)
   systemd.services.flatpak-apps.enable = false;
+  home-manager.users = lib.mkForce { };
 
   ## Shadow the ISO's plain Firefox with the configured one; git for `git pull` in the clone
   environment.systemPackages = [
