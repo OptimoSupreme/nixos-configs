@@ -216,7 +216,6 @@ in
   ## Packages
   environment.systemPackages = with pkgs; [
     kdePackages.breeze
-    git
     microfetch
     unzip
     ptyxis
@@ -245,9 +244,15 @@ in
       '';
       interactiveShellInit = ''
         shopt -s histappend
+        HISTSIZE=1000
+        HISTFILESIZE=1000
+        HISTCONTROL=ignoreboth
+        PROMPT_COMMAND="history -a''${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
+        bind 'set colored-stats on'
         command -v microfetch >/dev/null && microfetch
       '';
     };
+    fzf.keybindings = lib.mkDefault true; # Ctrl+R history search
     nix-index-database.comma.enable = lib.mkDefault true; # Command Not Found hint and `,` runner
   };
 

@@ -1,12 +1,20 @@
 #### Personal Environment ####
 
-{ lib, pkgs, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   user = "justin";
 in
 {
-  imports = [ ./workstation_core.nix ];
+  imports = [
+    ./workstation_core.nix
+    inputs.home-manager.nixosModules.home-manager
+  ];
 
   ## Networking
   networking.firewall.allowedTCPPorts = [ 53317 ]; # LocalSend
@@ -23,25 +31,19 @@ in
   virtualisation.libvirtd.qemu.swtpm.enable = lib.mkDefault true; # emulated TPM 2.0 for VMs
   users.groups.libvirtd.members = [ user ];
 
-  ## Git
-  programs.git = {
-    enable = lib.mkDefault true;
-    config = {
-      user.name = lib.mkDefault "Justin Ward";
-      user.email = lib.mkDefault "jward92@gmail.com";
-      fetch.prune = lib.mkDefault true;
-    };
+  ## Home Manager
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    backupFileExtension = "bak";
+    users.${user} = import ../home/justin;
   };
 
   ## Shim for non-Nix binaries (some Codium extensions)
   programs.nix-ld.enable = lib.mkDefault true;
 
   ## Packages
-  environment.systemPackages = with pkgs; [
-    vscodium
-    distrobox
-    gh
-  ];
+  environment.systemPackages = with pkgs; [ distrobox ];
 
   ## Flatpaks
   systemd.services.flatpak-apps =
