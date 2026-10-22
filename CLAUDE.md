@@ -28,8 +28,9 @@ it may be secret, and no IPs, passwords, or tokens belong here.
   differences. A host imports exactly one of the two environments, never
   `workstation_core.nix` directly. `work_patch.nix` layers the work-only
   pieces (CAC, Chromium, Slack, Zoom) on top of `personal_environment.nix`; a
-  personal host without it is a gaming or home box. Headless hosts import
-  `appliance.nix` instead.
+  personal host without it is a gaming or home box. Appliances and servers
+  import neither: each is a one-off, so its host file holds everything but
+  `maintenance.nix`.
 - `home/justin/` is the home-manager configuration for Justin's user. Only
   `personal_environment.nix` wires it in (as a NixOS module, so a rebuild or
   the daily upgrade applies it). Client hosts never get home-manager: their
@@ -55,8 +56,11 @@ words. No narrative comments, no restating what the code does.
 except `hardware-configuration.nix`, which stays exactly as generated.
 
 **Fleet rules.**
-- A host file holds only what is unique to that machine: hardware, hostname,
-  user, GPU, quirks. Anything two hosts would both want lives in `modules/`.
+- A workstation host file holds only what is unique to that machine:
+  hardware, hostname, user, GPU, quirks. Anything two workstations would both
+  want lives in `modules/`. Appliances and servers are exempt: each is a
+  one-off, so the same block in two of them is a coincidence, not a module.
+  Leave it repeated.
 - Shared modules set defaults with `lib.mkDefault` so a host can override with
   a plain assignment. Do not add custom options until three hosts need to vary
   the same thing.
