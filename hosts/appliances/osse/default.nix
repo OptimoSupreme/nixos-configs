@@ -49,19 +49,23 @@ in
 
     ## Select Modules
     ../../../modules/maintenance.nix
-    ../../../modules/appliance.nix
   ];
 
   ## GPU: not chosen yet (mesa only; add the GPU's extras from workstation_template.nix once the box exists)
   hardware.graphics.enable = true;
 
+  ## Firmware: losing WiFi strands the box
+  hardware.enableRedistributableFirmware = true;
+
   ## Boot
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.timeout = 0;
 
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelParams = [ "quiet" ];
 
   ## Swap
   zramSwap = {
@@ -123,6 +127,34 @@ in
     HandleLidSwitch = "ignore";
     IdleAction = "ignore";
   };
+
+  ## Audio (the Waydroid session bind-mounts the pulse socket into the container)
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+  };
+
+  ## SSH: the only way in, always on
+  services.openssh = {
+    enable = true;
+    settings.PermitRootLogin = "no";
+  };
+
+  ## Updates: manual only, a bad update is worse at sea (README "Updates")
+  systemd.timers.nixos-upgrade.enable = false;
+
+  ## Packages
+  environment.systemPackages = with pkgs; [
+    vim
+    git
+    curl
+    wget
+    tree
+    weston # weston-screenshooter over ssh
+    lxc # lxc-attach into Android by hand
+  ];
 
   ## Android (Waydroid)
   virtualisation.waydroid = {
@@ -241,20 +273,6 @@ in
       RestartSec = 5;
     };
   };
-
-  ## Updates: manual only, a bad update is worse at sea (README "Updates")
-  systemd.timers.nixos-upgrade.enable = false;
-
-  ## Packages
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-    curl
-    wget
-    tree
-    weston # weston-screenshooter over ssh
-    lxc # lxc-attach into Android by hand
-  ];
 
   system.stateVersion = "26.05";
 }
