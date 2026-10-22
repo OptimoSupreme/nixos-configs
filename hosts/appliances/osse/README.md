@@ -45,7 +45,7 @@ hardware.
   backlight (`/sys/class/backlight`, auto-detected) with a 2%-of-max floor so
   the slider can never black out the panel.
 - **Admin over ssh.** `ssh justin@osse.local` (avahi), by password; root has
-  no password and no ssh, and no keys live in the config (modules/appliance.nix). helm
+  no password and no ssh, and no keys live in the config. helm
   kept a separate locked kiosk user; here the kiosk runs as justin, the way
   palantir's does.
 
