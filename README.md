@@ -18,6 +18,7 @@ hosts/           one directory per machine: default.nix + hardware-configuration
   servers/
 modules/         opt-in modules; workstation_core.nix is the shared workstation
                  configuration, appliance.nix the shared headless block
+home/            home-manager configuration for my user on personal hosts
 assets/          dconf keyfiles, Firefox autoconfig, CAC certs, other static files
 installer/       the live ISO, and the manual for installing a machine
 ```

@@ -30,6 +30,10 @@ it may be secret, and no IPs, passwords, or tokens belong here.
   pieces (CAC, Chromium, Slack, Zoom) on top of `personal_environment.nix`; a
   personal host without it is a gaming or home box. Headless hosts import
   `appliance.nix` instead.
+- `home/justin/` is the home-manager configuration for Justin's user. Only
+  `personal_environment.nix` wires it in (as a NixOS module, so a rebuild or
+  the daily upgrade applies it). Client hosts never get home-manager: their
+  user accounts belong to other people.
 - `assets/` holds static files modules reference by relative path.
 - `installer/` builds the live ISO. `installer/README.md` is the install,
   update, Secure Boot and TPM manual; link to it rather than repeating it.
@@ -62,8 +66,11 @@ except `hardware-configuration.nix`, which stays exactly as generated.
   means checking whether the template should change too.
 - Every registered host must still evaluate after a change, not just the one
   being edited.
-- No home-manager. Per-user settings are system-level dconf keyfiles in
-  `assets/dconf/`.
+- home-manager is for Justin's dotfiles only (`home/justin/`): git, gh,
+  Codium. Desktop settings stay system-level dconf keyfiles in
+  `assets/dconf/`, shared with the client environment. Anything every
+  workstation user should have (shell history tuning, fzf) goes in
+  `workstation_core.nix`, not home-manager.
 - Never hand-edit `hardware-configuration.nix`; regenerate it on the machine.
 
 ## Tools that are not on the machine
@@ -94,6 +101,9 @@ Before reporting a change as done:
    host edited, plus every registered host that imports a touched module.
    `nix flake check` alone is shallow (option names only) and is not enough.
 3. State what was and was not evaluated in the report.
+
+A change under `home/` is covered by step 2 for the hosts that import
+`personal_environment.nix`; there is no separate home-manager check.
 
 If the machine has nix, run these directly. If it does not, use a
 `docker.io/nixos/nix` container with the repo mounted and a persistent store
