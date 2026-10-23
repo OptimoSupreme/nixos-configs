@@ -40,7 +40,7 @@ Add to template, comment that it's an option best for desktops that are left pow
 Add to template, comment that it's an option best for laptops to save battery. Need to decide how I want to implement this, whether it should be an optional import module or something else.
 
 ## 4. Installation guide
-Try to make a guide that someone (especially me) could actually follow on their own for using the template to setup a new workstation, and everything they have to do to apply it, get it resistered in the repo, and be good to go. Doesn't need to cover building installation media, or even how to install nixos. I feel like that's pretty easy. I guess we could at least mention the installation options they should use if they planning on using certain features like installing on btrfs if they want snapshots, encrypted if they want tpm decryption, etc. etc.
+Try to make a guide that someone (especially me) could actually follow on their own for using the template to setup a new workstation, and everything they have to do to apply it, get it resisted in the repo, and be good to go. Doesn't need to cover building installation media, or even how to install nixos. I feel like that's pretty easy. I guess we could at least mention the installation options they should use if they planning on using certain features like installing on btrfs if they want snapshots, encrypted if they want tpm decryption, etc. etc.
 
 #### Waiting on upstream ####
 
