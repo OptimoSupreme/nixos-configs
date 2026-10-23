@@ -11,6 +11,7 @@ profiles and per-box data stay on the machines.
 ```
 flake.nix        registers hosts; mkHost for nixos-26.05, mkHostOn for another channel
 hosts/           one directory per machine: default.nix + hardware-configuration.nix
+  HOSTNAMES.md   what the hostnames mean, and the lore behind them
   workstation_template.nix  the menu a new desktop host starts from
   workstations/  my desktops and laptops
   clients/       machines I manage for other people
