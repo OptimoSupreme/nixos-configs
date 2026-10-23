@@ -19,6 +19,15 @@
         Locked = true;
       };
 
+      ## Firefox Home tiles (locked: Firefox Sync writes user-branch prefs that beat mozilla.cfg)
+      FirefoxHome = {
+        TopSites = false;
+        SponsoredTopSites = false;
+        Stories = false;
+        SponsoredStories = false;
+        Locked = true;
+      };
+
       ## AI features off by default, still user-changeable
       AIControls = {
         Default = {
