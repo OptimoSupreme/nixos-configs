@@ -146,9 +146,21 @@ in
     interval = lib.mkDefault 300;
   };
 
-  ## Time Zone (set by GNOME from location)
+  ## Desktop Defaults
   programs.dconf.profiles.user.databases = [
-    { settings."org/gnome/desktop/datetime".automatic-timezone = true; }
+    {
+      settings = {
+        "org/gnome/desktop/datetime".automatic-timezone = true;
+        "org/gnome/settings-daemon/plugins/media-keys".custom-keybindings = [
+          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/resources/"
+        ];
+        "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/resources" = {
+          name = "Resources";
+          command = "resources";
+          binding = "<Control><Shift>Escape";
+        };
+      };
+    }
   ];
 
   ## Out of Memory Killer
