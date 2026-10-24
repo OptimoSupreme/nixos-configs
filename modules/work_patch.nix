@@ -157,12 +157,12 @@ in
     ++ [ freerdp ]
     ++ avdLaunchers;
 
-  ## Flatpaks (appended to the personal_environment install set)
+  ## Flatpaks
   systemd.services.flatpak-apps.script = lib.mkAfter ''
     flatpak install --system --noninteractive --assumeyes flathub com.slack.Slack us.zoom.Zoom
   '';
 
-  ## dconf (work apps on the first app grid page)
+  ## dconf (work apps on page one, home_patch apps on page two)
   programs.dconf.profiles.user.databases = lib.mkBefore [
     { keyfiles = [ ../assets/dconf/work_patch ]; }
   ];
