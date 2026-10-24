@@ -26,11 +26,14 @@ it may be secret, and no IPs, passwords, or tokens belong here.
   shared workstation configuration; `client_environment.nix` (client machines)
   and `personal_environment.nix` (Justin's) each import it and add their own
   differences. A host imports exactly one of the two environments, never
-  `workstation_core.nix` directly. `work_patch.nix` layers the work-only
-  pieces (CAC, Chromium, Slack, Zoom) on top of `personal_environment.nix`; a
-  personal host without it is a gaming or home box. Appliances and servers
-  import neither: each is a one-off, so its host file holds everything but
-  `maintenance.nix`.
+  `workstation_core.nix` directly. `home_patch.nix` (home apps, the home
+  server) and `work_patch.nix` (CAC, Chromium, Slack, Zoom) each layer on
+  `personal_environment.nix`; a personal host imports one or both. The work
+  dconf keyfile lays the app grid out as two pages, work then home, and GNOME
+  shows a page only when something on it is installed, so the same keyfile
+  serves work-only and work-plus-home hosts. Appliances and servers import
+  neither environment: each is a one-off, so its host file holds everything
+  but `maintenance.nix`.
 - `home/justin/` is the home-manager configuration for Justin's user. Only
   `personal_environment.nix` wires it in (as a NixOS module, so a rebuild or
   the daily upgrade applies it). Client hosts never get home-manager: their
