@@ -143,7 +143,8 @@ Then, in the clone:
      turns on measured boot (see "Finishing the machine"). Exactly one
      environment: `client_environment.nix` for a managed machine,
      `personal_environment.nix` for one of mine. They are siblings, never
-     both.
+     both. On top of `personal_environment.nix` take `home_patch.nix`,
+     `work_patch.nix` or both.
    - **Boot**: systemd-boot for UEFI, GRUB for BIOS. **Kernel**: LTS or
      latest. **Swap**: keep zram; the swapfile block is optional.
    - **Hostname** (it must match the flake.nix entry), the **user** block
@@ -295,7 +296,7 @@ keeps, plus anything built since, are still there to boot.
   Assistant or `snapper -c home list`. System state needs none: every
   generation is a bootable rollback point.
 - **Fingerprint login**: enroll under Settings → Users on the machine.
-- **My flatpaks** (personal_environment) install themselves at the first
+- **My flatpaks** (home_patch, work_patch) install themselves at the first
   boot with network; `systemctl status flatpak-apps` shows progress.
 - **ssh into a host**: sshd is installed but not started at boot. Start it
   when needed with `sudo systemctl start sshd` and log in as the user;
