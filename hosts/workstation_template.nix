@@ -14,8 +14,9 @@
     # ../../../modules/tpm_decryption.nix       # TPM unlock enrollment script
     # ../../../modules/secure_boot.nix          # Lanzaboote (needs the UEFI lines below)
     # ../../../modules/client_environment.nix   # Client user environment
-    # ../../../modules/personal_environment.nix # Personal user environment
-    # ../../../modules/work_patch.nix           # CAC, Chromium, Slack, Zoom (on top of personal_environment)
+    # ../../../modules/personal_environment.nix # Personal user environment (add home_patch, work_patch or both)
+    # ../../../modules/home_patch.nix           # Home apps (Discord, Steam, Spotify, LocalSend, GIMP, ...) and the home server
+    # ../../../modules/work_patch.nix           # CAC, Chromium, Slack, Zoom
   ];
 
   ## GPU (choose one)
