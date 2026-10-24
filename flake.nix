@@ -52,6 +52,7 @@
         # balrog = mkHost ./hosts/workstations/balrog; # waiting on the Framework Desktop board
         nazgul = mkHost ./hosts/workstations/nazgul;
         saruman = mkHost ./hosts/workstations/saruman;
+        # wormtongue = mkHost ./hosts/workstations/wormtongue; # waiting on the laptop
 
         ## Clients
         emily-laptop = mkHost ./hosts/clients/emily-laptop;
