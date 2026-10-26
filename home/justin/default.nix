@@ -2,6 +2,7 @@
 
 {
   config,
+  lib,
   osConfig,
   pkgs,
   ...
@@ -23,7 +24,7 @@ in
     enable = true;
     settings = {
       user.name = "Justin Ward";
-      user.email = "jward92@gmail.com";
+      user.email = lib.mkDefault "jward92@gmail.com"; # work hosts override it
       init.defaultBranch = "main";
       fetch.prune = true;
       pull.ff = "only";

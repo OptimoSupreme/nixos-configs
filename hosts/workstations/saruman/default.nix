@@ -11,6 +11,7 @@
     ../../../modules/firefox.nix
     ../../../modules/secure_boot.nix
     ../../../modules/personal_environment.nix
+    ../../../modules/home_patch.nix
     ../../../modules/work_patch.nix # temporary, until balrog arrives
   ];
 
