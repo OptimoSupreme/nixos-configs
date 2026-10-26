@@ -151,6 +151,7 @@ in
     {
       settings = {
         "org/gnome/desktop/datetime".automatic-timezone = true;
+        "org/gnome/shell".always-show-log-out = true; # hidden by default on single-user machines
         "org/gnome/settings-daemon/plugins/media-keys".custom-keybindings = [
           "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/resources/"
         ];
