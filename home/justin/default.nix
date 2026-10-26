@@ -55,7 +55,6 @@ in
         jnoortheen.nix-ide
         timonwong.shellcheck
         foxundermoon.shell-format
-        streetsidesoftware.code-spell-checker
         redhat.vscode-yaml
         tamasfe.even-better-toml
         teabyii.ayu
