@@ -8,6 +8,74 @@ let
     OpenSC = "/run/current-system/sw/lib/pkcs11/opensc-pkcs11.so";
     "p11-kit-trust" = "/run/current-system/sw/lib/pkcs11/p11-kit-trust.so";
   };
+
+  ## Azure Virtual Desktop (Government cloud; FreeRDP defaults to commercial endpoints)
+  # Entra sign-in in the system browser; nixpkgs does not build this helper
+  avdAuthHelper = pkgs.stdenvNoCC.mkDerivation {
+    pname = "freerdp-xdg-aad-helper";
+    inherit (pkgs.freerdp) version src;
+    buildInputs = [ pkgs.python3 ]; # patchShebangs resolves the interpreter from here
+    dontConfigure = true;
+    dontBuild = true;
+    # winpr hands the helper a read-only stdout/stderr when xfreerdp has no terminal; its first print would kill the browser thread
+    installPhase = ''
+      install -Dm755 client/common/xdg-aad-helper/xdg-aad-helper.py $out/libexec/freerdp-xdg-aad-helper
+      install -Dm755 client/common/xdg-aad-helper/freerdp_aad_handler.py $out/libexec/freerdp-aad-handler
+      mkdir -p $out/bin
+      cat > $out/bin/freerdp-xdg-aad-helper <<EOF
+      #!${pkgs.runtimeShell}
+      exec >"\''${XDG_RUNTIME_DIR:-/tmp}/freerdp-aad-helper.log" 2>&1
+      exec $out/libexec/freerdp-xdg-aad-helper "\$@"
+      EOF
+      chmod +x $out/bin/freerdp-xdg-aad-helper
+    '';
+  };
+  avdWorkspaces = {
+    arizona = "AVD - Arizona";
+    virginia = "AVD - Virginia";
+  };
+  avd = pkgs.writeShellApplication {
+    name = "avd";
+    runtimeInputs = with pkgs; [
+      freerdp
+      xdg-utils
+      desktop-file-utils # the helper gives up on registering its URL handler without update-desktop-database
+    ];
+    text = ''
+      if [ $# -lt 1 ]; then
+        echo "usage: avd <workspace.rdpw | name> [xfreerdp options...]" >&2
+        exit 1
+      fi
+      rdpw=$1
+      shift
+      if [ ! -f "$rdpw" ]; then
+        shopt -s nullglob nocaseglob
+        matches=("$HOME/git/Work/AVD"/*"$rdpw"*.rdpw)
+        if [ ''${#matches[@]} -ne 1 ]; then
+          echo "avd: no unique workspace matching '$rdpw' in $HOME/git/Work/AVD" >&2
+          exit 1
+        fi
+        rdpw=''${matches[0]}
+      fi
+      # cert:ignore: session hosts rotate behind one gateway name, so pinning prompts on stdin, which the launchers lack
+      exec xfreerdp "$rdpw" /cert:ignore /smartcard +clipboard \
+        /azure:ad:login.microsoftonline.us,tenantid:common,avd-scope:https%3A%2F%2Fwww.wvd.azure.us%2F.default%20openid%20profile%20offline_access,avd-access:https%%3A%%2F%%2Flogin.microsoftonline.com%%2Fcommon%%2Foauth2%%2Fnativeclient,auth-helper:${avdAuthHelper}/bin/freerdp-xdg-aad-helper \
+        "$@"
+    '';
+  };
+  avdLaunchers = lib.mapAttrsToList (
+    name: title:
+    pkgs.makeDesktopItem {
+      name = "avd-${name}";
+      desktopName = title;
+      exec = "${lib.getExe avd} ${name}";
+      icon = "computer";
+      categories = [
+        "Network"
+        "RemoteAccess"
+      ];
+    }
+  ) avdWorkspaces;
 in
 {
   ## Enable CAC
@@ -55,11 +123,16 @@ in
   ] (_: lib.mkDefault "firefox.desktop");
 
   ## Packages
-  environment.systemPackages = with pkgs; [
-    ungoogled-chromium
-    opensc
-    p11-kit.out # the default bin output has no lib/pkcs11
-  ];
+  environment.systemPackages =
+    with pkgs;
+    [
+      ungoogled-chromium
+      opensc
+      p11-kit.out # the default bin output has no lib/pkcs11
+      freerdp
+      avd
+    ]
+    ++ avdLaunchers;
 
   ## Flatpaks (appended to the personal_environment install set)
   systemd.services.flatpak-apps.script = lib.mkAfter ''
@@ -71,3 +144,6 @@ in
     { keyfiles = [ ../assets/dconf/work_patch ]; }
   ];
 }
+
+# The Azure Virtual Desktop pieces (freerdp, the auth helper, the avd wrapper and its launchers)
+# exist for the Army USIEM project. Remove them once it ends; the CAC browser setup stays.
