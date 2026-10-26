@@ -45,6 +45,14 @@ nickname Gandalf gives him, Saruman of Many Colours, is a bonus: a wizard who
 could not stay one colour, on a machine that cannot stay one operating
 system.
 
+### wormtongue — work laptop
+
+Gríma Wormtongue was chief counsellor to King Théoden of Rohan. He had the
+king's ear, sat at his table, and shaped every decision in Edoras, all while
+quietly taking his orders from Saruman. That is a consultant's work laptop:
+it sits in the client's meetings and advises their leadership, but its real
+management chain runs back to the firm.
+
 ### gollum — Steam Machine
 
 Gollum is a hobbit-kin who kept himself alive for five centuries on a ring
@@ -77,11 +85,3 @@ Small, numerous, green, and tinkerers. Tolkien wrote that "wheels and engines an
 explosions always delighted them" and that they likely invented many of the
 machines that have since troubled the world, which is the right spirit for a
 board you solder things to.
-
-### wormtongue — work laptop
-
-Gríma Wormtongue was chief counsellor to King Théoden of Rohan. He had the
-king's ear, sat at his table, and shaped every decision in Edoras, all while
-quietly taking his orders from Saruman. That is a consultant's work laptop:
-it sits in the client's meetings and advises their leadership, but its real
-management chain runs back to the firm.
