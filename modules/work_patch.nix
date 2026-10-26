@@ -16,6 +16,19 @@ let
     "p11-kit-trust" = "/run/current-system/sw/lib/pkcs11/p11-kit-trust.so";
   };
 
+  ## DoD roots for Firefox, one file per certificate (Certificates.Install reads one per file)
+  dodCerts =
+    let
+      blocks = lib.drop 1 (
+        lib.splitString "-----BEGIN CERTIFICATE-----" (builtins.readFile ../assets/cac/DoD_PKI_bundle.pem)
+      );
+      body = block: lib.head (lib.splitString "-----END CERTIFICATE-----" block);
+    in
+    lib.imap0 (
+      i: block:
+      pkgs.writeText "dod-ca-${toString i}.pem" "-----BEGIN CERTIFICATE-----${body block}-----END CERTIFICATE-----\n"
+    ) blocks;
+
   ## Azure Virtual Desktop (Government cloud; FreeRDP defaults to commercial endpoints)
   # Entra sign-in in the system browser; nixpkgs does not build this helper
   avdAuthHelper = pkgs.stdenvNoCC.mkDerivation {
@@ -91,9 +104,12 @@ in
   security.pki.certificateFiles = [ ../assets/cac/DoD_PKI_bundle.pem ];
 
   ## Firefox CAC Config (Delete runs first, so Add can replace a stale entry of the same name)
-  programs.firefox.policies.SecurityDevices = {
-    Add = pkcs11Modules;
-    Delete = builtins.attrNames pkcs11Modules;
+  programs.firefox.policies = {
+    SecurityDevices = {
+      Add = { inherit (pkcs11Modules) OpenSC; }; # p11-kit-trust at NSS startup breaks every Firefox TLS chain
+      Delete = builtins.attrNames pkcs11Modules;
+    };
+    Certificates.Install = map toString dodCerts;
   };
 
   ## Ungoogled Chromium CAC Config (no Chromium policy exists)
