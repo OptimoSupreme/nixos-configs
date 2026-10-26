@@ -1,8 +1,15 @@
 #### Work Patch ####
 
-{ lib, pkgs, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  ## FreeRDP from unstable: 3.32.2 stops a redirected smart card from locking the CAC for every other local app
+  freerdp = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.freerdp;
   ## Stable paths: NSS databases keep the registered path, and store paths die on upgrade
   pkcs11Modules = {
     OpenSC = "/run/current-system/sw/lib/pkcs11/opensc-pkcs11.so";
@@ -13,7 +20,7 @@ let
   # Entra sign-in in the system browser; nixpkgs does not build this helper
   avdAuthHelper = pkgs.stdenvNoCC.mkDerivation {
     pname = "freerdp-xdg-aad-helper";
-    inherit (pkgs.freerdp) version src;
+    inherit (freerdp) version src;
     buildInputs = [ pkgs.python3 ]; # patchShebangs resolves the interpreter from here
     dontConfigure = true;
     dontBuild = true;
@@ -36,10 +43,10 @@ let
   };
   avd = pkgs.writeShellApplication {
     name = "avd";
-    runtimeInputs = with pkgs; [
+    runtimeInputs = [
       freerdp
-      xdg-utils
-      desktop-file-utils # the helper gives up on registering its URL handler without update-desktop-database
+      pkgs.xdg-utils
+      pkgs.desktop-file-utils # the helper gives up on registering its URL handler without update-desktop-database
     ];
     text = ''
       if [ $# -lt 1 ]; then
@@ -129,9 +136,9 @@ in
       ungoogled-chromium
       opensc
       p11-kit.out # the default bin output has no lib/pkcs11
-      freerdp
       avd
     ]
+    ++ [ freerdp ]
     ++ avdLaunchers;
 
   ## Flatpaks (appended to the personal_environment install set)
