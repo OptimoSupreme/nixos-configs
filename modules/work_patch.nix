@@ -112,7 +112,7 @@ in
     Certificates.Install = map toString dodCerts;
   };
 
-  ## Ungoogled Chromium CAC Config (no Chromium policy exists)
+  ## Chromium CAC Config (no Chromium policy exists)
   systemd.user.services.nssdb-pkcs11 = {
     description = "Register PKCS#11 modules in the user NSS database";
     wantedBy = [ "default.target" ];
@@ -149,7 +149,7 @@ in
   environment.systemPackages =
     with pkgs;
     [
-      ungoogled-chromium
+      chromium
       opensc
       p11-kit.out # the default bin output has no lib/pkcs11
       avd
