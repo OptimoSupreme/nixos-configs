@@ -177,11 +177,6 @@ in
   ## Wayland for Electron and Chromium apps
   environment.sessionVariables.NIXOS_OZONE_WL = lib.mkDefault "1";
 
-  ## Fingerprint enrolment workaround for https://github.com/NixOS/nixpkgs/issues/561267
-  environment.extraInit = ''
-    export XDG_DATA_DIRS=$XDG_DATA_DIRS''${XDG_DATA_DIRS:+:}${pkgs.gdm}/share/gsettings-schemas/${pkgs.gdm.name}
-  '';
-
   ## SSH installed, started manually
   services.openssh.enable = lib.mkDefault true;
   systemd.services.sshd.wantedBy = lib.mkForce [ ];

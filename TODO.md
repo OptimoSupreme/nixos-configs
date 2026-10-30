@@ -47,21 +47,18 @@ Try to make a guide that someone (especially me) could actually follow on their 
 Items that cannot be finished yet, or that are a heads-up for a future
 change. Nothing to do until the named event happens.
 
-## 1. Drop workarounds once their nixpkgs backports reach nixos-26.05
+## 1. Drop the impatience workaround once its nixpkgs backport reaches nixos-26.05
 
-Both fixes are on nixpkgs master; the fleet waits on the release-26.05
-backports and the weekly lock bump that follows each merge.
+The fix is on nixpkgs master; the fleet waits on the release-26.05 backport
+and the weekly lock bump that follows the merge.
 
-- Fingerprint enrolment: `environment.extraInit` in `modules/workstation_core.nix`
-  puts gdm's gsettings schema on `XDG_DATA_DIRS`. Delete it once
-  https://github.com/NixOS/nixpkgs/pull/572210 is merged.
 - Impatience: `modules/workstation_core.nix` uses
   `gnome50Extensions."impatience@gfxmonk.net"` because the manual package
   on 26.05 stops at GNOME 49. Switch back to `gnomeExtensions.impatience`
   and drop the comment once https://github.com/NixOS/nixpkgs/pull/573338 is
   merged.
 
-Done when: both lines are gone and every registered desktop host evaluates.
+Done when: the line is gone and every registered desktop host evaluates.
 
 ## 2. Expect changes at the NixOS 26.11 bump
 
