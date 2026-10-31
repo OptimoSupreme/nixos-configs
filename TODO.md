@@ -99,3 +99,22 @@ Done when: the lanzaboote release in `flake.lock` no longer asserts the
 limit, the `configurationLimit` line in `secure_boot.nix` is deleted so
 measured hosts fall back to `boot.loader.systemd-boot.configurationLimit`
 like every other host, and nazgul and emily-laptop evaluate.
+
+## 4. Drop gollum's HDMI FRL flag once kernel 7.4 turns it on by default
+
+`hosts/appliances/gollum/default.nix` passes `amdgpu.dcfeaturemask=0x402` so
+the RX 6600 can drive the TV at 4K120 over HDMI 2.1 Fixed Rate Link. Linux
+7.2 added FRL but left it off because VRR over HDMI was not ready; 7.4 ships
+VRR, FreeSync and ALLM and flips FRL on by default, at which point the flag
+is redundant (and the mask replaces the driver default rather than adding to
+it, so leaving it is a small liability).
+
+- Delete the `amdgpu.dcfeaturemask` line once gollum's
+  `linuxPackages_latest` is 7.4 or newer and 4K120 still appears without it.
+- At the same time, if the TV connected then supports HDMI 2.1 VRR, turn on
+  variable refresh in the Steam display settings and check that gamescope
+  reports it active. VRR over HDMI did not exist on amdgpu before 7.4, so
+  this has never been tried on gollum.
+
+Done when: the flag is gone, gollum evaluates, and 4K120 (with VRR if the
+TV has it) works from a cold boot.
