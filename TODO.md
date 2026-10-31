@@ -118,3 +118,21 @@ it, so leaving it is a small liability).
 
 Done when: the flag is gone, gollum evaluates, and 4K120 (with VRR if the
 TV has it) works from a cold boot.
+
+## 5. Drop the screencast audio extension once GNOME records audio itself
+
+The built-in screen recorder is video only. `modules/workstation_core.nix`
+installs `screencast.extra.feature@wissle.me` (from nixpkgs-unstable, since
+26.05 ships version 7) and both dconf keyfiles enable it, which adds Desktop
+and Mic toggles to the screenshot UI by passing the screencast service a
+pipeline with a `pulsesrc` monitor branch. Upstream tracks native audio in
+https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/5524, open with no merge
+request attached. In the meantime, at the 26.11 bump, check whether
+`gnomeExtensions.screencast-extra-feature.version` is 8 or more and switch
+the unstable pull back to the stable package if so.
+
+Done when: the GNOME release in `flake.lock` records desktop audio from the
+screenshot UI on its own, the `screencastExtraFeature` lines and the UUID in
+`assets/dconf/personal_environment/00-defaults` and
+`assets/dconf/client_environment/00-defaults` are gone, and every registered
+desktop host evaluates.
