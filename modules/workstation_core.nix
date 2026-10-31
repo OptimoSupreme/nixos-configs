@@ -77,6 +77,9 @@ let
       platforms = pkgs.lib.platforms.linux;
     };
   });
+  # screencastExtraFeature from unstable: stable's 7 shells out to gst-inspect-1.0, which is not on PATH
+  screencastExtraFeature =
+    inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.gnomeExtensions.screencast-extra-feature;
 in
 {
   imports = [ inputs.nix-index-database.nixosModules.nix-index ];
@@ -236,6 +239,7 @@ in
     gnomeExtensions.dash-to-panel
     gnome50Extensions."impatience@gfxmonk.net" # gnomeExtensions.impatience is stuck on GNOME 45-49
     gnomeExtensions.pip-on-top
+    screencastExtraFeature # desktop and mic audio in the built-in screen recorder
   ];
 
   ## Flatpak with Flathub

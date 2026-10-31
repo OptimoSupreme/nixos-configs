@@ -27,7 +27,7 @@ donation-reminder-enabled=false
 [org/gnome/shell]
 favorite-apps=['org.gnome.Nautilus.desktop', 'firefox.desktop']
 app-picker-layout=[{'org.gnome.Software.desktop': <{'position': <0>}>, 'org.gnome.Calendar.desktop': <{'position': <1>}>, 'org.gnome.Calculator.desktop': <{'position': <2>}>, 'org.gnome.SimpleScan.desktop': <{'position': <3>}>, 'onlyoffice-desktopeditors.desktop': <{'position': <4>}>, 'com.vixalien.sticky.desktop': <{'position': <5>}>, 'Utilities': <{'position': <6>}>}]
-enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'blur-my-shell@aunetx', 'caffeine@patapon.info', 'dash-to-panel@jderose9.github.com', 'impatience@gfxmonk.net', 'pip-on-top@rafostar.github.com']
+enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'blur-my-shell@aunetx', 'caffeine@patapon.info', 'dash-to-panel@jderose9.github.com', 'impatience@gfxmonk.net', 'pip-on-top@rafostar.github.com', 'screencast.extra.feature@wissle.me']
 
 [org/gnome/desktop/app-folders]
 folder-children=['Utilities']
