@@ -136,3 +136,17 @@ screenshot UI on its own, the `screencastExtraFeature` lines and the UUID in
 `assets/dconf/personal_environment/00-defaults` and
 `assets/dconf/client_environment/00-defaults` are gone, and every registered
 desktop host evaluates.
+
+## 6. Check microfetch has the P/E core fix at the 26.11 bump
+
+microfetch 1.1.0 (on 26.05) and 1.2.0 (on unstable) report the thread count
+as the CPU core count. https://github.com/NotAShelf/microfetch/pull/112
+counts P and E cores instead; it merged 2026-10-30 and ships in v1.2.1 and
+later. Stable never takes version bumps, so nothing to do until the fleet
+moves to 26.11. At that point check that `microfetch.version` on
+release-26.11 is 1.2.1 or more. If it is not, ask for a nixpkgs backport
+first; if that is refused, override `microfetch` in
+`modules/workstation_core.nix` the way `work_patch.nix` does for freerdp.
+
+Done when: `microfetch` on the registered desktop hosts prints the core
+count, from the stable package with no override.
