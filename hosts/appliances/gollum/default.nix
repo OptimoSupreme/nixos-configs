@@ -22,10 +22,21 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 0;
 
+  ## Boot Splash
+  boot.consoleLogLevel = 3;
+  boot.plymouth = {
+    enable = true;
+    theme = "steamos";
+    themePackages = [ pkgs.jovianPackages.steamdeck-hw-theme ];
+  };
+
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [
     "quiet"
+    "udev.log_level=3"
+    "rd.udev.log_level=3"
+    "rd.systemd.show_status=auto"
     "amdgpu.dcfeaturemask=0x402" # HDMI 2.1 FRL for 4K120, see TODO.md
   ];
 
