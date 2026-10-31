@@ -62,7 +62,7 @@ Done when: the line is gone and every registered desktop host evaluates.
 
 ## 2. Expect changes at the NixOS 26.11 bump
 
-Three things the 26.11 upgrade will bring that touch this repo:
+Four things the 26.11 upgrade will bring that touch this repo:
 
 - GDM 51 no longer allows fingerprint-only login; fingerprint becomes
   re-authentication only. The fprintd hosts will behave differently at the
@@ -80,8 +80,11 @@ Three things the 26.11 upgrade will bring that touch this repo:
   once `gnomeExtensions.blur-my-shell.version` is 73 or more. At the same
   time check that `gnomeRoundedBlur` in `modules/workstation_core.nix` still builds against
   mutter 51 and bump its tag if upstream needed changes.
+- Scripted stage 1 is gone on unstable, and `boot.initrd.verbose` with it;
+  setting it is now an assertion failure (`gollum` already hit this). Drop
+  the line from `modules/workstation_core.nix` when the workstations move.
 
-Done when: the fleet is on 26.11 and all three points are checked off or
+Done when: the fleet is on 26.11 and all four points are checked off or
 reworked.
 
 ## 3. Lift the 4-generation cap on measured boot hosts
