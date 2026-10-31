@@ -24,7 +24,10 @@
 
   ## Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelParams = [ "quiet" ];
+  boot.kernelParams = [
+    "quiet"
+    "amdgpu.dcfeaturemask=0x402" # HDMI 2.1 FRL for 4K120, see TODO.md
+  ];
 
   ## Networking
   networking = {
