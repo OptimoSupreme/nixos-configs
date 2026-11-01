@@ -15,7 +15,8 @@
     ../../../modules/work_patch.nix # temporary, until balrog arrives
   ];
 
-  ## GPU: AMD (nothing to add)
+  ## GPU: AMD
+  hardware.amdgpu.initrd.enable = true;
 
   ## Intel CPU
   services.thermald.enable = true;

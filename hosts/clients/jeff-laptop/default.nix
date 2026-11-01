@@ -16,6 +16,7 @@
   ];
 
   ## GPU: Intel
+  boot.initrd.kernelModules = [ "i915" ]; # the iGPU drives the panel
   hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ];
 
   ## Keep the AMD dGPU out of D3cold

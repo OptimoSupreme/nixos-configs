@@ -16,7 +16,8 @@
     ../../../modules/work_patch.nix
   ];
 
-  ## GPU: AMD (nothing to add)
+  ## GPU: AMD
+  hardware.amdgpu.initrd.enable = true;
 
   ## Screenshot Key Override
   services.udev.extraHwdb = ''

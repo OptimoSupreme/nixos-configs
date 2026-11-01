@@ -19,20 +19,24 @@
     # ../../../modules/work_patch.nix           # CAC, Chromium, Slack, Zoom
   ];
 
-  ## GPU (choose one)
+  ## GPU (choose one; a nixos-hardware board module may already set early KMS)
   ## AMD (ROCm compute is optional)
+  # hardware.amdgpu.initrd.enable = true; # early KMS
   # hardware.amdgpu.opencl.enable = true;
 
-  ## Intel (choose one)
+  ## Intel (choose one VA-API driver)
+  # boot.initrd.kernelModules = [ "i915" ]; # early KMS; "xe" on Lunar Lake, Battlemage and newer
   # hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ]; # Broadwell and newer
   # hardware.graphics.extraPackages = with pkgs; [ intel-vaapi-driver ]; # Haswell and older
 
-  ## Nvidia (all three)
+  ## Nvidia (all five, open module too)
   # services.xserver.videoDrivers = [ "nvidia" ];
   # hardware.nvidia.open = true; # true on Turing (GTX 16xx / RTX 20xx) and newer, false before
+  # hardware.nvidia.modesetting.enable = true; # adds nvidia-drm.modeset=1 and fbdev=1
+  # boot.initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ]; # early KMS
   # nixpkgs.config.allowUnfree = true;
 
-  ## Hybrid Graphics (Nvidia PRIME) (also enable Nvidia and Intel; bus IDs from `lspci -D -d ::03xx`)
+  ## Hybrid Graphics (Nvidia PRIME) (also enable Nvidia and Intel; early KMS from the iGPU line only; bus IDs from `lspci -D -d ::03xx`)
   # hardware.nvidia.prime.offload.enable = true;
   # hardware.nvidia.prime.offload.enableOffloadCmd = true;
   # hardware.nvidia.prime.intelBusId = "PCI:0@0:2:0";

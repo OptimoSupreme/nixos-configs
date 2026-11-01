@@ -13,7 +13,8 @@
     ../../../modules/client_environment.nix
   ];
 
-  ## GPU: AMD (nothing to add)
+  ## GPU: AMD
+  hardware.amdgpu.initrd.enable = true;
 
   ## Boot
   boot.loader.systemd-boot.enable = true;
