@@ -39,9 +39,6 @@ Add to template, comment that it's an option best for desktops that are left pow
 ## 3. Sleep then shutdown
 Add to template, comment that it's an option best for laptops to save battery. Need to decide how I want to implement this, whether it should be an optional import module or something else.
 
-## 4. Installation guide
-Try to make a guide that someone (especially me) could actually follow on their own for using the template to setup a new workstation, and everything they have to do to apply it, get it resisted in the repo, and be good to go. Doesn't need to cover building installation media, or even how to install nixos. I feel like that's pretty easy. I guess we could at least mention the installation options they should use if they planning on using certain features like installing on btrfs if they want snapshots, encrypted if they want tpm decryption, etc. etc.
-
 #### Waiting on upstream ####
 
 Items that cannot be finished yet, or that are a heads-up for a future
@@ -66,8 +63,7 @@ Four things the 26.11 upgrade will bring that touch this repo:
 
 - GDM 51 no longer allows fingerprint-only login; fingerprint becomes
   re-authentication only. The fprintd hosts will behave differently at the
-  login screen and the fingerprint line in `installer/README.md` needs
-  rewording.
+  login screen.
 - Fedora 45 and GNOME OS replace gnome-keyring with oo7 as the Secrets
   Service. nixpkgs has the packages but no NixOS module yet; check whether
   26.11 wires it into the GNOME module and whether anything (CAC, Chromium
