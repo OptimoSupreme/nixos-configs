@@ -2,42 +2,7 @@
 
 Open work on the fleet. Each item says what, why, and how to tell it is done.
 
-## 1. Early KMS module for every GPU vendor
-
-Loading the GPU's kernel mode setting driver in the initrd gives native
-resolution from the first frame: Plymouth, the LUKS prompt and the console
-all render at the panel's resolution instead of the firmware's. The right
-knob is different for each vendor, and today only palantir
-(`boot.initrd.kernelModules = [ "i915" ]`) and balrog
-(`hardware.amdgpu.initrd.enable`, set by its nixos-hardware module) do it.
-
-Write a module, or a section of `workstation_template.nix`, that makes the
-correct setting one line to pick:
-
-- AMD: `hardware.amdgpu.initrd.enable = true`.
-- Intel: `boot.initrd.kernelModules = [ "i915" ]`, or `[ "xe" ]` on Lunar Lake,
-  Battlemage and newer.
-- Nvidia: `hardware.nvidia.modesetting.enable = true`, the
-  `nvidia nvidia_modeset nvidia_uvm nvidia_drm` modules in
-  `boot.initrd.kernelModules`, and `nvidia-drm.fbdev=1` in `boot.kernelParams`.
-  Check whether the open kernel module needs anything different.
-- Hybrid laptops: usually the iGPU driver only, since that is what drives the
-  panel.
-
-Decide where it lives. The fleet rule is no custom options until three hosts
-vary the same thing, so the first pass is probably a commented menu in
-`workstation_template.nix` next to the existing GPU block, mirrored into
-`nazgul` and `jeff-laptop`, with a `modules/` option only if the Nvidia case
-turns out to be more than a few lines.
-
-Done when: every registered desktop host has early KMS on and the template
-shows the choice for all three vendors.
-
-## 2. Wake from sleep automatic updates
-Add to template, comment that it's an option best for desktops that are left powered on. Need to decide how I want to implement this, whether it should be an optional import module or something else.
-
-## 3. Sleep then shutdown
-Add to template, comment that it's an option best for laptops to save battery. Need to decide how I want to implement this, whether it should be an optional import module or something else.
+Nothing open right now.
 
 #### Waiting on upstream ####
 
