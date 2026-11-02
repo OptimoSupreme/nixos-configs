@@ -60,6 +60,14 @@ and a grudge, hid under a mountain, and challenged visitors to a riddle game
 with his dinner as the stake. Old, wasted, and still playing games: a retired
 box repurposed as a Steam console.
 
+### smeagol — Steam Deck
+
+Sméagol is the name Gollum was born with, and the half of him that still
+remembers sunlight: smaller, younger, quicker, and the one that goes out
+walking with the hobbits. The handheld is the Steam Machine's little
+brother, the same games in a body you carry around, so it takes the
+earlier name.
+
 ### palantir — TV
 
 The palantíri were seeing-stones that showed things far away. They were not
