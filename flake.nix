@@ -49,7 +49,7 @@
       nixosConfigurations = {
 
         ## Workstations
-        # balrog = mkHost ./hosts/workstations/balrog; # waiting on the Framework Desktop board
+        balrog = mkHost ./hosts/workstations/balrog;
         nazgul = mkHost ./hosts/workstations/nazgul;
         saruman = mkHost ./hosts/workstations/saruman;
         # wormtongue = mkHost ./hosts/workstations/wormtongue; # waiting on the laptop
