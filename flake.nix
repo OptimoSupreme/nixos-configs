@@ -60,6 +60,7 @@
 
         ## Appliances
         gollum = mkHostOn nixpkgs-unstable ./hosts/appliances/gollum;
+        smeagol = mkHostOn nixpkgs-unstable ./hosts/appliances/smeagol;
         # osse = mkHost ./hosts/appliances/osse; # not deployed yet
         # palantir = mkHost ./hosts/appliances/palantir; # not deployed yet
 
