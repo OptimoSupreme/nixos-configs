@@ -2,7 +2,39 @@
 
 Open work on the fleet. Each item says what, why, and how to tell it is done.
 
-Nothing open right now.
+## 1. Pick the hosts that should wake for updates
+
+`modules/maintenance/wake_updates.nix` exists but no registered host imports
+it yet; every non-Steam host still runs `generic.nix`. Go through the fleet
+and decide, host by host, which desktops are left powered on and should
+swap to `wake_updates.nix` (waking Sunday to upgrade, GC and reboot), and
+which stay on the daily pull.
+
+Done when: each registered host imports the maintenance module that fits
+how it is used, and every host still evaluates.
+
+## 2. Add Decky Loader (and maybe Discord) to the Steam appliances
+
+gollum and smeagol run plain Jovian Steam with no plugin loader. Add Decky
+Loader to both, and decide whether Discord belongs there too (it would need
+to be reachable from Game Mode to be worth installing). Since both hosts
+share the setup, it goes in a module rather than in each host file.
+
+Done when: Decky Loader is installed declaratively on both hosts, Discord is
+either added or ruled out, and both hosts evaluate.
+
+## 3. Move the Steam updater from a library app to a Decky plugin
+
+`steam.nix` presents the updater as a non-Steam library app, which only
+runs from the library. A Decky plugin could bind it to a keypad trigger
+(Quick Access menu or a controller chord) and show status without leaving
+the game. Investigate whether the `steam-maintenance` flake input can ship a
+plugin instead, what the plugin needs from the system side (the binary
+cache check, the switch, the reboot prompt), and whether the library app
+should stay as a fallback. Depends on item 2.
+
+Done when: there is a decision written down here, and if it is a go, a plan
+for the `steam-maintenance` repo and `steam.nix`.
 
 #### Waiting on upstream ####
 
