@@ -107,8 +107,10 @@ password: `sudo passwd <user>`.
   sudo enable-tpm-decryption   # asks the LUKS passphrase; it stays as the fallback
   ```
 
-  A firmware update may make one boot ask for the passphrase; if the disk
-  keeps asking, run it again.
+  The policy follows kernel and bootloader updates by itself and ignores
+  system firmware updates. A Secure Boot key or dbx change brings the
+  passphrase prompt back at every boot; run it again and it replaces the
+  policy and re-enrolls.
 
 ## 5. Put it on main
 

@@ -27,6 +27,12 @@ let
         echo "No pcrlock policy at ${policy}: reboot into the measured boot generation first" >&2
         exit 1
       fi
+      # A policy this boot no longer satisfies cannot be rewritten in place
+      if ! systemctl restart systemd-pcrlock-make-policy.service; then
+        echo "The pcrlock policy does not match this boot (Secure Boot or firmware changed): replacing it"
+        ${config.systemd.package}/lib/systemd/systemd-pcrlock remove-policy
+        systemctl restart systemd-pcrlock-make-policy.service
+      fi
     ''
     + lib.concatMapStringsSep "\n" (
       dev:
