@@ -7,7 +7,7 @@
     ./hardware-configuration.nix
 
     ## Select Modules
-    ../../../modules/maintenance.nix
+    ../../../modules/maintenance/generic.nix
     ../../../modules/firefox.nix
     ../../../modules/secure_boot.nix
     ../../../modules/personal_environment.nix
