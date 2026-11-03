@@ -86,7 +86,7 @@
     user = "justin";
   };
 
-  ## Steamcord Prerequisites (the plugin itself is installed by hand, see TODO.md)
+  ## Steamcord Prerequisites (the plugin itself is installed by hand, see below)
   environment.systemPackages = with pkgs; [
     vesktop # native client, so no Flatpak
     pulseaudio # pactl, game audio in screen share
@@ -95,3 +95,8 @@
 
   system.stateVersion = "26.05";
 }
+
+# Steamcord is not on the Decky store, so install it yourself once: Decky settings,
+# Developer Mode, Install plugin from URL with
+# https://github.com/Necrosiak/Steamcord/releases/latest/download/Steamcord.zip,
+# accept the third-party warning, then log in by QR code. It updates itself after that.
