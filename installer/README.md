@@ -46,6 +46,8 @@ Work down `default.nix`; everything is a line to uncomment:
   otherwise). `secure_boot.nix` on UEFI, keeping the UEFI boot lines.
   Exactly one of `client_environment.nix` and `personal_environment.nix`;
   on top of the personal one, `home_patch.nix`, `work_patch.nix` or both.
+  `sleep_then_shutdown.nix` on a laptop: two hours into a
+  suspend it powers off to save the battery.
 - **Measured boot**. `secure_boot.nix` on an encrypted disk binds the TPM
   unlock to a pcrlock policy, which not every TPM supports. Ask first:
 
