@@ -57,7 +57,7 @@ below), auto-connecting from power-on with no interaction.
 - **Deploying:** the host line in `flake.nix` is still commented out, so
   uncomment it in the clone on the box, then
   `sudo nixos-rebuild switch --flake path:.#palantir`. Once that line is
-  committed, the fleet's daily auto-upgrade (`modules/maintenance.nix`)
+  committed, the fleet's daily auto-upgrade (`modules/maintenance/generic.nix`)
   takes over: it pulls the public repo over HTTPS, nothing to register,
   and on this host applies on the spot (`switch`, not `boot`: nobody is
   around to click Restart Now). Package updates arrive with the repo's
