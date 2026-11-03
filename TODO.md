@@ -174,8 +174,9 @@ https://gitlab.freedesktop.org/drm/amd/-/issues/6086 with a fix,
 which `hosts/appliances/gollum/default.nix` applies through
 `boot.kernelPatches` and which was confirmed on gollum on 2026-11-03 (HDR10
 and audio back at 4K120). Each kernel bump on unstable rebuilds the kernel
-on gollum, about 90 minutes. The research and the issue text live on the
-`docs/gollum-frl-hdr-issue` branch.
+on gollum, about 90 minutes, unless the cache-gollum workflow has already
+built it. The patch went to amd-gfx on 2026-11-03:
+https://lore.kernel.org/amd-gfx/20261103143248.59765-1-jward92@gmail.com/
 
 - Watch the issue and the amd-gfx thread for the patch (or an equivalent
   fix) landing; the `Fixes:` target is 70ed4679c512.
