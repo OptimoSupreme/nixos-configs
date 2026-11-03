@@ -113,9 +113,9 @@ recovery so it self-starts when the boat's power comes back.
 
 Nothing on the boat updates automatically — helm's rule, kept: a bad update
 is worse at sea than at the dock. The fleet's daily pull
-(`nixos-upgrade.service`, maintenance.nix) stays configured but its timer is
-masked; palantir and gollum, at home, are the ones that switch on a Sunday
-timer. Update when you choose, at the dock:
+(`nixos-upgrade.service`, maintenance/generic.nix) stays configured but its
+timer is masked; palantir, at home, is the one that switches daily at 10:00.
+Update when you choose, at the dock:
 
 ```bash
 sudo systemctl start nixos-upgrade.service   # pull the repo, stage the new generation

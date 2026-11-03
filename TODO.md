@@ -55,8 +55,8 @@ boot hosts because the lanzaboote module asserts it. systemd-pcrlock puts
 every alternative value for a PCR into one `TPM2_PolicyOR`, which takes at
 most 8 digests, and lanzaboote 1.2 covers a bootloader update in the policy,
 so PCR 4 holds 2 loader variants times 4 generations. The cap is only on
-boot entries; `maintenance.nix` keeping 5 store generations is independent
-and stays as is. Upstream fix: https://github.com/systemd/systemd/pull/43982
+boot entries; `maintenance/generic.nix` keeping 5 store generations is
+independent and stays as is. Upstream fix: https://github.com/systemd/systemd/pull/43982
 (PolicyOR tree) for https://github.com/systemd/systemd/issues/41526.
 
 Done when: the lanzaboote release in `flake.lock` no longer asserts the

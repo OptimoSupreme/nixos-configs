@@ -40,7 +40,8 @@ generated.
 Work down `default.nix`; everything is a line to uncomment:
 
 - **Modules**. A [nixos-hardware](https://github.com/NixOS/nixos-hardware)
-  module for the board first, if there is one. `maintenance.nix` always,
+  module for the board first, if there is one. One of
+  `maintenance/generic.nix` and `maintenance/wake_updates.nix` always,
   `firefox.nix` as wanted. `btrfs_snapshots.nix` on a btrfs install.
   `tpm_decryption.nix` only on an encrypted one (it refuses to evaluate
   otherwise). `secure_boot.nix` on UEFI, keeping the UEFI boot lines.
@@ -116,14 +117,17 @@ password: `sudo passwd <user>`.
 
 ## 5. Put it on main
 
-`maintenance.nix` has the host pull `main` from GitHub daily at 10:00 and
-run `nixos-rebuild boot`, so updates are staged for the next reboot and
-nothing reboots on its own. That only works once the host is on `main`:
-from a clone with push access (this machine after `gh auth login`, or copy
-the host directory to one), commit `hosts/<group>/<name>/` with its
-hardware config and the `flake.nix` line, and open a pull request. CI
-evaluates every registered host, which is why the hardware config is
-committed. Merge, then confirm the first pull from the host:
+`maintenance/generic.nix` has the host pull `main` from GitHub daily at
+10:00 and run `nixos-rebuild boot`, so updates are staged for the next reboot
+and nothing reboots on its own; `maintenance/wake_updates.nix` also reboots
+into them Sunday 03:00. gollum and smeagol have no timer: they update from
+the System Update tile in Steam, and CI builds them into a binary cache.
+The daily pull only works once the host is on `main`: from a clone with push
+access (this machine after `gh auth login`, or copy the host directory to
+one), commit `hosts/<group>/<name>/` with its hardware config and the
+`flake.nix` line, and open a pull request. CI evaluates every registered
+host, which is why the hardware config is committed. Merge, then confirm the
+first pull from the host:
 
 ```bash
 sudo systemctl start nixos-upgrade.service && journalctl -u nixos-upgrade -f

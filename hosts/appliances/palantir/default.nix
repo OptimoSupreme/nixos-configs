@@ -23,7 +23,7 @@ in
     ./hardware-configuration.nix
 
     ## Select Modules
-    ../../../modules/maintenance.nix
+    ../../../modules/maintenance/generic.nix
   ];
 
   ## GPU: Intel UHD 630
