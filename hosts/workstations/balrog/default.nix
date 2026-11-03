@@ -17,7 +17,7 @@
     ../../../modules/work_patch.nix
   ];
 
-  ## GPU: AMD, with ROCm for compute
+  ## GPU: AMD, with ROCm for compute (early KMS comes from the nixos-hardware module)
   hardware.amdgpu.opencl.enable = true;
 
   ## Boot

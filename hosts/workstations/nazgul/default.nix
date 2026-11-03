@@ -8,6 +8,7 @@
 
     ## Select Modules
     ../../../modules/maintenance.nix
+    ../../../modules/sleep_then_shutdown.nix
     ../../../modules/firefox.nix
     ../../../modules/tpm_decryption.nix
     ../../../modules/secure_boot.nix
@@ -16,7 +17,8 @@
     ../../../modules/work_patch.nix
   ];
 
-  ## GPU: AMD (nothing to add)
+  ## GPU: AMD
+  hardware.amdgpu.initrd.enable = true;
 
   ## Screenshot Key Override
   services.udev.extraHwdb = ''
