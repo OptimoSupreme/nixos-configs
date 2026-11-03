@@ -7,17 +7,18 @@
     ./hardware-configuration.nix
 
     ## Select Modules
-    # inputs.nixos-hardware.nixosModules.changeme # Board quirks (github.com/NixOS/nixos-hardware)
-    # ../../../modules/maintenance.nix          # Updates, GC, scrub, flakes
-    # ../../../modules/sleep_then_shutdown.nix  # Power off after two hours asleep (laptops, saves battery)
-    # ../../../modules/firefox.nix              # Firefox policies
-    # ../../../modules/btrfs_snapshots.nix      # Snapper on /home
-    # ../../../modules/tpm_decryption.nix       # TPM unlock enrollment script
-    # ../../../modules/secure_boot.nix          # Lanzaboote (needs the UEFI lines below)
-    # ../../../modules/client_environment.nix   # Client user environment
-    # ../../../modules/personal_environment.nix # Personal user environment (add home_patch, work_patch or both)
-    # ../../../modules/home_patch.nix           # Home apps (Discord, Steam, Spotify, LocalSend, GIMP, ...) and the home server
-    # ../../../modules/work_patch.nix           # CAC, Chromium, Slack, Zoom
+    # inputs.nixos-hardware.nixosModules.changeme   # Board quirks (github.com/NixOS/nixos-hardware)
+    # ../../../modules/maintenance/generic.nix      # Updates, GC, scrub, flakes (one maintenance module per host)
+    # ../../../modules/maintenance/wake_updates.nix # The same, waking Sun 03:00 to upgrade, GC and reboot (desktops left on)
+    # ../../../modules/sleep_then_shutdown.nix      # Power off after two hours asleep (laptops, saves battery)
+    # ../../../modules/firefox.nix                  # Firefox policies
+    # ../../../modules/btrfs_snapshots.nix          # Snapper on /home
+    # ../../../modules/tpm_decryption.nix           # TPM unlock enrollment script
+    # ../../../modules/secure_boot.nix              # Lanzaboote (needs the UEFI lines below)
+    # ../../../modules/client_environment.nix       # Client user environment
+    # ../../../modules/personal_environment.nix     # Personal user environment (add home_patch, work_patch or both)
+    # ../../../modules/home_patch.nix               # Home apps (Discord, Steam, Spotify, LocalSend, GIMP, ...) and the home server
+    # ../../../modules/work_patch.nix               # CAC, Chromium, Slack, Zoom
   ];
 
   ## GPU (choose one; a nixos-hardware board module may already set early KMS)
