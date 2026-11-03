@@ -48,6 +48,9 @@ in
     };
   };
 
+  ## Claude Code
+  home.file.".claude/CLAUDE.md".source = ./claude.md; # lowercase so it is not also a nested project file
+
   ## VSCodium
   programs.vscodium = {
     enable = true;
