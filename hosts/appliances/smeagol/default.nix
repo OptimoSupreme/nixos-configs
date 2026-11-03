@@ -80,5 +80,18 @@
   };
   programs.steam.extraCompatPackages = [ pkgs.proton-ge-bin ];
 
+  ## Decky Loader (plugins run as the Steam user: Steamcord keeps a Discord session per user)
+  jovian.decky-loader = {
+    enable = true;
+    user = "justin";
+  };
+
+  ## Steamcord Prerequisites (the plugin itself is installed by hand, see TODO.md)
+  environment.systemPackages = with pkgs; [
+    vesktop # native client, so no Flatpak
+    pulseaudio # pactl, game audio in screen share
+    ffmpeg # screen share preview
+  ];
+
   system.stateVersion = "26.05";
 }
