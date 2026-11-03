@@ -40,10 +40,9 @@ in
     measuredBoot = {
       enable = lib.mkDefault encrypted; # false where `systemd-pcrlock is-supported` is not yes
       pcrs = [
-        0
         4
         7
-      ];
+      ]; # not 0: a firmware update would strand the unlock
       autoCryptenroll = {
         enable = lib.mkDefault config.boot.lanzaboote.measuredBoot.enable;
         device = lib.mkIf encrypted (lib.head luksDevices);
