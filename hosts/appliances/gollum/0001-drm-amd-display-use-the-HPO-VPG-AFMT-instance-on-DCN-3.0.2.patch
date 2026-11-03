@@ -1,0 +1,136 @@
+Subject: [PATCH] drm/amd/display: use the HPO VPG/AFMT instance on DCN 3.0.2
+
+dcn302_hpo_frl_stream_encoder_create() hands the HPO FRL stream encoder
+VPG/AFMT instance 5. In dcn_3_0_2_offset.h mmVPG5_*/mmAFMT5_* are the
+DIG5 block (0x256c/0x2576, BASE_IDX 2), not the HPO's packet generator
+and audio formatter, which the header does not define at all: it goes
+from mmHDMI_TB_ENC_CRC_RESULT_1 (0x090a) straight to mmDME5_DME_CONTROL
+(0x093c, BASE_IDX 3). DCN 3.0.0 defines the same HPO sub-blocks as
+mmAFMT6_* (0x091c..0x092f) and mmVPG6_* (0x0931..0x093a), DCN 3.0.3 as
+mmAFMT2_*/mmVPG2_* at the same offsets, and both resource files pick that
+instance for the HPO. On DCN 3.0.2 every InfoFrame built for an FRL
+stream (AVI, HDR static metadata, HF-VSIF, ...) is therefore written to a
+VPG the HPO TB encoder never reads, and the sink shows the stream as SDR.
+
+Add the HPO AFMT/VPG registers to the DCN 3.0.2 header, numbered 6 as on
+DCN 3.0.0, and use instance 6 for ENGINE_ID_HPO_0.
+
+The register-map analysis and this patch were produced with Claude Code
+(claude-fable-5-1) from dcn_3_0_{0,2,3}_offset.h and the dcn30x resource
+files, then reviewed by the submitter. The dcn_3_0_2_offset.h block is a
+verbatim copy of the DCN 3.0.0 AFMT6/VPG6 block.
+
+Tested on an RX 6600 (Navi 23) driving a Sony TV at 3840x2160@120 RGB
+4:4:4 10 bpc over FRL, kernel 7.3 with amdgpu.dcfeaturemask=0x402: before
+the patch the TV reports SDR with HDR_OUTPUT_METADATA set and HDMI audio is
+silent; with it the TV reports HDR10 and audio plays. TMDS modes are
+unaffected either way.
+
+Link: https://gitlab.freedesktop.org/drm/amd/-/issues/6086
+Fixes: 70ed4679c512 ("drm/amd/display: Add DC resource support for FRL")
+---
+--- a/drivers/gpu/drm/amd/include/asic_reg/dcn/dcn_3_0_2_offset.h
++++ b/drivers/gpu/drm/amd/include/asic_reg/dcn/dcn_3_0_2_offset.h
+@@ -14396,6 +14396,69 @@
+ #define mmHDMI_TB_ENC_CRC_RESULT_1                                                                     0x090a
+ #define mmHDMI_TB_ENC_CRC_RESULT_1_BASE_IDX                                                            3
+ 
++// base address: 0x2646c
++#define mmAFMT6_AFMT_VBI_PACKET_CONTROL                                                                0x091c
++#define mmAFMT6_AFMT_VBI_PACKET_CONTROL_BASE_IDX                                                       3
++#define mmAFMT6_AFMT_AUDIO_PACKET_CONTROL2                                                             0x091d
++#define mmAFMT6_AFMT_AUDIO_PACKET_CONTROL2_BASE_IDX                                                    3
++#define mmAFMT6_AFMT_AUDIO_INFO0                                                                       0x091e
++#define mmAFMT6_AFMT_AUDIO_INFO0_BASE_IDX                                                              3
++#define mmAFMT6_AFMT_AUDIO_INFO1                                                                       0x091f
++#define mmAFMT6_AFMT_AUDIO_INFO1_BASE_IDX                                                              3
++#define mmAFMT6_AFMT_60958_0                                                                           0x0920
++#define mmAFMT6_AFMT_60958_0_BASE_IDX                                                                  3
++#define mmAFMT6_AFMT_60958_1                                                                           0x0921
++#define mmAFMT6_AFMT_60958_1_BASE_IDX                                                                  3
++#define mmAFMT6_AFMT_AUDIO_CRC_CONTROL                                                                 0x0922
++#define mmAFMT6_AFMT_AUDIO_CRC_CONTROL_BASE_IDX                                                        3
++#define mmAFMT6_AFMT_RAMP_CONTROL0                                                                     0x0923
++#define mmAFMT6_AFMT_RAMP_CONTROL0_BASE_IDX                                                            3
++#define mmAFMT6_AFMT_RAMP_CONTROL1                                                                     0x0924
++#define mmAFMT6_AFMT_RAMP_CONTROL1_BASE_IDX                                                            3
++#define mmAFMT6_AFMT_RAMP_CONTROL2                                                                     0x0925
++#define mmAFMT6_AFMT_RAMP_CONTROL2_BASE_IDX                                                            3
++#define mmAFMT6_AFMT_RAMP_CONTROL3                                                                     0x0926
++#define mmAFMT6_AFMT_RAMP_CONTROL3_BASE_IDX                                                            3
++#define mmAFMT6_AFMT_60958_2                                                                           0x0927
++#define mmAFMT6_AFMT_60958_2_BASE_IDX                                                                  3
++#define mmAFMT6_AFMT_AUDIO_CRC_RESULT                                                                  0x0928
++#define mmAFMT6_AFMT_AUDIO_CRC_RESULT_BASE_IDX                                                         3
++#define mmAFMT6_AFMT_STATUS                                                                            0x0929
++#define mmAFMT6_AFMT_STATUS_BASE_IDX                                                                   3
++#define mmAFMT6_AFMT_AUDIO_PACKET_CONTROL                                                              0x092a
++#define mmAFMT6_AFMT_AUDIO_PACKET_CONTROL_BASE_IDX                                                     3
++#define mmAFMT6_AFMT_INFOFRAME_CONTROL0                                                                0x092b
++#define mmAFMT6_AFMT_INFOFRAME_CONTROL0_BASE_IDX                                                       3
++#define mmAFMT6_AFMT_INTERRUPT_STATUS                                                                  0x092c
++#define mmAFMT6_AFMT_INTERRUPT_STATUS_BASE_IDX                                                         3
++#define mmAFMT6_AFMT_AUDIO_SRC_CONTROL                                                                 0x092d
++#define mmAFMT6_AFMT_AUDIO_SRC_CONTROL_BASE_IDX                                                        3
++#define mmAFMT6_AFMT_MEM_PWR                                                                           0x092f
++#define mmAFMT6_AFMT_MEM_PWR_BASE_IDX                                                                  3
++
++
++// base address: 0x264c4
++#define mmVPG6_VPG_GENERIC_PACKET_ACCESS_CTRL                                                          0x0931
++#define mmVPG6_VPG_GENERIC_PACKET_ACCESS_CTRL_BASE_IDX                                                 3
++#define mmVPG6_VPG_GENERIC_PACKET_DATA                                                                 0x0932
++#define mmVPG6_VPG_GENERIC_PACKET_DATA_BASE_IDX                                                        3
++#define mmVPG6_VPG_GSP_FRAME_UPDATE_CTRL                                                               0x0933
++#define mmVPG6_VPG_GSP_FRAME_UPDATE_CTRL_BASE_IDX                                                      3
++#define mmVPG6_VPG_GSP_IMMEDIATE_UPDATE_CTRL                                                           0x0934
++#define mmVPG6_VPG_GSP_IMMEDIATE_UPDATE_CTRL_BASE_IDX                                                  3
++#define mmVPG6_VPG_GENERIC_STATUS                                                                      0x0935
++#define mmVPG6_VPG_GENERIC_STATUS_BASE_IDX                                                             3
++#define mmVPG6_VPG_MEM_PWR                                                                             0x0936
++#define mmVPG6_VPG_MEM_PWR_BASE_IDX                                                                    3
++#define mmVPG6_VPG_ISRC1_2_ACCESS_CTRL                                                                 0x0937
++#define mmVPG6_VPG_ISRC1_2_ACCESS_CTRL_BASE_IDX                                                        3
++#define mmVPG6_VPG_ISRC1_2_DATA                                                                        0x0938
++#define mmVPG6_VPG_ISRC1_2_DATA_BASE_IDX                                                               3
++#define mmVPG6_VPG_MPEG_INFO0                                                                          0x0939
++#define mmVPG6_VPG_MPEG_INFO0_BASE_IDX                                                                 3
++#define mmVPG6_VPG_MPEG_INFO1                                                                          0x093a
++#define mmVPG6_VPG_MPEG_INFO1_BASE_IDX                                                                 3
++
+ 
+ // base address: 0x264f0
+ #define mmDME5_DME_CONTROL                                                                             0x093c
+--- a/drivers/gpu/drm/amd/display/dc/resource/dcn302/dcn302_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/resource/dcn302/dcn302_resource.c
+@@ -319,7 +319,8 @@
+ 		vpg_regs(2),
+ 		vpg_regs(3),
+ 		vpg_regs(4),
+-		vpg_regs(5)
++		vpg_regs(5),
++		vpg_regs(6)
+ };
+ 
+ static const struct dcn30_vpg_shift vpg_shift = {
+@@ -351,7 +352,8 @@
+ 		afmt_regs(2),
+ 		afmt_regs(3),
+ 		afmt_regs(4),
+-		afmt_regs(5)
++		afmt_regs(5),
++		afmt_regs(6)
+ };
+ 
+ static const struct dcn30_afmt_shift afmt_shift = {
+@@ -486,8 +488,8 @@
+ 
+ 	/* Mapping of VPG, AFMT, DME register blocks to HPO block instance */
+ 	if (eng_id == ENGINE_ID_HPO_0) {
+-		vpg_inst = 5;
+-		afmt_inst = 5;
++		vpg_inst = 6;
++		afmt_inst = 6;
+ 	} else
+ 		return NULL;
+ 

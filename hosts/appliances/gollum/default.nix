@@ -39,6 +39,12 @@
     "rd.systemd.show_status=auto"
     "amdgpu.dcfeaturemask=0x402" # HDMI 2.1 FRL for 4K120, see TODO.md
   ];
+  boot.kernelPatches = [
+    {
+      name = "hpo-vpg-afmt-dcn302"; # HDR and audio over FRL, see TODO.md
+      patch = ./0001-drm-amd-display-use-the-HPO-VPG-AFMT-instance-on-DCN-3.0.2.patch;
+    }
+  ];
 
   ## Networking
   networking = {
