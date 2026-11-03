@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   update:
@@ -24,6 +25,7 @@ jobs:
       - uses: ./.github/actions/check
 
       - name: Commit and push if changed
+        id: push
         run: |
           if git diff --quiet flake.lock; then
             echo "flake.lock already up to date"
@@ -33,3 +35,13 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "chore(flake): weekly lock update" flake.lock
           git push
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      # GITHUB_TOKEN pushes do not trigger on: push, so start the cache builds by hand
+      - name: Build the Steam hosts into the cache
+        if: steps.push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run cache-gollum.yml --ref main
+          gh workflow run cache-smeagol.yml --ref main
