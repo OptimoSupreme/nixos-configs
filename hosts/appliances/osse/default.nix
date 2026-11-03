@@ -48,7 +48,7 @@ in
     ./hardware-configuration.nix
 
     ## Select Modules
-    ../../../modules/maintenance/generic.nix
+    ../../../modules/maintenance/daily.nix
   ];
 
   ## GPU: not chosen yet (mesa only; add the GPU's extras from workstation_template.nix once the box exists)

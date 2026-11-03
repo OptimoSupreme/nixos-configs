@@ -8,7 +8,7 @@
 
     ## Select Modules
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-13th-gen # confirm with `sudo dmidecode -s system-version`
-    ../../../modules/maintenance/generic.nix
+    ../../../modules/maintenance/daily.nix
     ../../../modules/sleep_then_shutdown.nix
     ../../../modules/firefox.nix
     ../../../modules/tpm_decryption.nix

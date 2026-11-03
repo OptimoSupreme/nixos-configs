@@ -2,18 +2,7 @@
 
 Open work on the fleet. Each item says what, why, and how to tell it is done.
 
-## 1. Pick the hosts that should wake for updates
-
-`modules/maintenance/wake_updates.nix` exists but no registered host imports
-it yet; every non-Steam host still runs `generic.nix`. Go through the fleet
-and decide, host by host, which desktops are left powered on and should
-swap to `wake_updates.nix` (waking Sunday to upgrade, GC and reboot), and
-which stay on the daily pull.
-
-Done when: each registered host imports the maintenance module that fits
-how it is used, and every host still evaluates.
-
-## 2. Move the Steam updater from a library app to a Decky plugin
+## 1. Move the Steam updater from a library app to a Decky plugin
 
 Decision (2026-11-03): go, keeping the library tile as a fallback. A Decky
 plugin is a React panel injected into Steam's UI plus a Python backend
@@ -46,7 +35,7 @@ Done when: the plugin is in the flake input, both hosts show it in the
 Quick Access Menu, the weekly prompt appears through it, and the tile is
 removed after it has held up across Steam client updates.
 
-## 3. Global CLAUDE.md for the personal devices
+## 2. Global CLAUDE.md for the personal devices
 
 Claude Code reads `~/.claude/CLAUDE.md` on every machine as the user-level
 instructions, above any repo's own file. Right now each personal device has
@@ -111,8 +100,8 @@ boot hosts because the lanzaboote module asserts it. systemd-pcrlock puts
 every alternative value for a PCR into one `TPM2_PolicyOR`, which takes at
 most 8 digests, and lanzaboote 1.2 covers a bootloader update in the policy,
 so PCR 4 holds 2 loader variants times 4 generations. The cap is only on
-boot entries; `maintenance/generic.nix` keeping 5 store generations is
-independent and stays as is. Upstream fix: https://github.com/systemd/systemd/pull/43982
+boot entries; the 5 store generations the maintenance modules keep are
+independent and stay as is. Upstream fix: https://github.com/systemd/systemd/pull/43982
 (PolicyOR tree) for https://github.com/systemd/systemd/issues/41526.
 
 Done when: the lanzaboote release in `flake.lock` no longer asserts the

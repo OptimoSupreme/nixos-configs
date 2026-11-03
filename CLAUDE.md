@@ -2,7 +2,7 @@
 
 A flake managing a small fleet of NixOS machines. Every registered host but
 the two Steam machines runs `system.autoUpgrade` against
-`github:OptimoSupreme/nixos-configs` main once a day, and gollum and smeagol
+`github:OptimoSupreme/nixos-configs` main daily or weekly, and gollum and smeagol
 move when Justin accepts an update from the System Update tile, so **a merge
 to main is a fleet rollout.** The repo is public: nothing in it may be
 secret, and no IPs, passwords, or tokens belong here.
@@ -25,10 +25,13 @@ secret, and no IPs, passwords, or tokens belong here.
   changing modules they import.
 - `hosts/workstation_template.nix` is the menu a new desktop host starts from.
 - `modules/` is a set of opt-in modules. `modules/maintenance/` holds one
-  module per host, and a host imports exactly one: `generic.nix` (daily pull,
-  GC, scrub), `wake_updates.nix` (the same, waking Sunday to reboot) or
-  `steam.nix` (user-driven updates; pulls in the `steam-maintenance` flake
-  input). `workstation_core.nix` is the shared workstation configuration;
+  module per host, and a host imports exactly one: `daily.nix`
+  (pull main daily at 10:00 and stage it for the next boot, weekly GC,
+  scrub), `wake.nix` (nothing daily: wake from suspend Sunday 03:00
+  to pull, GC and reboot) or `jovian.nix` (user-driven updates; pulls in the
+  `steam-maintenance` flake input). The three stand alone and never import
+  each other; what they share is repeated on purpose, so a change to one
+  means checking the other two. `workstation_core.nix` is the shared workstation configuration;
   `client_environment.nix` (client machines)
   and `personal_environment.nix` (Justin's) each import it and add their own
   differences. A host imports exactly one of the two environments, never
@@ -138,8 +141,9 @@ sudo nixos-rebuild test   --flake path:$HOME/nixos-configs#<host>   # until rebo
 sudo nixos-rebuild switch --flake github:OptimoSupreme/nixos-configs/<branch>#<host>
 ```
 
-The daily upgrade pulls main back over a branch deploy, so an unmerged test
-reverts itself within a day. gollum and smeagol have no timer and only move
+The upgrade pulls main back over a branch deploy, so an unmerged test
+reverts itself within a day on a `daily.nix` host and by Sunday on a
+`wake.nix` host. gollum and smeagol have no timer and only move
 when an update is accepted from the System Update tile, so put them back on
 main by hand.
 
@@ -153,7 +157,7 @@ main by hand.
   ready for review, on every push after that, and on pushes to main.
   `.github/workflows/cache-gollum.yml` and `cache-smeagol.yml` then build
   their host on every push to main and push the result to the binary cache
-  `steam.nix` uses; a host is only offered a commit once its own workflow
+  `jovian.nix` uses; a host is only offered a commit once its own workflow
   has succeeded for it.
 - Conventional Commits: `type(scope): imperative summary`, lowercase, under 72
   characters. Scope is the host or module touched. Types: `feat`, `fix`,

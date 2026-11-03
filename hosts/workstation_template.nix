@@ -8,8 +8,8 @@
 
     ## Select Modules
     # inputs.nixos-hardware.nixosModules.changeme   # Board quirks (github.com/NixOS/nixos-hardware)
-    # ../../../modules/maintenance/generic.nix      # Updates, GC, scrub, flakes (one maintenance module per host)
-    # ../../../modules/maintenance/wake_updates.nix # The same, waking Sun 03:00 to upgrade, GC and reboot (desktops left on)
+    ../../../modules/maintenance/daily.nix # Daily pull, GC, scrub, flakes (one maintenance module per host)
+    # ../../../modules/maintenance/wake.nix         # The same, all of it Sun 03:00 from suspend, then reboot (test the wake first)
     # ../../../modules/sleep_then_shutdown.nix      # Power off after two hours asleep (laptops, saves battery)
     # ../../../modules/firefox.nix                  # Firefox policies
     # ../../../modules/btrfs_snapshots.nix          # Snapper on /home
