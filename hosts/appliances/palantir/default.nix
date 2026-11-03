@@ -23,7 +23,7 @@ in
     ./hardware-configuration.nix
 
     ## Select Modules
-    ../../../modules/maintenance/generic.nix
+    ../../../modules/maintenance/wake.nix
   ];
 
   ## GPU: Intel UHD 630
