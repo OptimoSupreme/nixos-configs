@@ -2,39 +2,6 @@
 
 Open work on the fleet. Each item says what, why, and how to tell it is done.
 
-## 1. Move the Steam updater from a library app to a Decky plugin
-
-Decision (2026-11-03): go, keeping the library tile as a fallback. A Decky
-plugin is a React panel injected into Steam's UI plus a Python backend
-that can run as root (`"flags": ["root"]` in `plugin.json`), so the
-updater becomes reachable from the Quick Access Menu mid-game and can
-toast or open a modal instead of launching a shortcut. Decky breaks for a
-few days after some Steam client updates, which is why the tile stays
-until the plugin has survived a couple of them.
-
-Plan, `steam-maintenance` repo:
-
-- Keep the worker as is: `steam-maintenance-upgrade.service`, the cache
-  check, `status.json`, the heartbeat before reboot, and the home-screen
-  gate in `check.rs`. The weekly timer keeps refusing to prompt while a game
-  has gamescope focus; only how the prompt appears changes.
-- Add a `plugin/` directory built by the flake into a Decky plugin: the
-  React panel reads `status.json` and shows Update, Later and Up to date;
-  the backend starts and stops the root unit directly, so the polkit rule
-  can go once the tile is retired.
-- Teach `check` a second target: a Decky toast or modal through the loader
-  when the plugin is present, else the `steam://` shortcut as today.
-- Export the plugin as a package the module links into
-  `/var/lib/decky-loader/plugins` from the store, read-only, so a deploy
-  brings it along and Decky's updater leaves it alone.
-
-Plan, this repo: nothing beyond the weekly lock bump and the cache
-workflows, which already rebuild on it.
-
-Done when: the plugin is in the flake input, both hosts show it in the
-Quick Access Menu, the weekly prompt appears through it, and the tile is
-removed after it has held up across Steam client updates.
-
 #### Waiting on upstream ####
 
 Items that cannot be finished yet, or that are a heads-up for a future
