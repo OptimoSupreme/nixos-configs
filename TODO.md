@@ -127,7 +127,9 @@ it, so leaving it is a small liability).
   this has never been tried on gollum.
 
 Done when: the flag is gone, gollum evaluates, and 4K120 (with VRR if the
-TV has it) works from a cold boot.
+TV has it) works from a cold boot. Item 7 (the HPO VPG/AFMT kernel patch) is
+separate: FRL carried no InfoFrames or audio on this GPU until that patch,
+and the flag alone does not fix it.
 
 ## 5. Drop the screencast audio extension once GNOME records audio itself
 
@@ -160,3 +162,28 @@ first; if that is refused, override `microfetch` in
 
 Done when: `microfetch` on the registered desktop hosts prints the core
 count, from the stable package with no override.
+
+## 7. Drop gollum's HPO VPG/AFMT kernel patch once upstream has the fix
+
+On DCN 3.0.2 (the RX 6600) amdgpu wires the HDMI FRL stream encoder to the
+DIG5 block's packet generator and audio formatter instead of the HPO's own,
+so every 4K120 FRL mode reaches the TV as SDR and silent, with the kernel
+convinced it sent HDR. Reported as
+https://gitlab.freedesktop.org/drm/amd/-/issues/6086 with a fix,
+`hosts/appliances/gollum/0001-drm-amd-display-use-the-HPO-VPG-AFMT-instance-on-DCN-3.0.2.patch`,
+which `hosts/appliances/gollum/default.nix` applies through
+`boot.kernelPatches` and which was confirmed on gollum on 2026-11-03 (HDR10
+and audio back at 4K120). Each kernel bump on unstable rebuilds the kernel
+on gollum, about 90 minutes. The research and the issue text live on the
+`docs/gollum-frl-hdr-issue` branch.
+
+- Watch the issue and the amd-gfx thread for the patch (or an equivalent
+  fix) landing; the `Fixes:` target is 70ed4679c512.
+- If a kernel bump makes the patch fail to apply, check
+  `dcn302_resource.c`'s `dcn302_hpo_frl_stream_encoder_create()` first: if
+  it no longer says `vpg_inst = 5`, upstream fixed it and the patch goes;
+  otherwise rebase the header hunk.
+
+Done when: gollum's `linuxPackages_latest` contains the fix, the
+`boot.kernelPatches` block and the patch file are deleted, gollum evaluates,
+and 4K120 still shows HDR10 with audio.
