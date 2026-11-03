@@ -13,28 +13,61 @@ which stay on the daily pull.
 Done when: each registered host imports the maintenance module that fits
 how it is used, and every host still evaluates.
 
-## 2. Add Decky Loader (and maybe Discord) to the Steam appliances
+## 2. Install Steamcord on the Steam appliances
 
-gollum and smeagol run plain Jovian Steam with no plugin loader. Add Decky
-Loader to both, and decide whether Discord belongs there too (it would need
-to be reachable from Game Mode to be worth installing). Since both hosts
-share the setup, it goes in a module rather than in each host file.
+gollum and smeagol run Decky Loader with plugins as the Steam user, and
+ship what Steamcord needs from the system (Vesktop, pactl, ffmpeg).
+Discord is a yes, as Steamcord: a Decky plugin that drives a hidden Vesktop
+over the DevTools protocol and puts voice, chat and Go Live in the Quick
+Access Menu. It is not on the Decky store and updates itself, so it stays a
+manual install rather than a store path.
 
-Done when: Decky Loader is installed declaratively on both hosts, Discord is
-either added or ruled out, and both hosts evaluate.
+- On each host, after the deploy: Decky settings, Developer Mode, Install
+  plugin from URL with
+  https://github.com/Necrosiak/Steamcord/releases/latest/download/Steamcord.zip,
+  accept the third-party warning once, then log in by QR code.
+- Check on device that Vesktop starts as the Steam user's unit, voice works,
+  and the Deck's built-in pad delivers push-to-talk in a game. On gollum the
+  chord depends on the pad plugged in.
+- GStreamer and pygobject are left out: Steamcord uses them only as a
+  fallback relay when no ScreenCast portal answers, and the loader's unit
+  carries no typelib path for them. If Go Live is wanted and the native
+  portal path does not answer, revisit that.
+
+Done when: Steamcord runs on both hosts with the packages they ship.
 
 ## 3. Move the Steam updater from a library app to a Decky plugin
 
-`steam.nix` presents the updater as a non-Steam library app, which only
-runs from the library. A Decky plugin could bind it to a keypad trigger
-(Quick Access menu or a controller chord) and show status without leaving
-the game. Investigate whether the `steam-maintenance` flake input can ship a
-plugin instead, what the plugin needs from the system side (the binary
-cache check, the switch, the reboot prompt), and whether the library app
-should stay as a fallback. Depends on item 2.
+Decision (2026-11-03): go, keeping the library tile as a fallback. A Decky
+plugin is a React panel injected into Steam's UI plus a Python backend
+that can run as root (`"flags": ["root"]` in `plugin.json`), so the
+updater becomes reachable from the Quick Access Menu mid-game and can
+toast or open a modal instead of launching a shortcut. Decky breaks for a
+few days after some Steam client updates, which is why the tile stays
+until the plugin has survived a couple of them.
 
-Done when: there is a decision written down here, and if it is a go, a plan
-for the `steam-maintenance` repo and `steam.nix`.
+Plan, `steam-maintenance` repo:
+
+- Keep the worker as is: `steam-maintenance-upgrade.service`, the cache
+  check, `status.json`, the heartbeat before reboot, and the home-screen
+  gate in `check.rs`. The weekly timer keeps refusing to prompt while a game
+  has gamescope focus; only how the prompt appears changes.
+- Add a `plugin/` directory built by the flake into a Decky plugin: the
+  React panel reads `status.json` and shows Update, Later and Up to date;
+  the backend starts and stops the root unit directly, so the polkit rule
+  can go once the tile is retired.
+- Teach `check` a second target: a Decky toast or modal through the loader
+  when the plugin is present, else the `steam://` shortcut as today.
+- Export the plugin as a package the module links into
+  `/var/lib/decky-loader/plugins` from the store, read-only, so a deploy
+  brings it along and Decky's updater leaves it alone.
+
+Plan, this repo: nothing beyond the weekly lock bump and the cache
+workflows, which already rebuild on it. Depends on item 2 being merged.
+
+Done when: the plugin is in the flake input, both hosts show it in the
+Quick Access Menu, the weekly prompt appears through it, and the tile is
+removed after it has held up across Steam client updates.
 
 ## 4. Global CLAUDE.md for the personal devices
 
