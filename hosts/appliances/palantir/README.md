@@ -57,11 +57,12 @@ below), auto-connecting from power-on with no interaction.
 - **Deploying:** the host line in `flake.nix` is still commented out, so
   uncomment it in the clone on the box, then
   `sudo nixos-rebuild switch --flake path:.#palantir`. Once that line is
-  committed, the fleet's daily auto-upgrade (`modules/maintenance/generic.nix`)
-  takes over: it pulls the public repo over HTTPS, nothing to register,
-  and on this host applies on the spot (`switch`, not `boot`: nobody is
-  around to click Restart Now). Package updates arrive with the repo's
-  weekly `flake.lock` bump.
+  committed, `modules/maintenance/wake.nix` takes over: Sunday at
+  03:00 the box wakes from S3, pulls the public repo over HTTPS (nothing to
+  register), applies on the spot (`switch`, not `boot`: nobody is around to
+  click Restart Now), collects garbage and reboots when the booted
+  generation is stale. Package updates arrive with the repo's weekly
+  `flake.lock` bump.
 - **WiFi:** Dell DW1810 (Qualcomm QCA9377, `ath10k_pci`). It needs
   `hardware.enableRedistributableFirmware` or it's a paperweight. A moody
   card — it logs correctable PCIe errors; if it ever flakes for real, try
