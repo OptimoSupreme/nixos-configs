@@ -85,6 +85,10 @@
     enable = true;
     user = "justin";
   };
+  # Decky injects through Steam's CEF debug port; Jovian leaves enabling it to the user
+  environment.etc."jovian/gamescope-session/pre-start".text = ''
+    ${pkgs.coreutils}/bin/touch "$HOME/.local/share/Steam/.cef-enable-remote-debugging" || true
+  '';
 
   ## Steamcord Prerequisites (the plugin itself is installed by hand, see below)
   environment.systemPackages = with pkgs; [
