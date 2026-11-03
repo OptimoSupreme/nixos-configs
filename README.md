@@ -3,7 +3,8 @@
 One flake for every NixOS machine I run or manage. Each host is a directory,
 shared behaviour is a module, and the hosts keep themselves current: every
 registered machine pulls this repo's `main` from GitHub once a day and stages
-the result for its next boot. Nothing in here is secret; passwords, WiFi
+the result for its next boot (the Steam machines update from a tile in Steam
+instead). Nothing in here is secret; passwords, WiFi
 profiles and per-box data stay on the machines.
 
 ## Layout
@@ -34,7 +35,8 @@ installer/       the live ISO, and the manual for installing a machine
   The `path:` prefix avoids git ownership errors and includes untracked files.
 - **Test a branch on a machine** before merging:
   `sudo nixos-rebuild test --flake github:OptimoSupreme/nixos-configs/<branch>#<host>`.
-  The daily upgrade pulls `main` back over it within a day.
+  The daily upgrade pulls `main` back over it within a day; the Steam hosts
+  have no timer, so put them back on `main` by hand.
 - **Updates**: `flake.lock` is bumped weekly by a GitHub Action that first
   checks every host still evaluates. Pushes to main and pull requests marked
   ready for review run the same checks plus `nixfmt`.

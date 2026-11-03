@@ -8,7 +8,7 @@
 
     ## Select Modules
     inputs.jovian.nixosModules.default
-    ../../../modules/maintenance.nix
+    ../../../modules/maintenance/steam.nix
   ];
 
   ## Hardware: Steam Deck (Valve kernel and drivers, firmware, audio DSP, controller)

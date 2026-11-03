@@ -1,9 +1,11 @@
 # nixos-configs
 
-A flake managing a small fleet of NixOS machines. Every registered host runs
-`system.autoUpgrade` against `github:OptimoSupreme/nixos-configs` main once a
-day, so **a merge to main is a fleet rollout.** The repo is public: nothing in
-it may be secret, and no IPs, passwords, or tokens belong here.
+A flake managing a small fleet of NixOS machines. Every registered host but
+the two Steam machines runs `system.autoUpgrade` against
+`github:OptimoSupreme/nixos-configs` main once a day, and gollum and smeagol
+move when Justin accepts an update from the System Update tile, so **a merge
+to main is a fleet rollout.** The repo is public: nothing in it may be
+secret, and no IPs, passwords, or tokens belong here.
 
 ## Layout
 
@@ -22,8 +24,12 @@ it may be secret, and no IPs, passwords, or tokens belong here.
   have been before); they are debt, not dead. Keep them in mind when
   changing modules they import.
 - `hosts/workstation_template.nix` is the menu a new desktop host starts from.
-- `modules/` is a flat set of opt-in modules. `workstation_core.nix` is the
-  shared workstation configuration; `client_environment.nix` (client machines)
+- `modules/` is a set of opt-in modules. `modules/maintenance/` holds one
+  module per host, and a host imports exactly one: `generic.nix` (daily pull,
+  GC, scrub), `wake_updates.nix` (the same, waking Sunday to reboot) or
+  `steam.nix` (user-driven updates; pulls in the `steam-maintenance` flake
+  input). `workstation_core.nix` is the shared workstation configuration;
+  `client_environment.nix` (client machines)
   and `personal_environment.nix` (Justin's) each import it and add their own
   differences. A host imports exactly one of the two environments, never
   `workstation_core.nix` directly. `home_patch.nix` (home apps, the home
@@ -33,7 +39,7 @@ it may be secret, and no IPs, passwords, or tokens belong here.
   shows a page only when something on it is installed, so the same keyfile
   serves work-only and work-plus-home hosts. Appliances and servers import
   neither environment: each is a one-off, so its host file holds everything
-  but `maintenance.nix`.
+  but its maintenance module.
 - `home/justin/` is the home-manager configuration for Justin's user. Only
   `personal_environment.nix` wires it in (as a NixOS module, so a rebuild or
   the daily upgrade applies it). Client hosts never get home-manager: their
@@ -133,7 +139,9 @@ sudo nixos-rebuild switch --flake github:OptimoSupreme/nixos-configs/<branch>#<h
 ```
 
 The daily upgrade pulls main back over a branch deploy, so an unmerged test
-reverts itself within a day.
+reverts itself within a day. gollum and smeagol have no timer and only move
+when an update is accepted from the System Update tile, so put them back on
+main by hand.
 
 ## Git workflow
 
@@ -143,6 +151,10 @@ reverts itself within a day.
   deploys. Open PRs as drafts; CI (`.github/actions/check`, the checks above
   plus `nixfmt --check`) is skipped on drafts and runs once the PR is marked
   ready for review, on every push after that, and on pushes to main.
+  `.github/workflows/cache-gollum.yml` and `cache-smeagol.yml` then build
+  their host on every push to main and push the result to the binary cache
+  `steam.nix` uses; a host is only offered a commit once its own workflow
+  has succeeded for it.
 - Conventional Commits: `type(scope): imperative summary`, lowercase, under 72
   characters. Scope is the host or module touched. Types: `feat`, `fix`,
   `refactor`, `docs`, `chore`, `ci`, `revert`. Add a body only when the why is

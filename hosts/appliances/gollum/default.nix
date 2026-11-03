@@ -8,7 +8,7 @@
 
     ## Select Modules
     inputs.jovian.nixosModules.default
-    ../../../modules/maintenance.nix
+    ../../../modules/maintenance/steam.nix
   ];
 
   ## GPU: AMD (nothing to add)

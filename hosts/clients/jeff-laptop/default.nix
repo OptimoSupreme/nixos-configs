@@ -7,7 +7,7 @@
     ./hardware-configuration.nix
 
     ## Select Modules
-    ../../../modules/maintenance.nix
+    ../../../modules/maintenance/generic.nix
     ../../../modules/firefox.nix
     ../../../modules/btrfs_snapshots.nix
     ../../../modules/tpm_decryption.nix
