@@ -13,30 +13,7 @@ which stay on the daily pull.
 Done when: each registered host imports the maintenance module that fits
 how it is used, and every host still evaluates.
 
-## 2. Install Steamcord on the Steam appliances
-
-gollum and smeagol run Decky Loader with plugins as the Steam user, and
-ship what Steamcord needs from the system (Vesktop, pactl, ffmpeg).
-Discord is a yes, as Steamcord: a Decky plugin that drives a hidden Vesktop
-over the DevTools protocol and puts voice, chat and Go Live in the Quick
-Access Menu. It is not on the Decky store and updates itself, so it stays a
-manual install rather than a store path.
-
-- On each host, after the deploy: Decky settings, Developer Mode, Install
-  plugin from URL with
-  https://github.com/Necrosiak/Steamcord/releases/latest/download/Steamcord.zip,
-  accept the third-party warning once, then log in by QR code.
-- Check on device that Vesktop starts as the Steam user's unit, voice works,
-  and the Deck's built-in pad delivers push-to-talk in a game. On gollum the
-  chord depends on the pad plugged in.
-- GStreamer and pygobject are left out: Steamcord uses them only as a
-  fallback relay when no ScreenCast portal answers, and the loader's unit
-  carries no typelib path for them. If Go Live is wanted and the native
-  portal path does not answer, revisit that.
-
-Done when: Steamcord runs on both hosts with the packages they ship.
-
-## 3. Move the Steam updater from a library app to a Decky plugin
+## 2. Move the Steam updater from a library app to a Decky plugin
 
 Decision (2026-11-03): go, keeping the library tile as a fallback. A Decky
 plugin is a React panel injected into Steam's UI plus a Python backend
@@ -63,13 +40,13 @@ Plan, `steam-maintenance` repo:
   brings it along and Decky's updater leaves it alone.
 
 Plan, this repo: nothing beyond the weekly lock bump and the cache
-workflows, which already rebuild on it. Depends on item 2 being merged.
+workflows, which already rebuild on it.
 
 Done when: the plugin is in the flake input, both hosts show it in the
 Quick Access Menu, the weekly prompt appears through it, and the tile is
 removed after it has held up across Steam client updates.
 
-## 4. Global CLAUDE.md for the personal devices
+## 3. Global CLAUDE.md for the personal devices
 
 Claude Code reads `~/.claude/CLAUDE.md` on every machine as the user-level
 instructions, above any repo's own file. Right now each personal device has
