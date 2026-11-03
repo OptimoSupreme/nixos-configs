@@ -7,7 +7,7 @@
     ./hardware-configuration.nix
 
     ## Select Modules
-    ../../../modules/maintenance/generic.nix
+    ../../../modules/maintenance/daily.nix
     ../../../modules/sleep_then_shutdown.nix
     ../../../modules/tpm_decryption.nix
     ../../../modules/secure_boot.nix

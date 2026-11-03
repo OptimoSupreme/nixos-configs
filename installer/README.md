@@ -41,7 +41,7 @@ Work down `default.nix`; everything is a line to uncomment:
 
 - **Modules**. A [nixos-hardware](https://github.com/NixOS/nixos-hardware)
   module for the board first, if there is one. One of
-  `maintenance/generic.nix` and `maintenance/wake_updates.nix` always,
+  `maintenance/daily.nix` and `maintenance/wake.nix` always,
   `firefox.nix` as wanted. `btrfs_snapshots.nix` on a btrfs install.
   `tpm_decryption.nix` only on an encrypted one (it refuses to evaluate
   otherwise). `secure_boot.nix` on UEFI, keeping the UEFI boot lines.
@@ -117,12 +117,13 @@ password: `sudo passwd <user>`.
 
 ## 5. Put it on main
 
-`maintenance/generic.nix` has the host pull `main` from GitHub daily at
-10:00 and run `nixos-rebuild boot`, so updates are staged for the next reboot
-and nothing reboots on its own; `maintenance/wake_updates.nix` also reboots
-into them Sunday 03:00. gollum and smeagol have no timer: they update from
+`maintenance/daily.nix` has the host pull `main` from GitHub daily
+at 10:00 and run `nixos-rebuild boot`, so updates are staged for the next
+reboot and nothing reboots on its own; `maintenance/wake.nix` does
+nothing daily and instead wakes the host from suspend Sunday 03:00 to pull,
+collect garbage and reboot. gollum and smeagol have no timer: they update from
 the System Update tile in Steam, and CI builds them into a binary cache.
-The daily pull only works once the host is on `main`: from a clone with push
+The pull only works once the host is on `main`: from a clone with push
 access (this machine after `gh auth login`, or copy the host directory to
 one), commit `hosts/<group>/<name>/` with its hardware config and the
 `flake.nix` line, and open a pull request. CI evaluates every registered
