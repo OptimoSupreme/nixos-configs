@@ -1,0 +1,41 @@
+#### Build gollum into the binary cache ####
+
+name: Cache gollum
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: cache-gollum
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  toplevel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jlumbroso/free-disk-space@ceedf095f4ec1a097402bc6bd80831f2e1a6fde6 # v2.0.0
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      - uses: DeterminateSystems/nix-installer-action@v23
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: steam-maintenance
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      - run: nix build --no-link --print-out-paths .#nixosConfigurations.gollum.config.system.build.toplevel
