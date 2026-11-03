@@ -8,6 +8,7 @@
 
     ## Select Modules
     ../../../modules/maintenance.nix
+    ../../../modules/sleep_then_shutdown.nix
     ../../../modules/tpm_decryption.nix
     ../../../modules/secure_boot.nix
     ../../../modules/client_environment.nix
