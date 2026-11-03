@@ -35,20 +35,6 @@ Done when: the plugin is in the flake input, both hosts show it in the
 Quick Access Menu, the weekly prompt appears through it, and the tile is
 removed after it has held up across Steam client updates.
 
-## 2. Global CLAUDE.md for the personal devices
-
-Claude Code reads `~/.claude/CLAUDE.md` on every machine as the user-level
-instructions, above any repo's own file. Right now each personal device has
-whatever was typed there by hand, or nothing. Write one global file (working
-habits, tool preferences, the rules that apply no matter the repo) and ship
-it from `home/justin/` so every host that imports `personal_environment.nix`
-gets the same copy and the daily upgrade keeps it current. Client hosts are
-out of scope: no home-manager there.
-
-Done when: the file is in the repo, home-manager places it at
-`~/.claude/CLAUDE.md` on the personal hosts, and every host that imports
-`personal_environment.nix` evaluates.
-
 #### Waiting on upstream ####
 
 Items that cannot be finished yet, or that are a heads-up for a future
