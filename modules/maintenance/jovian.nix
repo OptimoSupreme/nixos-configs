@@ -26,7 +26,8 @@ in
     ## Btrfs Scrub
     services.btrfs.autoScrub.enable = lib.mkDefault hasBtrfs;
 
-    ## Updates Are User Driven (the System Update tile in Steam)
+    ## Prompted Updates (the System Update plugin asks weekly; the daily timer stays off)
+    jovian.decky-loader.enable = lib.mkDefault true;
     services.steam-maintenance.enable = true;
     services.steam-maintenance.cacheWorkflow = "cache-${config.networking.hostName}.yml";
     system.autoUpgrade = {
@@ -56,7 +57,7 @@ in
   };
 }
 
-# gamescope only shows windows of processes Steam launched, so the updater UI runs
-# as a Steam shortcut (the System Update tile). The weekly prompt stays silent when
-# main has not changed. With the daily timer off, a branch deploy on these hosts does
-# not revert itself: return them to main by hand.
+# The update panel and the weekly prompt are a Decky plugin that steam-maintenance's
+# module links into Decky's plugin directory, so Decky stays on for these hosts. The
+# weekly prompt stays silent when main has not changed. With the daily timer off, a
+# branch deploy on these hosts does not revert itself: return them to main by hand.
