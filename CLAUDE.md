@@ -159,6 +159,8 @@ main by hand.
   their host on every push to main and push the result to the binary cache
   `jovian.nix` uses; a host is only offered a commit once its own workflow
   has succeeded for it.
+- To-do updates are the exception: a change that only touches `TODO.md` can be
+  pushed straight to main, with no branch or PR.
 - Conventional Commits: `type(scope): imperative summary`, lowercase, under 72
   characters. Scope is the host or module touched. Types: `feat`, `fix`,
   `refactor`, `docs`, `chore`, `ci`, `revert`. Add a body only when the why is
