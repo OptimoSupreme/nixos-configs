@@ -14,6 +14,44 @@ point is to save battery. Otherwise I think I'd pass.
 Done when: the loop is either in the module, working on nazgul and
 emily-laptop, or rejected here with the reason.
 
+## 2. Investigate a lighter workstation configuration for low-spec machines
+
+Every workstation gets the full desktop, including extras that cost GPU and
+memory a low-spec machine may not have. Idea: move them out of
+`modules/workstation_core.nix` into an opt-in `modules/desktop_luxuries.nix`.
+Hosts with resources to spare import it; low-spec hosts leave it out.
+
+Candidates to move:
+
+- Blur my Shell: `blurMyShell`, `gnomeRoundedBlur` and its `sessionPath` line.
+- File indexing: localsearch and tinysparql. The GNOME module enables both,
+  so leaving out a module is not enough: core has to turn them off and
+  `desktop_luxuries.nix` back on. Check what still needs them, since the
+  Nautilus search provider is already disabled in dconf but its in-app search
+  uses the index.
+- Dash to Panel effects: `trans-use-dynamic-opacity` and
+  `focus-highlight-dominant`, if they make a measurable difference.
+
+Leave in core: Impatience (shorter animations help a slow machine) and GNOME
+Software (nothing else in this repo updates Flatpaks).
+
+To work out:
+
+- dconf arrays replace rather than merge, so the module cannot append to
+  `enabled-extensions`. Simplest is to leave the UUID and blur settings in both
+  environment keyfiles, if GNOME ignores them with the extension absent. Also
+  check the panel is still legible at `trans-panel-opacity=0.5` without blur.
+- Existing hosts lose everything moved unless they import the module in the
+  same change: balrog, nazgul, saruman, emily-laptop, jeff-laptop, wormtongue
+  and `hosts/workstation_template.nix`. `installer/default.nix` needs a
+  decision too.
+- Update the Blur my Shell point under 26.11 below and the module list in
+  `CLAUDE.md`.
+
+Done when: idle memory and GPU load are compared with and without the module
+on low-spec hardware, and the module is in use or rejected here with the
+reason.
+
 #### Waiting on upstream ####
 
 Items that cannot be finished yet, or that are a heads-up for a future
