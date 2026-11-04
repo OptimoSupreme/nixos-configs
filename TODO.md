@@ -2,6 +2,18 @@
 
 Open work on the fleet. Each item says what, why, and how to tell it is done.
 
+## 1. Stop sleep_then_shutdown powering off a plugged-in laptop
+
+`modules/sleep_then_shutdown.nix` powers off 6 hours into any suspend, even
+on AC, where there is no battery to save. Better: never power off while
+plugged in, and power off 6 hours after being unplugged if still asleep.
+
+See if this can be done without waking the laptop up periodically, since the whole
+point is to save battery. Otherwise I think I'd pass.
+
+Done when: the loop is either in the module, working on nazgul and
+emily-laptop, or rejected here with the reason.
+
 #### Waiting on upstream ####
 
 Items that cannot be finished yet, or that are a heads-up for a future
@@ -140,37 +152,3 @@ https://lore.kernel.org/amd-gfx/20261103143248.59765-1-jward92@gmail.com/
 Done when: gollum's `linuxPackages_latest` contains the fix, the
 `boot.kernelPatches` block and the patch file are deleted, gollum evaluates,
 and 4K120 still shows HDR10 with audio.
-
-#### To investigate ####
-
-Ideas worth trying. Nothing is decided until the investigation says so.
-
-## 8. Stop sleep_then_shutdown powering off a plugged-in laptop
-
-`modules/sleep_then_shutdown.nix` powers off 6 hours into any suspend, even
-on AC, where there is no battery to save. Better: never power off while
-plugged in, and power off 6 hours after being unplugged if still asleep.
-
-A sleeping machine cannot notice the unplug, so it has to wake to check. The
-idea, untested so far, is to override `ExecStart` on `systemd-suspend.service`
-with a loop around `systemd-sleep suspend`, so that the desktop and network
-should stay asleep during the checks:
-
-- On battery: one alarm at 6 hours, as today.
-- On AC (`systemd-ac-power`): wake every 30 minutes and go back to sleep.
-- Unplugged while asleep: the next check sets a final 6-hour alarm, so power
-  off lands 6 to 6.5 hours after the unplug.
-- Plugged back in before the deadline: no power off at the alarm; back to
-  checking every 30 minutes.
-
-systemd's `HibernateOnACPower=no` works in a similar way but ends in hibernate,
-not power off, so it cannot be used directly.
-
-Check on real hardware, on nazgul before emily-laptop:
-
-- Whether unplugging wakes the laptop by itself. The module would take that
-  for the user waking it and stay awake, so it would need extra handling.
-- Whether the 30-minute checks are visible: fan, screen, or a desktop resume.
-
-Done when: the loop is either in the module, working on nazgul and
-emily-laptop, or rejected here with the reason.
