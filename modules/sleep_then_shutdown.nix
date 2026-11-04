@@ -3,7 +3,7 @@
 { pkgs, ... }:
 
 {
-  ## Power off a suspend that lasts two hours
+  ## Power off a suspend that lasts six hours
   systemd.services.sleep-then-shutdown = {
     description = "Sleep Then Shutdown";
     wantedBy = [ "suspend.target" ];
@@ -16,8 +16,8 @@
       RuntimeDirectory = "sleep-then-shutdown";
     };
     script = ''
-      date +%s --date '+2 hours' > /run/sleep-then-shutdown/deadline
-      rtcwake --mode no --seconds 7200
+      date +%s --date '+6 hours' > /run/sleep-then-shutdown/deadline
+      rtcwake --mode no --seconds 21600
     '';
     preStop = ''
       if [ "$(date +%s)" -ge "$(( $(cat /run/sleep-then-shutdown/deadline) - 5 ))" ]; then
