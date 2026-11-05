@@ -252,11 +252,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793818430,
-        "narHash": "sha256-3Sp1+z1JCng6zFMNggnLi3vHGgAcDbGADzOIsNsaxos=",
+        "lastModified": 1793894784,
+        "narHash": "sha256-B/z62Z/Qs9oC9RIHNyfPrxkNufJMCq/XIBT0RcRl6Yk=",
         "owner": "OptimoSupreme",
         "repo": "steam-maintenance",
-        "rev": "8d987f90481d115b1555b154a7e470695aa1f2ce",
+        "rev": "49c69013c62895baf6d12169bc59874aa35396d6",
         "type": "github"
       },
       "original": {
