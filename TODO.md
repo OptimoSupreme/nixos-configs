@@ -52,6 +52,35 @@ Done when: idle memory and GPU load are compared with and without the module
 on low-spec hardware, and the module is in use or rejected here with the
 reason.
 
+## 3. Rename steam-maintenance to jovian-decky-updater
+
+The name should say what it is: a Decky updater for Jovian hosts.
+`modules/maintenance/jovian.nix` keeps its name. Everything else moves: the
+GitHub repo (`OptimoSupreme/jovian-decky-updater` is free), the code in it
+(package, binary, `services.steam-maintenance`, units, `STEAM_MAINTENANCE_*`,
+run and state directories, the Decky plugin directory), the flake input, the
+two cache workflows, `CLAUDE.md`, and the Cachix cache.
+
+To work out:
+
+- Cachix has no rename, so this means a new cache with a new key, and maybe
+  a new `CACHIX_AUTH_TOKEN`. gollum and smeagol read substituters from their
+  running config, so switching CI to the new cache in the same commit would
+  make their next update build the kernel and Mesa locally. Two PRs: first
+  rename the input and service and trust both caches while CI still pushes to
+  the old one, then accept the update on both hosts; second, point CI at the
+  new cache and drop the old one (a cold CI build).
+- The `decky-loader` `preStart` only links the new plugin directory, so the
+  old link stays and Decky shows two System Update plugins. Remove the old
+  link there.
+- The new state directory starts empty: deferrals and snooze reset and the
+  check is due at once. Harmless; delete the old directory, no migration.
+- GitHub redirects the old repo URL as long as nothing reuses the name.
+
+Done when: nothing in either repo says steam-maintenance, gollum and smeagol
+are updated from the new cache with one System Update plugin, and the old
+cache is deleted.
+
 #### Waiting on upstream ####
 
 Items that cannot be finished yet, or that are a heads-up for a future
