@@ -121,7 +121,8 @@ password: `sudo passwd <user>`.
 at 10:00 and run `nixos-rebuild boot`, so updates are staged for the next
 reboot and nothing reboots on its own; `maintenance/wake.nix` does
 nothing daily and instead wakes the host from suspend Sunday 03:00 to pull,
-collect garbage and reboot. gollum and smeagol have no timer: they update from
+collect garbage and reboot (a host that was off then catches up at its next
+boot, without the reboot). gollum and smeagol have no timer: they update from
 the System Update tile in Steam, and CI builds them into a binary cache.
 The pull only works once the host is on `main`: from a clone with push
 access (this machine after `gh auth login`, or copy the host directory to

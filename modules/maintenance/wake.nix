@@ -17,12 +17,14 @@ let
     ]
     ++ lib.optional config.networking.networkmanager.enable pkgs.networkmanager;
     text = ''
+      scheduled=0
+      [ "$(date +%u%H)" = 703 ] && scheduled=1 # a catch-up run must not reboot
       ${lib.optionalString config.networking.networkmanager.enable "nm-online --quiet --timeout 120 || true"}
       status=0
       for unit in nixos-upgrade nix-gc nix-optimise; do
         systemctl start "$unit.service" || status=1
       done
-      if [ "$(readlink -f /nix/var/nix/profiles/system)" != "$(readlink -f /run/booted-system)" ]; then
+      if [ "$scheduled" = 1 ] && [ "$(readlink -f /nix/var/nix/profiles/system)" != "$(readlink -f /run/booted-system)" ]; then
         systemctl reboot
       fi
       exit "$status"
@@ -56,7 +58,8 @@ in
       wantedBy = [ "timers.target" ];
       timerConfig = {
         OnCalendar = "Sun 03:00";
-        WakeSystem = true; # from suspend; a powered-off host skips the week
+        WakeSystem = true; # from suspend
+        Persistent = true; # a powered-off host catches up at next boot
       };
     };
 
