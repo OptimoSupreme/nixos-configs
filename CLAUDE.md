@@ -28,7 +28,8 @@ secret, and no IPs, passwords, or tokens belong here.
   module per host, and a host imports exactly one: `daily.nix`
   (pull main daily at 10:00 and stage it for the next boot, weekly GC,
   scrub), `wake.nix` (nothing daily: wake from suspend Sunday 03:00
-  to pull, GC and reboot) or `jovian.nix` (user-driven updates; pulls in the
+  to pull, GC and reboot; a host that was off catches up at its next boot,
+  without the reboot) or `jovian.nix` (user-driven updates; pulls in the
   `steam-maintenance` flake input). The three stand alone and never import
   each other; what they share is repeated on purpose, so a change to one
   means checking the other two. `workstation_core.nix` is the shared workstation configuration;
