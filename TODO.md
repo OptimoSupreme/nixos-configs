@@ -23,7 +23,7 @@ Hosts with resources to spare import it; low-spec hosts leave it out.
 
 Candidates to move:
 
-- Blur my Shell: `blurMyShell`, `gnomeRoundedBlur` and its `sessionPath` line.
+- Blur my Shell: `blurMyShell`.
 - File indexing: localsearch and tinysparql. The GNOME module enables both,
   so leaving out a module is not enough: core has to turn them off and
   `desktop_luxuries.nix` back on. Check what still needs them, since the
@@ -110,14 +110,13 @@ Four things the 26.11 upgrade will bring that touch this repo:
   Service. nixpkgs has the packages but no NixOS module yet; check whether
   26.11 wires it into the GNOME module and whether anything (CAC, Chromium
   NSS database) notices.
-- Blur my Shell: `blurMyShell` in `modules/workstation_core.nix` pins version 75 from
+- Blur my Shell: `blurMyShell` in `modules/workstation_core.nix` pins version 78 from
   extensions.gnome.org because 26.05 ships 72, which flickers blurred windows
-  in the overview (fixed in 73). Release branches never get extension
-  updates, so this waits for 26.11. Replace it with
+  in the overview (fixed in 73) and predates the GPU memory leak fixes in 76.
+  Release branches never get extension updates, so this waits for 26.11.
+  Replace it with
   `gnomeExtensions.blur-my-shell` and delete `assets/blur-my-shell-metadata.json`
-  once `gnomeExtensions.blur-my-shell.version` is 73 or more. At the same
-  time check that `gnomeRoundedBlur` in `modules/workstation_core.nix` still builds against
-  mutter 51 and bump its tag if upstream needed changes.
+  once `gnomeExtensions.blur-my-shell.version` is 76 or more.
 - Scripted stage 1 is gone on unstable, and `boot.initrd.verbose` with it;
   setting it is now an assertion failure (`gollum` already hit this). Drop
   the line from `modules/workstation_core.nix` when the workstations move.
