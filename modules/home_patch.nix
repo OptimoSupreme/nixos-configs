@@ -5,7 +5,7 @@
 let
   flatpaks = [
     "com.discordapp.Discord"
-    "org.gnome.Fractal"
+    "org.lightning_matrix.Lightning"
     "org.jellyfin.JellyfinDesktop"
     "com.spotify.Client"
     "com.valvesoftware.Steam"
