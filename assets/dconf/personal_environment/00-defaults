@@ -111,7 +111,7 @@ blur=true
 
 [org/gnome/shell/extensions/blur-my-shell/applications]
 blur=true
-pipeline='pipeline_soft'
+pipeline='pipeline_default'
 opacity=220
 dynamic-opacity=false
 blur-on-overview=false
